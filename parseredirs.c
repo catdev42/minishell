@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/10 00:19:17 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/17 20:26:22 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,9 +44,7 @@ struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 		if (isredir(*start))
 		{
 			fd_in_or_out = infile_or_outfile(start);
-			mode = check_file_type(start, fd_in_or_out, tools); // TODO !!!
-			if (mode == -1)
-				return (NULL);
+			
 			if (start[1] == start[0])
 				start++;
 			createredir(++start, mode, fd_in_or_out, tools);

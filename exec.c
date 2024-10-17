@@ -65,19 +65,19 @@ char	*check_cmd_in_path(char *path, t_execcmd *cmd, t_tools *tools)
 	return (NULL);
 }
 
+/* is there a point to this being a function? can just stick it directly into */
 void	execute_path(char *pathcmd, t_execcmd *ecmd, t_tools *tool)
 {
 	execve(pathcmd, ecmd->argv, tool->env);
-	free(pathcmd);
-	print_errno_exit(NULL, NULL, NULL, tool); // why the third NULL
-	// myakoven
-	/* If this does not execute,
-	and take over the whole process,
-	then it fails and exits with error*/
+	// free(pathcmd);
+
+	// print_errno_exit(NULL, NULL, 0, tool); // why the third NULL
+											// changed null to 0
 }
 
 // function still needs to be finished
-void	exec_shell(t_tools *tool, t_execcmd *ecmd)
+// myakoven Renaming to exec_new_minishell
+void	exec_new_minishell(t_tools *tool, t_execcmd *ecmd)
 {
 	pid_t	pid;
 	char	*shlvl;
@@ -111,21 +111,18 @@ void	check_cmd(t_tools *tool, t_execcmd *ecmd)
 	pathcmd = NULL;
 	if (is_builtin(ecmd->argv[0]))
 	{
-		if (run_builtin(ecmd->argv[0]) == -1) //finish heute noch 16.10.
-		return ;
+		if (run_builtin(ecmd->argv[0]) == -1) // finish heute noch 16.10.
+			return ;
 	}
 	if (ft_strncmp(ecmd->argv[0], "minishell", 9))
 	{
-		exec_shell(tool, ecmd);
+		exec_new_minishell(tool, ecmd);
 		return ;
 	}
 	path = get_var(tool->env, "PATH");
 	if (!path)
-	{
-		// if path var fails, its a system wide issue
-		tool->exit_code = SYSTEMFAIL; //if this is in a fork, what happens - how does this get in the parents tool.exit_code
-		print_errno_exit(NULL, "Path variable could not be found", NULL, tool);
-	}
+		print_errno_exit(NULL, "PATH variable not found", SYSTEMFAIL, tool);
+	// if path var fails, its a system wide issue
 	split_path = ft_split(path, ":");
 	free(path);
 	if (!split_path)
@@ -136,10 +133,17 @@ void	check_cmd(t_tools *tool, t_execcmd *ecmd)
 		if (pathcmd != NULL)
 		{
 			free_tab(split_path);
-			execute_path(pathcmd, ecmd, tool->env);//if this is terminating and we dont fork how will the path matrix be cleaned?
+			execute_path(pathcmd, ecmd, tool->env);
+			// execve(pathcmd, ecmd->argv, tool->env); 
+			// we can just put execve here since we break, free and error exit on fafilure
+			break;
+			// if this is terminating and we dont fork how will the path matrix be cleaned? //OK
+			//point taken - i revert back to your breaking the loop where we free the path and exit. 
+			//previous issue was that it would still check the built in, but we dont do that now!
 		}
 		i++;
 	}
+	free(pathcmd);
 	print_errno_exit(ecmd->argv[0], "command not found", FORKFAIL, tool); //$?
 }
 

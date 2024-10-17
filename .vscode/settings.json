@@ -2,6 +2,7 @@
     "files.associations": {
         "format": "c",
         "complex": "c",
-        "unistd.h": "c"
+        "unistd.h": "c",
+        "minishell.h": "c"
     }
 }

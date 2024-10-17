@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   execredir.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/24 16:34:23 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/16 18:56:15 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/17 20:47:13 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ void	redir_cmd(t_redircmd *rcmd, t_tools *tool)
 			// but maybe no exit needed dunno dunno
 		// UNFINISHED!
 	}
-	exec_cmd(rcmd->cmd);
+	exec_cmd(rcmd->cmd, tool);
 }
 
 /* function forks and sets up and manages pipes*/
@@ -52,7 +52,7 @@ pid_t	pipe_fork(int fd, t_cmd *cmd, int pfd, t_tools *tool)
 		close(pipefd[pfd]);
 		dup2(pipefd[fd], fd);
 		close(pipefd[fd]);
-		exec_cmd(cmd);
+		exec_cmd(cmd, tool);
 	}
 	else
 	{
@@ -70,8 +70,8 @@ void	pipe_cmd(t_pipecmd *pcmd, t_tools *tools)
 	pid_t	pid1;
 	pid_t	pid2;
 
-	pid1 = pipe_fork(1, pcmd->left, 0);
-	pid2 = pipe_fork(0, pcmd->right, 1);
+	pid1 = pipe_fork(1, pcmd->left, 0, tools);
+	pid2 = pipe_fork(0, pcmd->right, 1, tools);
 	waitpid(pid1, &status1, 0);
 	check_system_fail(status1, tools);
 	waitpid(pid2, &status2, 0);
