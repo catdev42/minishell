@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/17 20:26:22 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/18 22:26:40 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ struct s_cmd	*parseargv(char *start, char *end, t_tools *tools)
 			i++;
 		if (start[i] && istoken(start[i]))
 			i = skip_token(start, i);
-		else
+		else if (start[i])
 		{
 			ecmd->argv[index] = &start[i];
 			i = skip_token(start, i);

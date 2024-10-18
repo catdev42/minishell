@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/18 21:23:31 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/18 23:36:02 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,58 +40,69 @@ void	check_system_fail(int status, t_tools *tools)
 		exit(0); // temporary?
 }
 
-void	change_shlvl(t_tools *tool)
-{
-	char	*var;
-	int		shlvl;
 
-	var = get_var(tool->env, "SHLVL");
-	shlvl = ft_atoi(var) + 1;
+/*
+
+THIS IS MY  CALL OF check_file_type and FAILURE checker...
+	mode = check_file_type(start, fd_in_or_out, tools); // TODO !!!
+	if (mode == -1) //because 0 is returned for O_RDONLY
+		return (NULL); return out or exit fork
+You can do this in your code cause it should work for builtin in the main process...
+*/
+/* Checks if a path is a file or directory File: 1; Dir: 2; Neither: 0*/
+int	file_dir_noexist(const char *path, int fd_in_or_out)
+{
+	struct stat	path_stat;
+
+	if (stat(path, &path_stat) != 0)
+	{
+		// if it is an outfile and path is not found, we return 1
+		// because a regular file will be created
+		if (fd_in_or_out == 1 && errno == ENOENT)
+			return (1); //not an error
+		else
+		{  //an error
+			print_error(path, strerror(errno), NULL);
+			return (0);
+		}
+	}
+	if (S_ISREG(path_stat.st_mode))
+	{
+		return (1);
+	}
+	else if (S_ISDIR(path_stat.st_mode))
+		return (2);
+	else
+		print_error(path, "Is neither a file nor a directory", NULL);
+	return (0); //error
 }
 
-int	is_builtin(char *s)
-{
-	int	a;
+/* Return the MODE necessary for OPEN() file or dir */
 
-	a = 0;
-	if (ft_strncmp(s, ECHO, 5) == 0)
-		a = 1;
-	else if (ft_strncmp(s, CD, 3) == 0)
-		a = 1;
-	else if (ft_strncmp(s, PWD, 4) == 0)
-		a = 1;
-	else if (ft_strncmp(s, EXPORT, 7) == 0)
-		a = 1;
-	else if (ft_strncmp(s, UNSET, 6) == 0)
-		a = 1;
-	else if (ft_strncmp(s, ENV, 4) == 0)
-		a = 1;
-	else if (ft_strncmp(s, EXIT, 5) == 0)
-		a = 1;
-	return (a);
+int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)//took the tools out cause not used
+{
+	char				*filepath;
+	int					fileordir;
+
+	if (!rcmd || fd_in_or_out < 0)
+		return (0);
+	fileordir = file_dir_noexist(rcmd->file, fd_in_or_out);
+	if (fileordir == 0)
+		return (-1);
+	if (fileordir == 2 && rcmd->fd == 1) // directory, outfile 
+		print_error(filepath, "Is a directory", NULL);
+	if (fileordir == 1 && rcmd->append && rcmd->fd == 1) // reg file (not a directory), append, outfile
+	//I HAVE TO ADDRESS APPEND IN REDIR CREATION (myakoven)
+		return (O_WRONLY | O_CREAT | O_APPEND);
+	else if (fileordir == 1 && !rcmd->append && rcmd->fd == 1) //reg file (not a directory), trund, outfile
+		return (O_WRONLY | O_CREAT | O_TRUNC);
+	else if (fileordir == 1 && rcmd->fd == 0) // reverted this to 1... cause regular file
+		return (O_RDONLY);
+	else if (fileordir == 2 && rcmd->fd == 0) // special condition for infile which is a directory
+		return (O_RDONLY | __O_DIRECTORY);
+	return (0);
 }
 
-int	run_builtin(t_execcmd *cmd)
-{
-	int	a;
-
-	a = 0;
-	if (ft_strncmp(cmd->argv[0], ECHO, 5) == 0)
-		a = echo();
-	else if (ft_strncmp(cmd->argv[0], CD, 3) == 0)
-		a = cd();
-	else if (ft_strncmp(cmd->argv[0], PWD, 4) == 0)
-		a = pwd(cmd);
-	else if (ft_strncmp(cmd->argv[0], EXPORT, 7) == 0)
-		a = export();
-	else if (ft_strncmp(cmd->argv[0], UNSET, 6) == 0)
-		a = unset();
-	else if (ft_strncmp(cmd->argv[0], ENV, 4) == 0)
-		a = env();
-	else if (ft_strncmp(cmd->argv[0], EXIT, 5) == 0)
-		a = ft_exit();
-	return (a);
-}
 
 /* from slack sde-silv (Shenya)
 while (i < env->procs)

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/18 20:55:33 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/18 23:34:08 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,16 +87,16 @@ int				run_builtin(t_execcmd *cmd);
 int				file_dir_noexist(const char *path, int fd_in_or_out);
 int				check_file_type(t_redircmd *rcmd, int fd_in_or_out);
 /* exec */
-void			exec_cmd(t_cmd *cmd, t_tools *tool);
-void			check_cmd(t_tools *tool, t_execcmd *ecmd);
+void			handle_node(t_cmd *cmd, t_tools *tool);
+void			run_cmd(t_tools *tool, t_execcmd *ecmd);
 void			exec_new_minishell(t_tools *tool, t_execcmd *ecmd);
-void			execute_path(char *pathcmd, t_execcmd *ecmd, t_tools *tool);
-char			*check_cmd_in_path(char *path, t_execcmd *cmd, t_tools *tools);
+void			execute_execve(char *pathcmd, t_execcmd *ecmd, t_tools *tool);
+char			*check_cmd_path(char *path, t_execcmd *cmd, t_tools *tools);
 int				running_msh(t_tools *tools);
 /* execredir */
-void			redir_cmd(t_redircmd *rcmd, t_tools *tool);
+void			run_redir(t_redircmd *rcmd, t_tools *tool);
 pid_t			pipe_fork(int fd, t_cmd *cmd, int pfd, t_tools *tool);
-void			pipe_cmd(t_pipecmd *pcmd, t_tools *tools);
+void			run_pipe(t_pipecmd *pcmd, t_tools *tools);
 
 /************************/
 /******* INIT.C ********/

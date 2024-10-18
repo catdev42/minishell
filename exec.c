@@ -2,15 +2,15 @@
 /*                                                                            */
 /*                                                        :::      ::::::::   */
 /*   exec.c                                             :+:      :+:    :+:   */
-/*                                                    +:+
-		+:	// myakoven: this will print mash: strerror(errno) and exit(errno)
-+         +:+     */
+/*                                                    +:+ +:+         +:+     */
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2024/07/16 15:48:13 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/15 13:20:31 by myakoven         ###   ########.fr       */
+/*   Created: 2024/10/18 23:23:33 by myakoven          #+#    #+#             */
+/*   Updated: 2024/10/18 23:26:50 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
+
 
 #include "./include/minishell.h"
 
@@ -21,7 +21,6 @@ int	running_msh(t_tools *tools)
 {
 	// pid_t	pid;
 	// int		status;
-
 	// status = 0;
 	if (!tools->tree)
 		return (0);
@@ -33,85 +32,122 @@ int	running_msh(t_tools *tools)
 		// 	print_errno_exit(NULL, NULL, 0, tools); // myakoven system fail
 		// if (pid == 0)
 		// 	exec_cmd(tools->tree, tools);
-		exec_cmd(tools->tree, tools);
+		handle_node(tools->tree, tools);
 		// waitpid(pid, &status, 0);
 		// check_system_fail(status, tools); // maykoven this also exits
 	}
 	else
-		exec_cmd(tools->tree, tools);
+		handle_node(tools->tree, tools);
 	return (1);
 }
 
-char	*check_cmd_in_path(char *path, t_execcmd *cmd, t_tools *tools)
+void	handle_node(t_cmd *cmd, t_tools *tool)
 {
-	char	*cmdpath;
-	char	*temp;
+	t_execcmd	*ecmd;
+	t_redircmd	*rcmd;
+	t_pipecmd	*pcmd;
 
-	cmdpath = NULL;
-	temp = NULL;
-	temp = ft_strjoin(path, "/");
-	if (!temp)
-		print_errno_exit(NULL, NULL, 0, tools); // myakoven system fail
-	cmdpath = ft_strjoin(temp, cmd->argv[0]);
-	free(temp);
-	if (!cmdpath)
-		return (NULL); // not failure, just path is not found yet
-	if (access(cmdpath, F_OK) == 0)
+	if (cmd->type == EXEC)
 	{
-		if (access(cmdpath, X_OK) != 0) // cannot execute cannot access
-		{
-			free(cmdpath);
-			print_errno_exit(NULL, NULL, 0, tools); // myakoven
-		}
-		return (cmdpath);
+		ecmd = (t_execcmd *)cmd;
+		run_cmd(tool, ecmd);
 	}
-	// printf("msh: permission denied %s\n", cmd->argv[0]);
-	free(cmdpath);
-	return (NULL);
-}
-
-/* is there a point to this being a function? can just stick it directly into */
-void	execute_path(char *pathcmd, t_execcmd *ecmd, t_tools *tool)
-{
-	execve(pathcmd, ecmd->argv, tool->env);
-	free(pathcmd);
-	print_errno_exit(NULL, NULL, 0, tool);
-}
-
-// function still needs to be finished
-// myakoven Renaming to exec_new_minishell
-void	exec_new_minishell(t_tools *tool, t_execcmd *ecmd)
-{
-	char	*shlvl;
-
-	// pid_t	pid;
-	if (get_matrix_len(ecmd->argv) != 1)
-		print_errno_exit(NULL, "too many arguments", 141, tool);
-	shlvl = NULL;
-	// pid = fork(); // if not recognized as a builtin forking is not necessary
-	// if (pid == -1)
-	// 	print_errno_exit(NULL, NULL, NULL, tool); // system error
-	// myakoven: this will print mash: strerror(errno) and exit(errno)
-	// error_exit(tool, FORKERROR); // i think i dont have the last version
-	// if (pid == 0)
+	else if (cmd->type == REDIR)
 	{
-		change_shlvl(tool);
-		if (execve("./minishell", ecmd->argv, tool->env) == -1)
-			print_errno_exit(NULL, NULL, 0, tool);
-		// myakoven: this will print mash: strerror(errno) and exit(errno)
-		// error_exit(tool, EXECVEERROR);
+		rcmd = (t_redircmd *)cmd;
+		run_redir(rcmd, tool);
 	}
+	else if (cmd->type == PIPE)
+	{
+		pcmd = (t_pipecmd *)cmd;
+		run_pipe(pcmd, tool);
+	}
+	else
+		exit(1);
+	/*if we dont terminate all the stuff in exec node we exit error?*/
 }
 
-void	check_cmd(t_tools *tool, t_execcmd *ecmd)
+// check if order of running processes correct?
+void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
+{
+	int		status1;
+	int		status2;
+	pid_t	pid1;
+	pid_t	pid2;
+
+	pid1 = pipe_fork(1, pcmd->left, 0, tools);
+	pid2 = pipe_fork(0, pcmd->right, 1, tools);
+	waitpid(pid1, &status1, 0);
+	check_system_fail(status1, tools);
+	waitpid(pid2, &status2, 0);
+	check_system_fail(status2, tools);
+}
+
+/* function forks and sets up and manages pipes*/
+/* Myakoven: What are these variables? */
+pid_t	pipe_fork(int fd, t_cmd *cmd, int pfd, t_tools *tool)
+{
+	int	pipefd[2];
+	int	pid;
+
+	if (pipe(pipefd) == -1)
+		print_errno_exit("pipe", NULL, 141, tool);
+	pid = fork();
+	if (pid == -1)
+		print_errno_exit("fork", NULL, 141, tool);
+	if (pid == 0)
+	{
+		close(pipefd[pfd]);
+		dup2(pipefd[fd], fd);
+		close(pipefd[fd]);
+		handle_node(cmd, tool);
+	}
+	else
+	{
+		close(pipefd[0]);
+		close(pipefd[1]);
+	}
+	// Waitpid?
+	return (pid);
+}
+
+
+
+// maybe open dir w/ opendir
+/*MYAKOVEN: I think this function only need to get the mode,
+	all other information is already written*/
+void	run_redir(t_redircmd *rcmd, t_tools *tool)
+{
+	rcmd->mode = check_file_type(rcmd, rcmd->fd);
+	if (rcmd->mode == -1)
+		return ;      // not sure about this - is a return enough in all cases
+	close(rcmd->fd); // I don't thin we should close standard in or out here...
+	/*
+	This space does not store the fd of an open file, it just stores whether
+	it is an infile (standard in) or an outfile (standard out)
+	rcmd->fd is alread written during parsing
+	the file is only opened in the same place where it is redirected to std in or out
+	*/
+	rcmd->fd = open(rcmd->file, rcmd->mode, 0644); // where to close it?
+	// I am not sure why this file is getting opened here...
+	if (rcmd->fd == -1)
+	{
+		print_errno_exit(NULL, strerror(errno), 0, tool);
+		// but maybe no exit needed dunno dunno
+		// UNFINISHED!
+	}
+	handle_node(rcmd->cmd, tool);
+}
+
+void	run_cmd(t_tools *tool, t_execcmd *ecmd)
 {
 	char	*path;
-	char	*pathcmd;
+	char	*cmdpath;
 	char	**split_path;
 	int		i;
 
 	i = 0;
-	pathcmd = NULL;
+	cmdpath = NULL;
 	if (is_builtin(ecmd->argv[0]))
 	{
 		if (run_builtin(ecmd) == -1) // finish heute noch 16.10.
@@ -125,51 +161,36 @@ void	check_cmd(t_tools *tool, t_execcmd *ecmd)
 	path = get_var(tool->env, "PATH");
 	if (!path)
 		print_errno_exit(NULL, "PATH variable not found", SYSTEMFAIL, tool);
-	// if path var fails, its a system wide issue
-	split_path = ft_split(path, ':');
 	// path is a variable in ENV we do NOT free it
+	split_path = ft_split(path, ':');
 	if (!split_path)
 		print_errno_exit(NULL, NULL, 0, tool);
 	while (split_path[i])
 	{
-		pathcmd = check_cmd_in_path(split_path[i], ecmd, tool);
-		if (pathcmd != NULL)
+		cmdpath = check_cmd_path(split_path[i], ecmd, tool);
+		if (cmdpath != NULL)
 		{
 			ft_freetab(split_path);
-			execute_path(pathcmd, ecmd, tool);
+			execute_execve(cmdpath, ecmd, tool);
 			break ;
 		}
 		i++;
 	}
-	free(pathcmd);
+	free(cmdpath);
 	print_errno_exit(ecmd->argv[0], "command not found", FORKFAIL, tool); //$?
 }
 
-void	exec_cmd(t_cmd *cmd, t_tools *tool)
-{
-	t_execcmd	*ecmd;
-	t_redircmd	*rcmd;
-	t_pipecmd	*pcmd;
 
-	if (cmd->type == EXEC)
-	{
-		ecmd = (t_execcmd *)cmd;
-		check_cmd(tool, ecmd);
-	}
-	else if (cmd->type == REDIR)
-	{
-		rcmd = (t_redircmd *)cmd;
-		redir_cmd(rcmd, tool);
-	}
-	else if (cmd->type == PIPE)
-	{
-		pcmd = (t_pipecmd *)cmd;
-		pipe_cmd(pcmd, tool);
-	}
-	// else
-	// 	return (1); // this
-}
-/*void	_exec_cmd(char *pathcmd, t_execcmd *cmd, char **env)
+
+
+//**********************************************************************
+// Broken Pipe Error (SIGPIPE): A broken pipe can
+//  happen if the command on the reading end of the pipe terminates
+// unexpectedly before the writing process finishes. In this case,
+// the writing command (the one trying to send data to the pipe)
+//  will receive a SIGPIPE signal and often terminate.
+
+/*void	_exec_cmd(char *cmdpath, t_execcmd *cmd, char **env)
 {
 	pid_t	pid;
 
@@ -178,7 +199,7 @@ void	exec_cmd(t_cmd *cmd, t_tools *tool)
 		return (FORK_ERROR);//dunno
 	if (pid == 0)
 	{
-		if (execve(pathcmd, cmd->argv, env) == -1)
+		if (execve(cmdpath, cmd->argv, env) == -1)
 		// better an error handling function
 			printf("msh: %s: no such file or directory\n", cmd->argv[0]);
 	}
