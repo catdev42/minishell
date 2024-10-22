@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/22 14:52:47 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/22 20:55:59 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,10 +42,36 @@ int	echo(t_execcmd *cmd)
 // 	return (1);
 // }
 
-// int	export(t_execcmd *cmd, t_tools *tool)
-// {
-// 	return (1);
-// }
+int	syntax_check_export(char *argv, t_tools *tool)
+{
+	int	i;
+	
+	i = 0;
+	if (argv[0] == '=')
+	{
+		print_error("export", "not a valid identifier", argv);
+		return (1);
+	}
+	while (argv[i])
+	{
+		if (argv[i] == '=')
+		{
+			if (argv[i-1] == ' ')
+			{
+				print_error("export", "not a valid identifier", argv);
+				return (1);
+			}
+		}
+	}
+		
+}
+
+int	export(t_execcmd *cmd, t_tools *tool)
+{
+	if (get_matrix_len(cmd->argv) > 1)
+	
+	return (1);
+}
 
 
 int	unset(t_execcmd *cmd, t_tools *tool)
