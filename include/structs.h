@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:00:21 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/20 17:41:58 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/22 21:08:05 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,9 +66,8 @@ typedef struct s_cmd		t_cmd;
 
 typedef struct s_tools
 {
-	bool					isfork;
-	int						env_len;
 	char					**env;
+	int						env_len;
 
 	char					*line;
 	size_t					line_capacity;
