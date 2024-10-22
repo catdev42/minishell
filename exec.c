@@ -19,10 +19,7 @@ int	running_msh(t_tools *tools)
 {
 	pid_t	pid;
 	int		status;
-	pid_t	pid;
-	int		status;
 
-	status = 0;
 	status = 0;
 	if (!tools->tree)
 		return (0);
