@@ -1,0 +1,21 @@
+DELETE HEREDOC FILES
+
+
+
+
+
+
+Can i just parse everything in a fork and then pass the tree through a pipe?
+This would just make my life so much easier...
+
+
+
+
+Every time somthing fails etc... even while parsing... i need to add the error to env.
+
+SYNTAX
+* Remove "\" if its not in quotes
+
+
+CLEANING
+* Redir nodes have the file name allocated as a string - must free when cleaning
