@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/23 18:59:24 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:09:09 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -176,3 +176,28 @@ int	pwd(t_execcmd *cmd)
 		perror("pwd: error retrieving current directory:");
 	return (1);
 }
+
+int	syntax_check_export(char *argv, t_tools *tool)
+{
+	int	i;
+	
+	i = 0;
+	if (argv[0] == '=')
+	{
+		print_error("export", "not a valid identifier", argv);
+		return (1);
+	}
+	while (argv[i])
+	{
+		if (argv[i] == '=')
+		{
+			if (argv[i-1] == ' ')
+			{
+				print_error("export", "not a valid identifier", argv);
+				return (1);
+			}
+		}
+	}
+		
+}
+
