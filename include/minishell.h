@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/22 14:51:51 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:42:16 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@
 # define ENV "env"
 # define EXIT "exit"
 /* error codes to send to error exit function error_exit(t_tools *tools,
-		int error)*/
+                int error)*/
 # define SYSTEMFAIL 142
 # define FORKFAIL 141
 # define UNKNOWNERROR 143
@@ -73,14 +73,15 @@ void			tree_free(struct s_cmd *node);
 /*******  ENV.C  ********/
 /************************/
 char			**copy_env(t_tools *tools, char **env);
+char			*get_var_value(char **env, char *var);
 char			*get_var(char **env, char *var);
 // char	*get_env_var(t_tools *tools, char *var);
 
 /************************/
 /******* ERROR.C ********/
 /************************/
-int				print_errno_exit(const char *arg, const char *errline,
-					int custom_fail, t_tools *tools);
+int	print_errno_exit(const char *arg, const char *errline, int custom_fail,
+                     t_tools *tools);
 void			error_exit(t_tools *tools, int error);
 struct s_cmd	*clean_execs(struct s_cmd *first, struct s_cmd *second);
 void			clean_tools(t_tools *tools);
@@ -109,8 +110,8 @@ int				run_pipeless_builtin_tree(t_cmd *cmd, t_tools *tool);
 /* execredir */
 int				run_redir(t_redircmd *rcmd, t_tools *tool);
 void			run_pipe(t_pipecmd *pcmd, t_tools *tools);
-// pid_t			pipe_fork(int fd, t_cmd *cmd, int pfd, t_tools *tool);
-// void			run_pipe(t_pipecmd *pcmd, t_tools *tools);
+// pid_t			pipe_fork(int fd, t_cmd *cmd, int pfd, t_tools
+// *tool); void			run_pipe(t_pipecmd *pcmd, t_tools *tools);
 
 /************************/
 /******* INIT.C ********/
@@ -151,14 +152,13 @@ void			checkexit(t_tools *tools);
 /************************/
 struct s_cmd	*parseline(char *cline, t_tools *tools);
 struct s_cmd	*createpipe(struct s_cmd *left, struct s_cmd *right,
-					t_tools *tools);
+                         t_tools *tools);
 char			*peek(char *line, char *end, int token);
 /*static nullify*/
 /******parse_heredoc.c*****/
 void			here_unlink(t_tools *tools);
 void			here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools);
-int				createredir_here(char *delim, int mode, int fd,
-					t_tools *tools);
+int				createredir_here(char *delim, int mode, int fd, t_tools *tools);
 char			*make_heredoc_file(char *delim, t_tools *tools);
 
 /***** parse_redir_exec.c ****/

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_node_handling.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/22 14:49:00 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:42:00 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	run_exec_node(t_tools *tool, t_execcmd *ecmd)
 			print_errno_exit(NULL, NULL, 0, tool);
 		execute_execve(ecmd->argv[0], ecmd, tool);
 	}
-	path = get_var(tool->env, "PATH");
+	path = get_var_value(tool->env, "PATH");
 	if (!path)
 		print_errno_exit(NULL, "PATH variable not found", SYSTEMFAIL, tool);
 	// path is a variable in ENV we do NOT free it

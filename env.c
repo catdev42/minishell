@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:07:28 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/18 20:36:30 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/23 18:49:15 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	**copy_env(t_tools *tools, char **env)
 }
 
 /* Return the pointer to the variable definition or NULL if not found */
-char	*get_var(char **env, char *var)
+char	*get_var_value(char **env, char *var)
 {
 	int		i;
 	size_t	len;
@@ -61,4 +61,26 @@ char	*get_var(char **env, char *var)
 		i++;
 	}
 	return (line);
+}
+
+/* gets the pointer to the beginning of a var in env */
+char	*get_var(char **env, char *var)
+{
+	int i;
+	size_t len;
+	char *line;
+
+	if (!env || !*env)
+		return (NULL);
+	line = NULL;
+	i = 0;
+	len = ft_strlen(var);
+	while (env[i])
+	{
+		line = ft_strnstr(env[i], var, len);
+		if (line && line[len] == '=')
+			return (env[i]);
+		i++;
+	}
+	return (NULL);
 }
