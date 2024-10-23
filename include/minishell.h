@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/22 14:51:51 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:27:57 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,6 +31,8 @@
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+
+# define MIDLEN 256
 
 # define UNEXP "syntax error near unexpected token "
 # define UNCLOSED "unclosed quotes "
@@ -63,6 +65,10 @@ int				unset(t_execcmd *cmd, t_tools *tool);
 int				echo(t_execcmd *cmd);
 int				builtin_check_walk(t_cmd *cmd);
 
+int				cd(char **argv, char **env, t_tools *tools);
+char			*ft_join_one(char const *s1, char const *delim, char const *s2);
+int				replace_var(char *key, char *value, char **env);
+
 /************************/
 /******* CLEAN.C ********/
 /************************/
@@ -72,7 +78,7 @@ void			tree_free(struct s_cmd *node);
 /************************/
 /*******  ENV.C  ********/
 /************************/
-char			**copy_env(t_tools *tools, char **env);
+int				copy_env(t_tools *tools, char **env);
 char			*get_var(char **env, char *var);
 // char	*get_env_var(t_tools *tools, char *var);
 
@@ -157,8 +163,7 @@ char			*peek(char *line, char *end, int token);
 /******parse_heredoc.c*****/
 void			here_unlink(t_tools *tools);
 void			here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools);
-int				createredir_here(char *delim, int mode, int fd,
-					t_tools *tools);
+int				createredir_here(char *delim, int mode, int fd, t_tools *tools);
 char			*make_heredoc_file(char *delim, t_tools *tools);
 
 /***** parse_redir_exec.c ****/

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/22 14:52:10 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:31:01 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,12 +66,11 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 {
 	int	a;
 
-	tool->isfork = 1;
 	a = 0;
 	if (ft_strncmp(cmd->argv[0], ECHO, 5) == 0)
 		a = echo(cmd);
-	// else if (ft_strncmp(cmd->argv[0], CD, 3) == 0)
-	// 	a = cd(cmd, tool);
+	else if (ft_strncmp(cmd->argv[0], CD, 3) == 0)
+		a = cd(cmd->argv, tool->env, tool);
 	else if (ft_strncmp(cmd->argv[0], PWD, 4) == 0)
 		a = pwd(cmd);
 	// else if (ft_strncmp(cmd->argv[0], EXPORT, 7) == 0)

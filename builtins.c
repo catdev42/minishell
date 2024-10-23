@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/23 14:28:26 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 17:27:28 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@ int	echo(t_execcmd *cmd)
 	}
 	if (cmp != 0)
 		ft_putstr_fd("\n", 1);
-	return (0); //exit success
+	return (0); // exit success
 }
 
 // int cd(char *path) {
@@ -41,21 +41,21 @@ int	cd(char **argv, char **env, t_tools *tools)
 {
 	char	*buffer;
 
+	buffer = NULL;
+	buffer = safe_calloc(MIDLEN + 1, sizeof(char), tools);
 	if (chdir(argv[1]) < 0)
 	{
-		printf(2, "cd: cannot change directory to %s\n", argv);
-		return (-1);
+		print_error("cd", "cannot change directory to %s\n", NULL);
+		return (1); // error
 	}
-	buffer = NULL;
-	// unset("PWD",
-	replace_var("PWD", getcwd(), env, tools);
+	replace_var("PWD", getcwd(buffer, MIDLEN), env);
+	free(buffer);
 	return (0);
 }
 
 int	replace_var(char *key, char *value, char **env)
 {
 	int		i;
-	int		j;
 	char	*temp;
 	char	*newvar;
 

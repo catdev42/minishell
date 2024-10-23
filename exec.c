@@ -34,8 +34,6 @@ int	running_msh(t_tools *tools)
 			handle_node(tools->tree, tools);
 		waitpid(pid, &status, 0);
 		check_system_fail(status, tools); // maykoven this also exits
-		tools->isfork = 1;
-		
 	}
 	else
 	{
@@ -122,7 +120,7 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 int	run_redir(t_redircmd *rcmd, t_tools *tool)
 {
 	rcmd->mode = check_file_type(rcmd, rcmd->fd);
-	if (rcmd->mode == -1 && tool->isfork)
+	if (rcmd->mode == -1)
 		exit(1); // exit fail
 	// not sure about this - is a return enough in all cases
 	else if (rcmd->mode == -1)

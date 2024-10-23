@@ -71,7 +71,8 @@ int	print_error(const char *arg, const char *errline, const char *errarg)
 		ft_putstr_fd("\'", 2);
 	}
 	ft_putstr_fd("\n", 2);
-	return (0);
+	// reset_tools(tools);
+	return (0); //return ! for not working
 }
 
 /* FOR FORK PROCESvoid	goodexit(tools)
