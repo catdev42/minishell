@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 23:59:13 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/15 10:56:47 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:35:52 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,7 @@ int	copy_var(char *c_line, char *line, t_tools *tools)
 	var = ft_substr(line, 1, i - 1);
 	if (!var)
 		error_exit(tools, 1);
-	var_result = get_var(tools->env, var);
+	var_result = get_var_value(tools->env, var);
 	free(var);
 	if (!var_result)
 		return (i);

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/23 17:27:57 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:53:47 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,6 +52,9 @@
 
 // volatile sig_atomic_t	global_signal = 0;
 
+// TEMP
+char			*get_var(char **env, char *var);
+
 void			walking(struct s_cmd *cmd);
 /************************/
 /******* BUILTINS.c ****/
@@ -79,7 +82,7 @@ void			tree_free(struct s_cmd *node);
 /*******  ENV.C  ********/
 /************************/
 int				copy_env(t_tools *tools, char **env);
-char			*get_var(char **env, char *var);
+char			*get_var_value(char **env, char *var);
 // char	*get_env_var(t_tools *tools, char *var);
 
 /************************/

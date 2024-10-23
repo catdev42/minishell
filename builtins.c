@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/23 17:27:28 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:59:24 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,7 @@ int	cd(char **argv, char **env, t_tools *tools)
 	return (0);
 }
 
+
 int	replace_var(char *key, char *value, char **env)
 {
 	int		i;
@@ -65,7 +66,7 @@ int	replace_var(char *key, char *value, char **env)
 	while (env[i])
 	{
 		/*if we find the var value*/
-		if (get_var(env, key))
+		if (get_var_value(env, key))
 		{
 			temp = env[i];
 			newvar = ft_join_one(key, "=", value);
@@ -111,7 +112,7 @@ char	*ft_join_one(char const *s1, char const *delim, char const *s2)
 // 	return (1);
 // }
 
-int	unset(t_execcmd *cmd, t_tools *tool)
+int	unset(t_execcmd *cmd, t_tools *tools)
 {
 	int		i;
 	int		j;
@@ -123,23 +124,16 @@ int	unset(t_execcmd *cmd, t_tools *tool)
 	while (cmd->argv[i])
 	{
 		/*if we find the var value*/
-		if (get_var(tool->env, cmd->argv[i]))
+		if (get_var(tools->env, cmd->argv[i]))
 		{
-			/*put it in temp*/
-			temp = cmd->argv[i];
+			temp = tools->env[i];
 			j = i;
-			/*move all the other variables*/
-			while (cmd->argv[j++])
+			while (tools->env[j])
 			{
-				/*
-				this might be skipping one variable.
-				lets pretend we are at i = 1... you will store it in temp,
-				initialize j = 1, check if it exists and
-				go to index 2, move stuff from index 3 into 2*/
-				cmd->argv[j] = cmd->argv[j + 1];
+				tools->env[j] = tools->env[j + 1];
+				j++;
 			}
-			/* MAYBE WE NEED TO CHECK THE INCREMENTING OF J */
-			free(temp);
+			free(temp); 
 		}
 		i++;
 	}

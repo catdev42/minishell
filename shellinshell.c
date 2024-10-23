@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:09:25 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/18 23:36:08 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 18:35:52 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ void	change_shlvl(t_tools *tool)
 	char	*var;
 	int		shlvl;
 
-	var = get_var(tool->env, "SHLVL");
+	var = get_var_value(tool->env, "SHLVL");
 	shlvl = ft_atoi(var) + 1;
 }
 
