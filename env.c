@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:07:28 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/22 21:17:13 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:32:48 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ int copy_env(t_tools *tools, char **env)
 	char	**oldenv;
 
 	oldenv = NULL; // checker if this was a previously allocated array
-	if (tools->env)
+	if (tools->env == env) 
 		oldenv = tools->env;
 	i = 0;
 	len_pointers = 0;
@@ -35,7 +35,7 @@ int copy_env(t_tools *tools, char **env)
 		envp[i] = ft_strdup(env[i]);
 		if (!envp[i])
 		{
-			ft_freetab(env);
+			ft_freetab(envp); // changed to envp, we must delete currently allocated
 			return (0);
 		}
 		i++;

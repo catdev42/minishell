@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/22 21:04:10 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 14:28:26 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	echo(t_execcmd *cmd)
 	int	cmp;
 
 	if (!cmd)
-		return (1);
+		return (1); // exit fail
 	cmp = ft_strncmp(cmd->argv[1], "-n", 3);
 	if (cmp == 0)
 		i = 2;
@@ -33,24 +33,77 @@ int	echo(t_execcmd *cmd)
 	}
 	if (cmp != 0)
 		ft_putstr_fd("\n", 1);
-	return (0);
+	return (0); //exit success
 }
 
 // int cd(char *path) {
 int	cd(char **argv, char **env, t_tools *tools)
 {
+	char	*buffer;
+
 	if (chdir(argv[1]) < 0)
 	{
-		printf(2, "cd: cannot change directory to %s\n", path);
+		printf(2, "cd: cannot change directory to %s\n", argv);
 		return (-1);
 	}
+	buffer = NULL;
 	// unset("PWD",
-	replace_var("PWD", getcwd(getenvline)) return (0);
+	replace_var("PWD", getcwd(), env, tools);
+	return (0);
 }
 
-char	*replace_var(char *key, char *value, char **env, t_tools *tools)
+int	replace_var(char *key, char *value, char **env)
 {
-	
+	int		i;
+	int		j;
+	char	*temp;
+	char	*newvar;
+
+	i = 1;
+	if (!key)
+		return (1);
+	while (env[i])
+	{
+		/*if we find the var value*/
+		if (get_var(env, key))
+		{
+			temp = env[i];
+			newvar = ft_join_one(key, "=", value);
+			if (!newvar)
+				return (0);
+			free(temp);
+			env[i] = newvar;
+		}
+		i++;
+	}
+	return (1);
+}
+
+// reallocation is dest not provided
+char	*ft_join_one(char const *s1, char const *delim, char const *s2)
+{
+	size_t	len;
+	size_t	i;
+	size_t	j;
+	char	*fullstr;
+
+	i = 0;
+	j = 0;
+	len = ft_strlen(s1) + ft_strlen(delim) + ft_strlen(s2);
+	fullstr = ft_calloc(len + 2, sizeof(char));
+	if (!fullstr)
+		return (NULL);
+	j = 0;
+	while (s1[j])
+		fullstr[i++] = s1[j++];
+	j = 0;
+	while (delim[j])
+		fullstr[i++] = delim[j++];
+	j = 0;
+	while (s2[j])
+		fullstr[i++] = s2[j++];
+	fullstr[i] = 0;
+	return (fullstr);
 }
 
 // int	export(t_execcmd *cmd, t_tools *tool)
@@ -69,14 +122,23 @@ int	unset(t_execcmd *cmd, t_tools *tool)
 		return (1);
 	while (cmd->argv[i])
 	{
+		/*if we find the var value*/
 		if (get_var(tool->env, cmd->argv[i]))
 		{
+			/*put it in temp*/
 			temp = cmd->argv[i];
 			j = i;
+			/*move all the other variables*/
 			while (cmd->argv[j++])
 			{
+				/*
+				this might be skipping one variable.
+				lets pretend we are at i = 1... you will store it in temp,
+				initialize j = 1, check if it exists and
+				go to index 2, move stuff from index 3 into 2*/
 				cmd->argv[j] = cmd->argv[j + 1];
 			}
+			/* MAYBE WE NEED TO CHECK THE INCREMENTING OF J */
 			free(temp);
 		}
 		i++;
@@ -93,7 +155,7 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
 	if (get_matrix_len(cmd->argv) > 1)
 		print_error(NULL, "too many arguments", NULL);
-			// maybe a little nonsensical
+	// maybe a little nonsensical
 	tree_free(tool->tree);
 	clean_tools(tool);
 	exit(0);
