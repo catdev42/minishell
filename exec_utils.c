@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/21 18:34:20 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:51:56 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,8 +25,15 @@ void	check_system_fail(int status, t_tools *tools)
 	if (WIFEXITED(status))
 	{
 		tools->exit_code = WEXITSTATUS(status);
-		if (tools->exit_code == 142)
-			exit(142); // where is it catched and interpreted
+		if (tools->exit_code == ENOMEM || tools->exit_code == EPIPE
+			|| tools->exit_code == EMFILE || tools->exit_code == EACCES
+			|| tools->exit_code == ENOENT || tools->exit_code == EINVAL
+			|| tools->exit_code == EAGAIN || tools->exit_code == EINTR)
+		{
+			error_exit(tools, tools->exit_code);
+		}
+		if (tools->exit_code == SYSTEMFAIL)
+			error_exit(tools, tools->exit_code); // where is it catched and interpreted
 	}
 	else if (WIFSIGNALED(status))
 	{
@@ -34,12 +41,11 @@ void	check_system_fail(int status, t_tools *tools)
 		if (sig == SIGSEGV || sig == SIGBUS || sig == SIGFPE || sig == SIGILL
 			|| sig == SIGABRT || sig == SIGKILL || sig == SIGSYS)
 			tools->exit_code = sig + 128;
-		error_exit(tools, 0);
+		error_exit(tools, sig + 128);
 	}
 	else
 		exit(0); // temporary?
 }
-
 
 /*
 
@@ -59,9 +65,9 @@ int	file_dir_noexist(const char *path, int fd_in_or_out)
 		// if it is an outfile and path is not found, we return 1
 		// because a regular file will be created
 		if (fd_in_or_out == 1 && errno == ENOENT)
-			return (1); //not an error
+			return (1); // not an error
 		else
-		{  //an error
+		{ // an error
 			print_error(path, strerror(errno), NULL);
 			return (0);
 		}
@@ -74,35 +80,39 @@ int	file_dir_noexist(const char *path, int fd_in_or_out)
 		return (2);
 	else
 		print_error(path, "Is neither a file nor a directory", NULL);
-	return (0); //error
+	return (0); // error
 }
 
 /* Return the MODE necessary for OPEN() file or dir */
 
-int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)//took the tools out cause not used
+int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
+// took the tools out cause not used
 {
-	char				*filepath;
-	int					fileordir;
+	char *filepath;
+	int fileordir;
 
 	if (!rcmd || fd_in_or_out < 0)
 		return (0);
 	fileordir = file_dir_noexist(rcmd->file, fd_in_or_out);
 	if (fileordir == 0)
 		return (-1);
-	if (fileordir == 2 && rcmd->fd == 1) // directory, outfile 
+	if (fileordir == 2 && rcmd->fd == 1) // directory, outfile
 		print_error(filepath, "Is a directory", NULL);
-	if (fileordir == 1 && rcmd->append && rcmd->fd == 1) // reg file (not a directory), append, outfile
-	//I HAVE TO ADDRESS APPEND IN REDIR CREATION (myakoven)
+	if (fileordir == 1 && rcmd->append && rcmd->fd == 1)
+		// reg file (not a directory), append, outfile
+		// I HAVE TO ADDRESS APPEND IN REDIR CREATION (myakoven)
 		return (O_WRONLY | O_CREAT | O_APPEND);
-	else if (fileordir == 1 && !rcmd->append && rcmd->fd == 1) //reg file (not a directory), trund, outfile
+	else if (fileordir == 1 && !rcmd->append && rcmd->fd == 1)
+		// reg file (not a directory), trund, outfile
 		return (O_WRONLY | O_CREAT | O_TRUNC);
-	else if (fileordir == 1 && rcmd->fd == 0) // reverted this to 1... cause regular file
+	else if (fileordir == 1 && rcmd->fd == 0)
+		// reverted this to 1... cause regular file
 		return (O_RDONLY);
-	else if (fileordir == 2 && rcmd->fd == 0) // special condition for infile which is a directory
+	else if (fileordir == 2 && rcmd->fd == 0)
+		// special condition for infile which is a directory
 		return (O_RDONLY | __O_DIRECTORY);
 	return (0);
 }
-
 
 /* from slack sde-silv (Shenya)
 while (i < env->procs)

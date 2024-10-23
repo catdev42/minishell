@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/23 19:23:58 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:35:19 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,7 @@ void	run_exec_node(t_tools *tool, t_execcmd *ecmd)
 	cmdpath = NULL;
 	path = NULL;
 	if (is_builtin(ecmd->argv[0]))
-	{
-		if (run_builtin(ecmd, tool))
-			exit(1);
-		exit(0);
-	}
+		exit(run_builtin(ecmd, tool));
 	if (ft_strncmp(ecmd->argv[0], "minishell", 9) == 0)
 	{
 		exec_new_minishell(tool, ecmd);

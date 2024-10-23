@@ -72,7 +72,7 @@ int	print_error(const char *arg, const char *errline, const char *errarg)
 	}
 	ft_putstr_fd("\n", 2);
 	// reset_tools(tools);
-	return (0); //return ! for not working
+	return (0); // return ! for not working
 }
 
 /* FOR FORK PROCESvoid	goodexit(tools)
@@ -121,6 +121,7 @@ FOR EXITING!
 1: malloc
 3: just exit(1) nothing printed
 */
+//TODO change all error exit in parsing part to 1
 void	error_exit(t_tools *tools, int error)
 {
 	clean_tools(tools);
@@ -132,12 +133,12 @@ void	error_exit(t_tools *tools, int error)
 		exit(error);
 	}
 	else if (error == 1)
-		exit(errno);
-	else if (error > 0)
+		exit(1);
+	else if (error > 1)
 	{
 		// usually malloc error.... this need to be edited and replaces with errno exits...
-		print_error(NULL, strerror(errno), NULL);
-		exit(errno);
+		print_error(NULL, strerror(error), NULL);
+		exit(error);
 	}
 	else
 		exit(1);
@@ -149,7 +150,7 @@ void	clean_tools(t_tools *tools)
 	if (tools->env)
 		ft_freetab(tools->env);
 	// ft_memset(tools->heredocs, 0, sizeof(tools->heredocs));
-		//its not allocated...
+	// its not allocated...
 }
 
 struct s_cmd	*clean_execs(struct s_cmd *first, struct s_cmd *second)

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/23 17:31:01 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:38:50 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,5 +81,6 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 	// 	a = env(cmd, tool);
 	else if (ft_strncmp(cmd->argv[0], EXIT, 5) == 0)
 		a = ft_exit(cmd, tool);
+	tool->exit_code = a;
 	return (a);
 }
