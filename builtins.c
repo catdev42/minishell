@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/23 19:09:09 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:19:48 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,6 +19,11 @@ int	echo(t_execcmd *cmd)
 
 	if (!cmd)
 		return (1); // exit fail
+	if (!cmd->argv[1])
+	{
+		ft_putstr_fd("\n", 1);
+		return (0);
+	}
 	cmp = ft_strncmp(cmd->argv[1], "-n", 3);
 	if (cmp == 0)
 		i = 2;
@@ -52,7 +57,6 @@ int	cd(char **argv, char **env, t_tools *tools)
 	free(buffer);
 	return (0);
 }
-
 
 int	replace_var(char *key, char *value, char **env)
 {
@@ -133,7 +137,7 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 				tools->env[j] = tools->env[j + 1];
 				j++;
 			}
-			free(temp); 
+			free(temp);
 		}
 		i++;
 	}
@@ -177,27 +181,26 @@ int	pwd(t_execcmd *cmd)
 	return (1);
 }
 
-int	syntax_check_export(char *argv, t_tools *tool)
-{
-	int	i;
-	
-	i = 0;
-	if (argv[0] == '=')
-	{
-		print_error("export", "not a valid identifier", argv);
-		return (1);
-	}
-	while (argv[i])
-	{
-		if (argv[i] == '=')
-		{
-			if (argv[i-1] == ' ')
-			{
-				print_error("export", "not a valid identifier", argv);
-				return (1);
-			}
-		}
-	}
-		
-}
+// int	syntax_check_export(char *argv, t_tools *tool)
+// {
+// 	int	i;
 
+// 	i = 0;
+// 	if (argv[0] == '=')
+// 	{
+// 		print_error("export", "not a valid identifier", argv);
+// 		return (1);
+// 	}
+// 	while (argv[i])
+// 	{
+// 		if (argv[i] == '=')
+// 		{
+// 			if (argv[i-1] == ' ')
+// 			{
+// 				print_error("export", "not a valid identifier", argv);
+// 				return (1);
+// 			}
+// 		}
+// 	}
+
+// }

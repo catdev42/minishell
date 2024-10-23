@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/23 18:35:52 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/23 19:23:58 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,6 +26,7 @@ void	run_exec_node(t_tools *tool, t_execcmd *ecmd)
 	{
 		if (run_builtin(ecmd, tool))
 			exit(1);
+		exit(0);
 	}
 	if (ft_strncmp(ecmd->argv[0], "minishell", 9) == 0)
 	{
@@ -57,7 +58,8 @@ void	run_exec_node(t_tools *tool, t_execcmd *ecmd)
 		i++;
 	}
 	free(cmdpath);
-	print_errno_exit(ecmd->argv[0], "command not found", 127, tool); //$? bash uses 127 as exit code in this case
+	print_errno_exit(ecmd->argv[0], "command not found", 127, tool);
+	//$? bash uses 127 as exit code in this case
 }
 
 char	*check_cmd_path(char *path, t_execcmd *cmd, t_tools *tools)
@@ -73,16 +75,13 @@ char	*check_cmd_path(char *path, t_execcmd *cmd, t_tools *tools)
 	cmdpath = ft_strjoin(temp, cmd->argv[0]);
 	free(temp);
 	if (!cmdpath)
-		print_errno_exit(NULL, NULL, 0, tools); // not failure, just path is not found yet
-		//spitul yes, this is a malloc failure 
-		//ok rewrote
-	
+		print_errno_exit(NULL, NULL, 0, tools);
 	if (access(cmdpath, F_OK) == 0)
 	{
 		if (access(cmdpath, X_OK) != 0) // cannot execute cannot access
 		{
 			free(cmdpath);
-			print_errno_exit(NULL, NULL, 0, tools); 
+			print_errno_exit(NULL, NULL, 0, tools);
 		}
 		return (cmdpath);
 	}
