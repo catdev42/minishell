@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/24 17:20:00 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/24 17:24:29 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -257,9 +257,8 @@ int	export(t_execcmd *cmd, t_tools *tool)
 			value ++;
 		}		
 		if (get_var(tool->env, key))
-			replace_var(key, value, tool->env); //error check?
+			return (replace_var(key, value, tool->env)); 
 		else
-			append_var(); //free key here
+			return(append_var()); //free key here
 	}
-	return (0);
 }
