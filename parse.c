@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 00:42:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/20 16:00:02 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 17:49:58 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -51,6 +51,7 @@ struct s_cmd	*parseline(char *cline, t_tools *tools)
 	if (!tools->tree)
 		tools->tree = parseexec(tools->s, tools->e_cline, tools);
 	nullify(tools->cleanline, tools);
+	remove_useless_quotes_final(tools->cleanline, tools->cl_capacity);
 	return (tools->tree);
 }
 
@@ -117,7 +118,6 @@ static void	nullify(char *cline, t_tools *tools)
 			i = skip_token(cline, i);
 		i++;
 	}
-	remove_useless_quotes_final(cline, tools->cl_capacity);
 }
 
 // static void	remove_useless_quotes_nulled(char *cline, t_tools *tools)
@@ -160,7 +160,9 @@ static void	remove_useless_quotes_final(char *cline, size_t linecapacity)
 	size_t	i;
 	char	quotechar;
 	char	*firstquote;
+	bool	removequotes;
 
+	removequotes = 0;
 	i = 0;
 	while (i < linecapacity)
 	{
@@ -172,8 +174,12 @@ static void	remove_useless_quotes_final(char *cline, size_t linecapacity)
 			firstquote = &cline[i];
 			i++;
 			while (cline[i] && cline[i] != quotechar)
+			{
+				if (ft_isspace(cline[i]) || istoken(cline[i]))
+					removequotes = 1;
 				i++;
-			if (cline[i] && cline[i] == quotechar)
+			}
+			if (cline[i] && removequotes && cline[i] == quotechar)
 				i -= remove_two(firstquote, &cline[i]);
 		}
 		i++;

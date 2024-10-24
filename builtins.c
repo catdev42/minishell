@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/23 20:27:38 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:33:03 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	cd(char **argv, char **env, t_tools *tools)
 		return (1); // error
 	}
 	if (!replace_var("PWD", getcwd(buffer, MIDLEN), env)) /* if it errors*/
-		return (1); 
+		return (1);
 	free(buffer);
 	return (0);
 }
@@ -144,11 +144,6 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 	}
 	return (0);
 }
-
-// int	env(t_execcmd *cmd, t_tools *tool)
-// {
-// 	return (1);
-// }
 
 int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
