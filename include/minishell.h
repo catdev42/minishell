@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/23 18:53:47 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:05:32 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,10 +52,16 @@
 
 // volatile sig_atomic_t	global_signal = 0;
 
-// TEMP
+/*TEMP*/
 char			*get_var(char **env, char *var);
+int				passcheck(char *start, long int lim);
+int				replace_or_append_var(char *key, char *value, char **env,
+					t_tools *tools);
+int				append_var(char *key, char *value, char **env, t_tools *tools);
 
+/*TESTERS*/
 void			walking(struct s_cmd *cmd);
+
 /************************/
 /******* BUILTINS.c ****/
 /************************/
@@ -153,7 +159,7 @@ int				shell_loop(t_tools *tools);
 void			new_line(void);
 void			handle_signals(int sig);
 void			init_sa(struct sigaction *sa);
-void			checkexit(t_tools *tools);
+// void			checkexit(t_tools *tools); //retired?
 
 /************************/
 /******* PARSE.C ********/

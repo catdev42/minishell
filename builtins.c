@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/23 20:27:38 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 18:04:26 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,7 +54,7 @@ int	cd(char **argv, char **env, t_tools *tools)
 		return (1); // error
 	}
 	if (!replace_var("PWD", getcwd(buffer, MIDLEN), env)) /* if it errors*/
-		return (1); 
+		return (1);
 	free(buffer);
 	return (0);
 }
@@ -145,11 +145,125 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 	return (0);
 }
 
-// int	env(t_execcmd *cmd, t_tools *tool)
-// {
-// 	return (1);
-// }
+/* DRAFT OF ENV: Unchecked */
+int	env(char **argv, char **env, t_tools *tools)
+{
+	pid_t	pid;
+	size_t	i;
+	char	*equalsign;
+	int		status;
 
+	equalsign = NULL;
+	if (get_matrix_len(argv) == 1)
+		print_tab(env);
+	if (get_matrix_len(argv) > 1)
+	{
+		pid = fork();
+		if (pid == 0)
+		{
+			i = 0;
+			while (argv[i]) // assign env variables
+			{
+				equalsign = ft_strchr(argv[i], '=');
+				if (equalsign && passcheck(argv[i], (long int)(equalsign
+							- &argv[i][0])))
+				{
+					equalsign[0] = 0; // nullterm to key
+					/*
+					replace_or_append_var(argv[i], &equalsign[1], env, tools);
+					// TODO*/
+					equalsign[0] = '='; // unnullterm
+				}
+				else
+					break ;
+				i++;
+			}
+			if (!argv[i] || !argv[i][0])
+			{
+				print_tab(tools->env);
+				exit(0);
+			}
+			tools->line = argv[i];
+			clean_line(tools->line, ft_strlen(tools->line), tools);
+			if (!tools->cleanline)
+				print_errno_exit(NULL, NULL, errno, tools);
+			if (!parseline(tools->cleanline, tools))
+				exit(errno);
+			running_msh(tools);
+			clean_tools(tools);
+			exit(0);
+		}
+		waitpid(pid, &status, 0);
+		check_system_fail(status, tools);
+	}
+	return (1);
+}
+
+int	passcheck(char *start, long int lim)
+{
+	long int	i;
+
+	i = 0;
+	while (i < lim)
+	{
+		if (ft_isspace(start[i]) || isquote(start[i]))
+			return (0);
+		i++;
+	}
+	return (1);
+}
+
+/*UNFINISHED*/
+int	append_var(char *key, char *value, char **env, t_tools *tools)
+{
+	int		i;
+	char	*newvar;
+
+	newvar = NULL;
+	i = 0;
+	while (env[i])
+		i++;
+	if (i >= tools->env_len - 1)
+		copy_env(tools, env); // adds MAXARGS
+	newvar = ft_join_one(key, "=", value);
+	if (!newvar)
+		return (0);
+	tools->env[i] = newvar;
+	// has to be via tools in case of new env allocation
+	return (1);
+}
+
+int	replace_or_append_var(char *key, char *value, char **env, t_tools *tools)
+{
+	int		i;
+	char	*temp;
+	char	*newvar;
+	bool	found;
+
+	found = 0;
+	i = 1;
+	if (!key)
+		return (0);
+	while (env[i])
+	{
+		/*if we find the var value*/
+		if (get_var_value(env, key))
+		{
+			found = true;
+			temp = env[i];
+			newvar = ft_join_one(key, "=", value);
+			if (!newvar)
+				return (0);
+			free(temp);
+			env[i] = newvar;
+		}
+		i++;
+	}
+	if (!found)
+		if (!append_var(key, value, env, tools))
+			return (0);
+	return (1);
+}
 int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
 	if (get_matrix_len(cmd->argv) > 1)
