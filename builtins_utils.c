@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/24 19:02:34 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 20:36:44 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,8 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 		a = cd(cmd->argv, tool->env, tool);
 	else if (ft_strncmp(cmd->argv[0], PWD, 4) == 0)
 		a = pwd(cmd);
-	// else if (ft_strncmp(cmd->argv[0], EXPORT, 7) == 0)
-	// 	a = export(cmd, tool);
+	else if (ft_strncmp(cmd->argv[0], EXPORT, 7) == 0)
+		a = export(cmd, tool);
 	else if (ft_strncmp(cmd->argv[0], UNSET, 6) == 0)
 		a = unset(cmd, tool);
 	// else if (ft_strncmp(cmd->argv[0], ENV, 4) == 0)
@@ -93,9 +93,9 @@ int	append_var(char *key, char *value, char **env, t_tools *tools)
 
 	newvar = NULL;
 	i = 0;
-	while (env[i])
-		i++;
-
+	// while (env[i])
+	// 	i++;
+	i = get_matrix_len(env);
 	if (i >= tools->env_len - 1)
 		copy_env(tools, env); // adds MAXARGS
 	newvar = ft_join_one(key, "=", value);

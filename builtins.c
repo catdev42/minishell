@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/24 18:33:03 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 20:51:13 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -177,26 +177,126 @@ int	pwd(t_execcmd *cmd)
 	return (1);
 }
 
-// int	syntax_check_export(char *argv, t_tools *tool)
-// {
-// 	int	i;
+int	key_syntax_export(char *argv)
+{
+	int	i;
 
-// 	i = 0;
-// 	if (argv[0] == '=')
-// 	{
-// 		print_error("export", "not a valid identifier", argv);
-// 		return (1);
-// 	}
-// 	while (argv[i])
-// 	{
-// 		if (argv[i] == '=')
-// 		{
-// 			if (argv[i-1] == ' ')
-// 			{
-// 				print_error("export", "not a valid identifier", argv);
-// 				return (1);
-// 			}
-// 		}
-// 	}
+	if (!argv)
+		return (0);
+	i = 0;
+	if (argv[0] == '=')
+	{
+		print_error("export", "not a valid identifier", argv);
+		return (0);
+	}
+	while (argv[i] && argv[i] != '=')
+	{
+		if (!isalpha(argv[i]))
+		{
+			print_error("export", "not a valid identifier", argv);
+			return (0);
+		}
+		i++;
+	}
+	return (1);
+}
 
-// }
+char	*get_key(char *argv)
+{
+	int		i;
+	int		len;
+	char	*key;
+
+	if (!argv)
+		return (NULL);
+	if (!key_syntax_export(argv))
+		return (NULL);
+	i = 0;
+	while (argv[i] && argv[i] != '=')
+		i++;
+	len = i + 1;
+	key = ft_calloc(len + 1, sizeof(char));
+	if (!key)
+		return (NULL);
+	i = 0;
+	while (i < len)
+	{
+		key[i] = argv[i];
+		i++;
+	}
+	key[i] = '\0';
+	return (key);
+}
+
+int	print_export(char **env)
+{
+	int		i;
+	char	*key;
+	char	*value;
+
+	if (!env)
+		return (1);
+	key = NULL;
+	value = NULL;
+	i = 0;
+	while (env[i])
+	{
+		if (env[i][0] == '_')
+		{
+			i++;
+			break ;
+		}
+		key = get_key(env[i]);
+		if (!key)
+			return (1);
+		value = ft_strchr(env[i], '=');
+		if (!value)
+		{
+			free(key);
+			return (1);
+		}
+		value++;
+		ft_putstr_fd("declar -x ", 1);
+		ft_putstr_fd(key, 1);
+		ft_putstr_fd("=", 1);
+		ft_putstr_fd("\"", 1);
+		ft_putstr_fd(value, 1);
+		ft_putstr_fd("\"\n", 1);
+	}
+	return (0);
+}
+
+int	export(t_execcmd *cmd, t_tools *tool)
+{
+	int		i;
+	char	*key;
+	char	*value;
+
+	if (!cmd || !cmd->argv[0])
+		return (1);
+	if (get_matrix_len(cmd->argv) == 1)
+		return (print_export(tool->env));
+	i = 1;
+	key = NULL;
+	value = NULL;
+	while (cmd->argv[i++])
+	{
+		key = get_key(cmd->argv[i]);
+		if (!key)
+			return (1);
+		value = ft_strchr(cmd->argv[i], '=');
+		if (!value)
+		{
+			free(key);
+			return (1);
+		}
+		value++;
+		if (!replace_or_append_var(key, value, tool->env, tool))
+		{
+			free(key);
+			return (1);
+		}
+		free(key); // key=NULL:
+	}
+	return (0);
+}

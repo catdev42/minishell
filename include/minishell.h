@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/24 19:02:10 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 20:37:03 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int				pwd(t_execcmd *cmd);
 int				ft_exit(t_execcmd *cmd, t_tools *tool);
 // int				env(t_execcmd *cmd, t_tools *tool);
 int				unset(t_execcmd *cmd, t_tools *tool);
-// int				export(t_execcmd *cmd, t_tools *tool);
+int				export(t_execcmd *cmd, t_tools *tool);
 // int				cd(t_execcmd *cmd, t_tools *tool);
 int				echo(t_execcmd *cmd);
 int				builtin_check_walk(t_cmd *cmd);

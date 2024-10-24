@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/24 19:00:25 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:51:03 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	passcheck(char *start, long int lim)
 	i = 0;
 	while (i < lim)
 	{
-		if (ft_isspace(start[i]) || isquote(start[i]) || ft_strchr("*&|<>?", start[i]))
+		if (ft_isspace(start[i]) || isquote(start[i]) || ft_strchr("*&|<>?(){}[]", start[i]))
 			return (0);
 		i++;
 	}
