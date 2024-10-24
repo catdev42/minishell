@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:07:28 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/15 10:36:05 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:19:48 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ char	*clean_line(char *line, int linelen, t_tools *tools)
 			c_line[j++] = line[i++];
 		j = ft_strlen(c_line);
 	}
-	remove_useless_quotes(tools->cleanline);
+	// remove_useless_quotes(tools->cleanline);
 	return (c_line);
 }
 

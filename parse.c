@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 00:42:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/24 17:49:58 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:20:50 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,9 +160,9 @@ static void	remove_useless_quotes_final(char *cline, size_t linecapacity)
 	size_t	i;
 	char	quotechar;
 	char	*firstquote;
-	bool	removequotes;
+	// bool	removequotes;
 
-	removequotes = 0;
+	// removequotes = 0;
 	i = 0;
 	while (i < linecapacity)
 	{
@@ -175,11 +175,11 @@ static void	remove_useless_quotes_final(char *cline, size_t linecapacity)
 			i++;
 			while (cline[i] && cline[i] != quotechar)
 			{
-				if (ft_isspace(cline[i]) || istoken(cline[i]))
-					removequotes = 1;
+				// if (ft_isspace(cline[i]) || istoken(cline[i]))
+				// 	removequotes = 1;
 				i++;
 			}
-			if (cline[i] && removequotes && cline[i] == quotechar)
+			if (cline[i]&& cline[i] == quotechar) // && removequotes 
 				i -= remove_two(firstquote, &cline[i]);
 		}
 		i++;
