@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/24 18:05:32 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:02:10 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ int				passcheck(char *start, long int lim);
 int				replace_or_append_var(char *key, char *value, char **env,
 					t_tools *tools);
 int				append_var(char *key, char *value, char **env, t_tools *tools);
-
+int				env(char **argv, char **env, t_tools *tools);
 /*TESTERS*/
 void			walking(struct s_cmd *cmd);
 

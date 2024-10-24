@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/23 19:38:50 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:02:34 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,4 +83,57 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 		a = ft_exit(cmd, tool);
 	tool->exit_code = a;
 	return (a);
+}
+
+/*UNFINISHED*/
+int	append_var(char *key, char *value, char **env, t_tools *tools)
+{
+	int		i;
+	char	*newvar;
+
+	newvar = NULL;
+	i = 0;
+	while (env[i])
+		i++;
+
+	if (i >= tools->env_len - 1)
+		copy_env(tools, env); // adds MAXARGS
+	newvar = ft_join_one(key, "=", value);
+	if (!newvar)
+		return (0);
+	tools->env[i] = newvar;
+	// has to be via tools in case of new env allocation
+	return (1);
+}
+
+int	replace_or_append_var(char *key, char *value, char **env, t_tools *tools)
+{
+	int		i;
+	char	*temp;
+	char	*newvar;
+	bool	found;
+
+	found = 0;
+	i = 1;
+	if (!key)
+		return (0);
+	while (env[i])
+	{
+		/*if we find the var value*/
+		if (get_var_value(env, key))
+		{
+			found = true;
+			temp = env[i];
+			newvar = ft_join_one(key, "=", value);
+			if (!newvar)
+				return (0);
+			free(temp);
+			env[i] = newvar;
+		}
+		i++;
+	}
+	if (!found)
+		if (!append_var(key, value, env, tools))
+			return (0);
+	return (1);
 }
