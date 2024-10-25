@@ -6,12 +6,15 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 11:35:48 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 12:28:56 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+
+extern volatile sig_atomic_t	global_signal = 0; // delete?
 
 # include <stdbool.h>
 # include <stdio.h>
