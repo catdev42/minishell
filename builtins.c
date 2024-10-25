@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/25 07:50:15 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/25 19:28:04 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -223,7 +223,7 @@ char	*get_key(char *argv, int syn_io)
 	if (!key)
 		return (NULL);
 	i = 0;
-	while (i < len)
+	while (i < len - 1)
 	{
 		key[i] = argv[i];
 		i++;
@@ -260,9 +260,9 @@ int	print_export(char **env)
 			return (1);
 		}
 		value++;
-		ft_putstr_fd("declar -x ", 1);
+		ft_putstr_fd("declare -x ", 1);
 		ft_putstr_fd(key, 1);
-		//ft_putstr_fd("=", 1);
+		// ft_putstr_fd("=", 1);
 		ft_putstr_fd("\"", 1);
 		ft_putstr_fd(value, 1);
 		ft_putstr_fd("\"\n", 1);
@@ -279,12 +279,13 @@ int	export(t_execcmd *cmd, t_tools *tool)
 
 	if (!cmd || !cmd->argv[0])
 		return (1);
+	printf("argvlen %d\n", get_matrix_len(cmd->argv));
 	if (get_matrix_len(cmd->argv) == 1)
 		return (print_export(tool->env));
 	i = 1;
 	key = NULL;
 	value = NULL;
-	while (cmd->argv[i++])
+	while (cmd->argv[i])
 	{
 		key = get_key(cmd->argv[i], 1);
 		if (!key)
@@ -302,6 +303,7 @@ int	export(t_execcmd *cmd, t_tools *tool)
 			return (1);
 		}
 		free(key); // key=NULL:
+		i++;
 	}
 	return (0);
 }
