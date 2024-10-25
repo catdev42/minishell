@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:00:21 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/22 21:08:05 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 11:56:16 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,19 +80,15 @@ typedef struct s_tools
 
 	struct s_cmd			*tree;
 
+	// pid_t					children[MAXARGS];
+	
 	/* Temporary */
 	char					*s;
 	char					*cmd_end;
 	char					heredocs[MAXARGS][MAXARGS];
 	int						hereindex;
-	// char					*p;
-	// char					*p_next;
-	// char					*r;
-
-	struct s_pipecmd		*lastpipe;
-	// do not free/// it gets freed when tree is cleaned
-	struct s_redircmd		*lastredir;
-	// do not free/// it gets freed when tree is cleaned
+	struct s_pipecmd *lastpipe;   // just set to null
+	struct s_redircmd *lastredir; // just set to null
 }							t_tools;
 
 #endif

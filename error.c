@@ -18,34 +18,11 @@
 #include "./include/minishell.h"
 
 /* A GOOD EXIT */
-void	goodexit(t_tools *tools)
+void	good_exit(t_tools *tools)
 {
 	clean_tools(tools);
 	exit(0);
 }
-
-/*
-ERROR PATHS (please read): me
-Parsing:
-	if system error
-		then exit (with cleaning)
-	else
-		return 0 in all functions (except
-			-1 in mode finding (MOVE TO EXECUTION))
-Execution (FORKS)
-		Print error and exit with errno
-		Waitpid catches the error, analyses to see if System Failure
-
-		If CRITICAL ERROR
-			(Progrvoid	goodexit(tools)
-{
-	clean_tools(tools);
-	exit(0);
-}
-am should exit immediately as oppposed to just terminate one fork and keep going)
-		else if just some error in a fork (like command not found)
-			terminate just that fork, keep going with the program
-*/
 
 /* FOR MAIN PROCESS
 Input NULL or what to print in the 3 prositions:
@@ -115,19 +92,16 @@ int	print_errno_exit(const char *arg, const char *errline, int custom_fail,
 }
 /*ABOVE: work in progress - when do we exit errno and when do we just exit 1?*/
 
-/*
-FOR EXITING!
-0: CTRL D or EXIT SUCCESS
-1: malloc
-3: just exit(1) nothing printed
-*/
-//TODO change all error exit in parsing part to 1
+/*NO SUCCESSFULL EXIT: -1 r 0 will exit with errno ***USE goodexit
+NO PRINTING: use print_errno_exit */
 void	error_exit(t_tools *tools, int error)
 {
 	clean_tools(tools);
 	clear_history();
-	if (error == 0) // sucessful exit
-		exit(0);
+	if (error = -1 || error == 0)
+		exit(errno);
+	// if (error == 0) // sucessful exit
+	// 	exit(0);
 	else if (error >= 141 && error <= 143)
 	{
 		exit(error);
@@ -137,7 +111,7 @@ void	error_exit(t_tools *tools, int error)
 	else if (error > 1)
 	{
 		// usually malloc error.... this need to be edited and replaces with errno exits...
-		print_error(NULL, strerror(error), NULL);
+		// print_error(NULL, strerror(error), NULL);
 		exit(error);
 	}
 	else
@@ -153,28 +127,37 @@ void	clean_tools(t_tools *tools)
 	// its not allocated...
 }
 
-struct s_cmd	*clean_execs(struct s_cmd *first, struct s_cmd *second)
+struct s_cmd	*clean_two(struct s_cmd *first, struct s_cmd *second)
 {
-	struct s_redircmd	*rcmd;
-
 	if (first)
-	{
-		if (first->type == REDIR)
-		{
-			rcmd = (struct s_redircmd *)first;
-			free(rcmd);
-		}
-	}
+		tree_free(first);
 	if (second)
-	{
-		if (first->type == REDIR)
-		{
-			rcmd = (struct s_redircmd *)second;
-			free(rcmd);
-		}
-	}
+		tree_free(second);
 	return (NULL);
 }
+
+/*
+ERROR PATHS (please read): me
+Parsing:
+	if system error
+		then exit (with cleaning)
+	else
+		return 0 in all functions (except
+			-1 in mode finding (MOVE TO EXECUTION))
+Execution (FORKS)
+		Print error and exit with errno
+		Waitpid catches the error, analyses to see if System Failure
+
+		If CRITICAL ERROR
+			(Progrvoid	goodexit(tools)
+{
+	clean_tools(tools);
+	exit(0);
+}
+am should exit immediately as oppposed to just terminate one fork and keep going)
+		else if just some error in a fork (like command not found)
+			terminate just that fork, keep going with the program
+*/
 
 /*
 // ft_freetab in library
