@@ -3,15 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/24 20:37:03 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/25 20:05:41 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef MINISHELL_H
 # define MINISHELL_H
+
+
+extern volatile sig_atomic_t	global_signal = 0; // delete?
 
 # include <stdbool.h>
 # include <stdio.h>
@@ -22,6 +25,7 @@
 # include "../libft/libft.h"
 # include "builtins.h"
 # include "structs.h"
+# include "exits.h"
 # include <errno.h>
 # include <fcntl.h>
 # include <signal.h>
@@ -78,11 +82,7 @@ int				cd(char **argv, char **env, t_tools *tools);
 char			*ft_join_one(char const *s1, char const *delim, char const *s2);
 int				replace_var(char *key, char *value, char **env);
 
-/************************/
-/******* CLEAN.C ********/
-/************************/
-void			reset_tools(t_tools *tools);
-void			tree_free(struct s_cmd *node);
+
 
 /************************/
 /*******  ENV.C  ********/
@@ -91,17 +91,7 @@ int				copy_env(t_tools *tools, char **env);
 char			*get_var_value(char **env, char *var);
 // char	*get_env_var(t_tools *tools, char *var);
 
-/************************/
-/******* ERROR.C ********/
-/************************/
-int				print_errno_exit(const char *arg, const char *errline,
-					int custom_fail, t_tools *tools);
-void			error_exit(t_tools *tools, int error);
-struct s_cmd	*clean_execs(struct s_cmd *first, struct s_cmd *second);
-void			clean_tools(t_tools *tools);
-int				print_error(const char *arg, const char *errline,
-					const char *errarg);
-/*char			**free_array(char **res, int nb);*/
+
 
 /************************/
 /********* EXEC *********/

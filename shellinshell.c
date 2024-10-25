@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:09:25 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/24 19:31:23 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 16:08:40 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ void	change_shlvl(t_tools *tool)
 // function still needs to be finished
 // myakoven Renaming to exec_new_minishell
 void	exec_new_minishell(t_tools *tool, t_execcmd *ecmd)
-{
+{	
 	if (get_matrix_len(ecmd->argv) > 1)
 		print_errno_exit(NULL, "too many arguments", 141, tool);
 	{

@@ -31,7 +31,10 @@ int	running_msh(t_tools *tools)
 		if (pid == -1)
 			print_errno_exit(NULL, NULL, 0, tools); // myakoven system fail
 		if (pid == 0)
+		{
+			tools->sa.sa_handler = SIG_DFL; //NEW TODO
 			handle_node(tools->tree, tools);
+		}
 		waitpid(pid, &status, 0);
 		check_system_fail(status, tools); // maykoven this also exits
 	}

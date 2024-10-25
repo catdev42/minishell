@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/25 07:37:50 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/25 20:04:43 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,33 +18,49 @@
 
 	* in main status errno is caught and we need to determine to close the whole program or not
  */
-void	check_system_fail(int status, t_tools *tools)
+void	check_system_fail(int status, t_tools *tools, bool inmain)
 {
 	int	sig;
 
 	if (WIFEXITED(status))
 	{
-		tools->exit_code = WEXITSTATUS(status);
-		if (tools->exit_code == ENOMEM || tools->exit_code == EPIPE
-			|| tools->exit_code == EMFILE || tools->exit_code == EACCES
-			|| tools->exit_code == ENOENT || tools->exit_code == EINVAL
-			|| tools->exit_code == EAGAIN || tools->exit_code == EINTR)
-		{
+		sig = WEXITSTATUS(status);
+		tools->exit_code = sig;
+		if (inmain && sig == 142)
+			error_exit(tools, 1);
+		
+		else if (sig == SYSTEMFAIL || sig == ENOMEM || sig == EPIPE
+			|| sig == EMFILE || sig == EBADF || sig == EFAULT || sig == ENOSPC
+			|| sig == EIO || sig == ENODEV)
 			error_exit(tools, tools->exit_code);
-		}
-		if (tools->exit_code == SYSTEMFAIL)
-			error_exit(tools, tools->exit_code); // where is it catched and interpreted
+		else
+			return ;
+		// where is it catched and interprete
+		/* MYAKOVEN: we are just figuring out if we
+		need to just set exit_code or exit the entire program
+		removed:
+		|| sig == EACCES || tools->exit_code == ENOENT || sig == EINVAL
+			|| sig == EAGAIN || sig == EINTR
+		NOT CRITICAL ERRORS
+		*/
 	}
 	else if (WIFSIGNALED(status))
 	{
 		sig = WTERMSIG(status);
-		if (sig == SIGSEGV || sig == SIGBUS || sig == SIGFPE || sig == SIGILL
-			|| sig == SIGABRT || sig == SIGKILL || sig == SIGSYS)
+		tools->exit_code = sig;
+		if (sig == SIGKILL)
+			return ;
+		else if (sig == SIGSEGV || sig == SIGBUS || sig == SIGFPE
+			|| sig == SIGILL || sig == SIGABRT || sig == SIGSYS)
+		{
 			tools->exit_code = sig + 128;
-		error_exit(tools, sig + 128);
+			error_exit(tools, sig + 128);
+		}
 	}
 	else
-		exit(0); // temporary?
+		return ;
+	/*we dont exit unless the above, this is just an exra catcher for compiler
+		*/// exit(0); // temporary?
 }
 
 /*

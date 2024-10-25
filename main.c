@@ -3,22 +3,22 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 17:32:41 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/25 20:05:33 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
+#include <signal.h>
 
-volatile sig_atomic_t	global_signal = 0;
+// volatile sig_atomic_t	global_signal = 0; // delete?
 
 int	main(int argc, char **argv, char **env)
 {
 	t_tools	tools;
 
-	// struct sigaction	sa;
 	if (argc > 1 || argv[1])
 		ft_putstr_fd("This program does not accept arguments\n", 2);
 	ft_memset(&tools, 0, sizeof(t_tools)); // init tools to zero
@@ -26,7 +26,7 @@ int	main(int argc, char **argv, char **env)
 	copy_env(&tools, env);
 	if (!tools.env || !tools.heredocs[0][0])
 		(error_exit(&tools, 1));
-	// init_sa(&sa);
+	init_sa(&tools.sa);
 	shell_loop(&tools);
 	return (0);
 }
@@ -35,10 +35,19 @@ int	shell_loop(t_tools *tools)
 {
 	while (1)
 	{
-		// if (global_signal == SIGTERM) // TODO? or done
-		// 	break ;
+		tools->sa.sa_handler = handle_signals;
+		if (global_signal == SIGTERM) // TODO? or done
+			break ;
 		tools->line = readline("minishell: ");
-		global_signal = 0;
+		// global_signal = 0;
+		if (!tools->line || global_signal == SIGTERM)
+			ft_exit(NULL, tools);
+		if (global_signal)
+			tools->exit_code = global_signal + 128;
+		tools->sa.sa_handler = SIG_DFL;
+		/*TODO there has to be a way to call the exit function
+		eithout a command struct
+		*/
 		if (!valid_line(tools->line))
 			continue ;
 		add_history(tools->line);
@@ -82,35 +91,3 @@ int	shell_loop(t_tools *tools)
 // 			error_exit(tools, 0);
 // 	}
 // }
-
-void	new_line(void)
-{
-	printf("\n");
-	rl_on_new_line();
-	rl_replace_line("", 0);
-	rl_redisplay();
-}
-
-void	handle_signals(int sig)
-{
-	if (sig == SIGINT)
-	{
-		new_line();
-		global_signal = SIGINT;
-	}
-	else if (sig == SIGTERM)
-		global_signal = SIGTERM;
-}
-
-void	init_sa(struct sigaction *sa)
-{
-	sa->sa_handler = handle_signals;
-	sigemptyset(&sa->sa_mask);
-	sa->sa_flags = 0;
-	if (sigaction(SIGINT, sa, NULL) == -1)
-	{
-		global_signal = SIGINT;
-		perror("sigaction");
-		exit(1);
-	}
-}

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 00:42:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/24 19:20:50 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 16:09:38 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ struct s_cmd	*parseline(char *cline, t_tools *tools)
 		{
 			right = parseexec(tools->s, tools->e_cline, tools);
 			if (!right)
-				return (clean_execs(left, NULL));
+				return (clean_two(left, NULL));
 			// ERROR MANAGEMENT:
 			// (print error message in parseexec(),
 			// give cursor to user in loop)
@@ -68,7 +68,7 @@ struct s_cmd	*createpipe(struct s_cmd *left, struct s_cmd *right,
 		tools->lastpipe = (struct s_pipecmd *)makepipe(left, right);
 	if (!tools->lastpipe)
 	{
-		clean_execs(left, right);
+		clean_two(left, right);
 		error_exit(tools, 1); // EXITS ENTIRE PROGRAM ON ALLOCATION ERROR!
 	}
 	if (!tools->tree)
@@ -100,7 +100,7 @@ char	*peek(char *line, char *end, int token)
 				break ;
 			}
 		}
-		i++;
+		i++; // TODO test SIGNAL HANDLER command
 	}
 	return (tokenaddress);
 }
@@ -160,8 +160,8 @@ static void	remove_useless_quotes_final(char *cline, size_t linecapacity)
 	size_t	i;
 	char	quotechar;
 	char	*firstquote;
-	// bool	removequotes;
 
+	// bool	removequotes;
 	// removequotes = 0;
 	i = 0;
 	while (i < linecapacity)
@@ -179,7 +179,7 @@ static void	remove_useless_quotes_final(char *cline, size_t linecapacity)
 				// 	removequotes = 1;
 				i++;
 			}
-			if (cline[i]&& cline[i] == quotechar) // && removequotes 
+			if (cline[i] && cline[i] == quotechar) // && removequotes
 				i -= remove_two(firstquote, &cline[i]);
 		}
 		i++;

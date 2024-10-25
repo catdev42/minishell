@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/25 19:28:04 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/25 20:04:25 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -150,7 +150,7 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 	if (get_matrix_len(cmd->argv) > 1)
 		print_error(NULL, "too many arguments", NULL);
 	// maybe a little nonsensical
-	tree_free(tool->tree);
+	// tree_free(tool->tree); //clean tools does this...
 	clean_tools(tool);
 	exit(0);
 }
