@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/24 20:51:13 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/25 07:50:15 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -158,9 +158,7 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 int	pwd(t_execcmd *cmd)
 {
 	char	*cwd;
-	size_t	i;
 
-	i = 0;
 	cwd = NULL;
 	if (get_matrix_len(cmd->argv) > 1)
 		ft_putstr_fd("pwd: too many arguments\n", 2);
@@ -201,7 +199,10 @@ int	key_syntax_export(char *argv)
 	return (1);
 }
 
-char	*get_key(char *argv)
+/* gets the variable name. checks the syntax of the var name
+only if get key is not called for printing. syn_io is set to 0 for printing
+1 for non-printing */
+char	*get_key(char *argv, int syn_io)
 {
 	int		i;
 	int		len;
@@ -209,8 +210,11 @@ char	*get_key(char *argv)
 
 	if (!argv)
 		return (NULL);
-	if (!key_syntax_export(argv))
-		return (NULL);
+	if (syn_io == 1)
+	{
+		if (!key_syntax_export(argv))
+			return (NULL);
+	}
 	i = 0;
 	while (argv[i] && argv[i] != '=')
 		i++;
@@ -246,7 +250,7 @@ int	print_export(char **env)
 			i++;
 			break ;
 		}
-		key = get_key(env[i]);
+		key = get_key(env[i], 0);
 		if (!key)
 			return (1);
 		value = ft_strchr(env[i], '=');
@@ -258,10 +262,11 @@ int	print_export(char **env)
 		value++;
 		ft_putstr_fd("declar -x ", 1);
 		ft_putstr_fd(key, 1);
-		ft_putstr_fd("=", 1);
+		//ft_putstr_fd("=", 1);
 		ft_putstr_fd("\"", 1);
 		ft_putstr_fd(value, 1);
 		ft_putstr_fd("\"\n", 1);
+		i++;
 	}
 	return (0);
 }
@@ -281,7 +286,7 @@ int	export(t_execcmd *cmd, t_tools *tool)
 	value = NULL;
 	while (cmd->argv[i++])
 	{
-		key = get_key(cmd->argv[i]);
+		key = get_key(cmd->argv[i], 1);
 		if (!key)
 			return (1);
 		value = ft_strchr(cmd->argv[i], '=');

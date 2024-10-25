@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redir_exec.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/24 19:17:52 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 07:39:03 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,10 +33,10 @@ struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 	int				fd_in_or_out;
 	int				mode;
 	struct s_cmd	*ret;
-	int				i;
+	//int				i;
 
 	ret = NULL;
-	i = 0;
+	//i = 0;
 	while (*start && start < end_of_exec)
 	{
 		mode = -1;

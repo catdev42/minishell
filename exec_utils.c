@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/23 19:51:56 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 07:37:50 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,6 @@ int	file_dir_noexist(const char *path, int fd_in_or_out)
 int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
 // took the tools out cause not used
 {
-	char *filepath;
 	int fileordir;
 
 	if (!rcmd || fd_in_or_out < 0)
@@ -97,7 +96,7 @@ int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
 	if (fileordir == 0)
 		return (-1);
 	if (fileordir == 2 && rcmd->fd == 1) // directory, outfile
-		print_error(filepath, "Is a directory", NULL);
+		print_error(rcmd->file, "Is a directory", NULL);
 	if (fileordir == 1 && rcmd->append && rcmd->fd == 1)
 		// reg file (not a directory), append, outfile
 		// I HAVE TO ADDRESS APPEND IN REDIR CREATION (myakoven)
