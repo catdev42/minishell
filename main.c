@@ -6,29 +6,28 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 20:29:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 21:18:27 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
-#include <signal.h>
 
-// volatile sig_atomic_t	global_signal = 0; // delete?
+volatile sig_atomic_t	global_signal = 0; // delete?
 
 int	main(int argc, char **argv, char **env)
 {
 	t_tools				tools;
 	struct sigaction	sa;
 
-	tools.sa = &sa;
 	if (argc > 1 || argv[1])
 		ft_putstr_fd("This program does not accept arguments\n", 2);
 	ft_memset(&tools, 0, sizeof(t_tools)); // init tools to zero
+	tools.sa = &sa;
 	here_init(tools.heredocs, &tools);
 	copy_env(&tools, env);
 	if (!tools.env || !tools.heredocs[0][0])
 		(error_exit(&tools, 1));
-	init_sa(tools.sa); //chat says this is wrong
+	init_sa(tools.sa); // chat says this is wrong
 	shell_loop(&tools);
 	return (0);
 }

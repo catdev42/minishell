@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/25 20:41:30 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 21:25:00 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -147,10 +147,19 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 
 int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
-	if (get_matrix_len(cmd->argv) > 1)
-		print_error(NULL, "too many arguments", NULL);
-	// maybe a little nonsensical
-	// tree_free(tool->tree); //clean tools does this...
+	/*if we have parsed because it was abn exit command*/
+	/*We should check args atoll*/
+	if (cmd)
+	{
+		if (get_matrix_len(cmd->argv) > 1)
+			print_error(NULL, "too many arguments", NULL);
+		// maybe a little nonsensical
+		// tree_free(tool->tree); //clean tools does this...
+	}
+	/* If we are here before any tree has been created then we dont do the error thing
+	not parsed yes*/
+	
+		
 	clean_tools(tool);
 	exit(0);
 }
@@ -276,6 +285,7 @@ int	export(t_execcmd *cmd, t_tools *tool)
 	int		i;
 	char	*key;
 	char	*value;
+
 	if (!cmd || !cmd->argv[0])
 		return (1);
 	printf("argvlen %d\n", get_matrix_len(cmd->argv));

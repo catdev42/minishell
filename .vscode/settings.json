@@ -2,6 +2,7 @@
     "files.associations": {
         "type_traits": "c",
         "minishell.h": "c",
-        "readline.h": "c"
+        "readline.h": "c",
+        "structs.h": "c"
     }
 }
