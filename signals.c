@@ -6,12 +6,11 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 12:31:20 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 17:41:23 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
-
 
 void	new_line(void)
 {
@@ -23,16 +22,16 @@ void	new_line(void)
 
 void	handle_signals(int sig)
 {
-    global_signal = sig;
-	// if (sig == SIGINT)
-	// {
-	// 	// new_line();
-	// 	global_signal = SIGINT;
-	// }
-	// else if (sig == SIGTERM)
-	// 	global_signal = SIGTERM;
+	if (sig == SIGINT)
+	{
+		new_line();
+		global_signal = SIGINT;
+	}
+	else if (sig == SIGTERM)
+		global_signal = SIGTERM;
+	else
+		global_signal = sig;
 }
-
 
 void	init_sa(struct sigaction *sa)
 {
@@ -46,3 +45,5 @@ void	init_sa(struct sigaction *sa)
 		exit(1);
 	}
 }
+
+void	init_child_signals(void)

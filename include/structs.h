@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:00:21 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 15:38:23 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:44:37 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -66,7 +66,7 @@ typedef struct s_cmd		t_cmd;
 
 typedef struct s_tools
 {
-	struct sigaction		sa;
+	struct sigaction		sa; //its not an error
 
 	char					**env;
 	int						env_len;

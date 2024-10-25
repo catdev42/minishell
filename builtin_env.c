@@ -6,19 +6,20 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/24 19:23:19 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 15:58:23 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
 /* DRAFT OF ENV: Unchecked */
-int	env(char **argv, char **env, t_tools *tools)
+int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 {
 	pid_t	pid;
 	size_t	i;
 	char	*equalsign;
 	int		status;
+	int		j;
 
 	equalsign = NULL;
 	if (get_matrix_len(argv) == 1)
@@ -29,7 +30,7 @@ int	env(char **argv, char **env, t_tools *tools)
 		if (pid == 0)
 		{
 			i = 0;
-			while (argv[i]) // assign env variables
+			while (ecmd->argv[i]) // assign env variables
 			{
 				equalsign = ft_strchr(argv[i], '=');
 				if (equalsign && passcheck(argv[i], (long int)(equalsign
@@ -48,16 +49,10 @@ int	env(char **argv, char **env, t_tools *tools)
 				print_tab(tools->env);
 				exit(0);
 			}
-            // line = ft_join(&argv[i])
-            // struct s_execcmd* cmd; 
-            argv =  &argv[i];
-			tools->line = argv[i];
-			clean_line(tools->line, ft_strlen(tools->line), tools);
-			if (!tools->cleanline)
-				print_errno_exit(NULL, NULL, errno, tools);
-			if (!parseline(tools->cleanline, tools))
-				exit(errno);
-			running_msh(tools);
+			j = i - 1;
+			while (++j < MAXARGS)
+				ft_memcpy(*argv[j - i], *argv[j], sizeof(*argv));
+			handle_node(ecmd, tools);
 			clean_tools(tools);
 			exit(0);
 		}
@@ -74,7 +69,8 @@ int	passcheck(char *start, long int lim)
 	i = 0;
 	while (i < lim)
 	{
-		if (ft_isspace(start[i]) || isquote(start[i]) || ft_strchr("*&|<>?{}()[]", start[i]))
+		if (ft_isspace(start[i]) || isquote(start[i])
+			|| ft_strchr("*&|<>?{}()[]", start[i]))
 			return (0);
 		i++;
 	}

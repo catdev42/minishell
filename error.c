@@ -94,28 +94,33 @@ int	print_errno_exit(const char *arg, const char *errline, int custom_fail,
 
 /*NO SUCCESSFULL EXIT: -1 r 0 will exit with errno ***USE goodexit
 NO PRINTING: use print_errno_exit */
+
+/*PUT "errno" in error field
+UNLESS you specifically need to exit 1, in which case...put "1"
+EXTRA (if you put -1 ot 0, will return errno as a catch all)
+*/
+// TODO should put malloc errors etc
 void	error_exit(t_tools *tools, int error)
 {
 	clean_tools(tools);
 	clear_history();
 	if (error = -1 || error == 0)
 		exit(errno);
-	// if (error == 0) // sucessful exit
-	// 	exit(0);
-	else if (error >= 141 && error <= 143)
-	{
-		exit(error);
-	}
-	else if (error == 1)
-		exit(1);
 	else if (error > 1)
-	{
-		// usually malloc error.... this need to be edited and replaces with errno exits...
-		// print_error(NULL, strerror(error), NULL);
 		exit(error);
+	else if (error == 1) // if we need to exit specifically with 1
+	{
+		perror("msh"); //will print the error message with errno
+		exit(1);
 	}
 	else
 		exit(1);
+	// if (error == 0) // sucessful exit
+	// 	exit(0);
+	// else if (error >= 141 && error <= 143)
+	// {
+	// 	exit(error);
+	// }
 }
 
 void	clean_tools(t_tools *tools)

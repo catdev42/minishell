@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 00:42:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 11:24:25 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 16:09:38 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ char	*peek(char *line, char *end, int token)
 				break ;
 			}
 		}
-		i++; // TODO test exit command
+		i++; // TODO test SIGNAL HANDLER command
 	}
 	return (tokenaddress);
 }
