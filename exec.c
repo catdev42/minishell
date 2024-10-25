@@ -32,11 +32,11 @@ int	running_msh(t_tools *tools)
 			print_errno_exit(NULL, NULL, 0, tools); // myakoven system fail
 		if (pid == 0)
 		{
-			tools->sa.sa_handler = SIG_DFL; //NEW TODO
+			tools->sa->sa_handler = SIG_DFL; // NEW TODO
 			handle_node(tools->tree, tools);
 		}
 		waitpid(pid, &status, 0);
-		check_system_fail(status, tools); // maykoven this also exits
+		check_system_fail(status, tools, 0); // maykoven this also exits
 	}
 	else
 	{
@@ -112,9 +112,9 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 	close(pipefd[1]);
 	close(pipefd[0]);
 	waitpid(pid1, &status1, 0);
-	check_system_fail(status1, tools);
+	check_system_fail(status1, tools, 0);
 	waitpid(pid2, &status2, 0);
-	check_system_fail(status2, tools);
+	check_system_fail(status2, tools, 0);
 }
 
 // maybe open dir w/ opendir

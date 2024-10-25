@@ -6,12 +6,13 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:00:21 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 15:44:37 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 20:27:37 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
+extern volatile sig_atomic_t global_signal; // TODO
 
 # include "./minishell.h"
 
@@ -66,7 +67,7 @@ typedef struct s_cmd		t_cmd;
 
 typedef struct s_tools
 {
-	struct sigaction		sa; //its not an error
+	struct sigaction *sa; // its not an error
 
 	char					**env;
 	int						env_len;

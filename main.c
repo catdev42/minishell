@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 20:05:33 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 20:29:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,8 +17,10 @@
 
 int	main(int argc, char **argv, char **env)
 {
-	t_tools	tools;
+	t_tools				tools;
+	struct sigaction	sa;
 
+	tools.sa = &sa;
 	if (argc > 1 || argv[1])
 		ft_putstr_fd("This program does not accept arguments\n", 2);
 	ft_memset(&tools, 0, sizeof(t_tools)); // init tools to zero
@@ -26,7 +28,7 @@ int	main(int argc, char **argv, char **env)
 	copy_env(&tools, env);
 	if (!tools.env || !tools.heredocs[0][0])
 		(error_exit(&tools, 1));
-	init_sa(&tools.sa);
+	init_sa(tools.sa); //chat says this is wrong
 	shell_loop(&tools);
 	return (0);
 }
@@ -35,7 +37,7 @@ int	shell_loop(t_tools *tools)
 {
 	while (1)
 	{
-		tools->sa.sa_handler = handle_signals;
+		tools->sa->sa_handler = handle_signals;
 		if (global_signal == SIGTERM) // TODO? or done
 			break ;
 		tools->line = readline("minishell: ");
@@ -44,7 +46,7 @@ int	shell_loop(t_tools *tools)
 			ft_exit(NULL, tools);
 		if (global_signal)
 			tools->exit_code = global_signal + 128;
-		tools->sa.sa_handler = SIG_DFL;
+		tools->sa->sa_handler = SIG_DFL;
 		/*TODO there has to be a way to call the exit function
 		eithout a command struct
 		*/

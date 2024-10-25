@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 17:41:23 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 20:24:23 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,4 +46,4 @@ void	init_sa(struct sigaction *sa)
 	}
 }
 
-void	init_child_signals(void)
+// void	init_child_signals(void)

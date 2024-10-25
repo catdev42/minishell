@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/25 20:04:25 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 20:41:30 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -202,21 +202,21 @@ int	key_syntax_export(char *argv)
 /* gets the variable name. checks the syntax of the var name
 only if get key is not called for printing. syn_io is set to 0 for printing
 1 for non-printing */
-char	*get_key(char *argv, int syn_io)
+char	*get_key(char *arg, int syn_io)
 {
 	int		i;
 	int		len;
 	char	*key;
 
-	if (!argv)
+	if (!arg)
 		return (NULL);
 	if (syn_io == 1)
 	{
-		if (!key_syntax_export(argv))
+		if (!key_syntax_export(arg))
 			return (NULL);
 	}
 	i = 0;
-	while (argv[i] && argv[i] != '=')
+	while (arg[i] && arg[i] != '=')
 		i++;
 	len = i + 1;
 	key = ft_calloc(len + 1, sizeof(char));
@@ -225,7 +225,7 @@ char	*get_key(char *argv, int syn_io)
 	i = 0;
 	while (i < len - 1)
 	{
-		key[i] = argv[i];
+		key[i] = arg[i];
 		i++;
 	}
 	key[i] = '\0';
@@ -276,7 +276,6 @@ int	export(t_execcmd *cmd, t_tools *tool)
 	int		i;
 	char	*key;
 	char	*value;
-
 	if (!cmd || !cmd->argv[0])
 		return (1);
 	printf("argvlen %d\n", get_matrix_len(cmd->argv));

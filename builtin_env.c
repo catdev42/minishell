@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/25 20:03:59 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 20:42:13 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,8 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 			while (ecmd->argv[i]) // assign env variables
 			{
 				equalsign = ft_strchr(argv[i], '=');
-				if (equalsign && passcheck(argv[i], (long int)(equalsign
-							- &argv[i][0])))
+				if (equalsign && 
+				passcheck(argv[i], (long int)(equalsign - &argv[i][0])))
 				{
 					equalsign[0] = 0; // nullterm to key
 					replace_or_append_var(argv[i], &equalsign[1], env, tools);
@@ -57,7 +57,7 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 			exit(0);
 		}
 		waitpid(pid, &status, 0);
-		check_system_fail(status, tools);
+		check_system_fail(status, tools, 0);
 	}
 	return (1);
 }

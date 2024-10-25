@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 20:05:41 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/25 20:27:25 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,6 @@
 # define MINISHELL_H
 
 
-extern volatile sig_atomic_t	global_signal = 0; // delete?
 
 # include <stdbool.h>
 # include <stdio.h>
@@ -22,10 +21,7 @@ extern volatile sig_atomic_t	global_signal = 0; // delete?
 # include <readline/history.h>
 # include <readline/readline.h>
 /* Keep on top */
-# include "../libft/libft.h"
-# include "builtins.h"
-# include "structs.h"
-# include "exits.h"
+
 # include <errno.h>
 # include <fcntl.h>
 # include <signal.h>
@@ -35,6 +31,14 @@ extern volatile sig_atomic_t	global_signal = 0; // delete?
 # include <sys/types.h>
 # include <sys/wait.h>
 # include <unistd.h>
+/**/
+// extern volatile sig_atomic_t	global_signal; //TODO
+
+# include "exits.h"
+# include "../libft/libft.h"
+# include "builtins.h"
+# include "structs.h"
+
 
 # define MIDLEN 256
 
@@ -97,7 +101,7 @@ char			*get_var_value(char **env, char *var);
 /********* EXEC *********/
 /************************/
 /*exec_utils*/
-void			check_system_fail(int status, t_tools *tools);
+void			check_system_fail(int status, t_tools *tools, bool inmain);
 void			change_shlvl(t_tools *tool);
 int				is_builtin(char *s);
 int				run_builtin(t_execcmd *cmd, t_tools *tool);

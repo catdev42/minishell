@@ -104,7 +104,7 @@ void	error_exit(t_tools *tools, int error)
 {
 	clean_tools(tools);
 	clear_history();
-	if (error = -1 || error == 0)
+	if (error == -1 || error == 0)
 		exit(errno);
 	else if (error > 1)
 		exit(error);
