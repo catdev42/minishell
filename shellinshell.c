@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:09:25 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/23 18:35:52 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/24 19:31:23 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,29 +19,18 @@ void	change_shlvl(t_tools *tool)
 
 	var = get_var_value(tool->env, "SHLVL");
 	shlvl = ft_atoi(var) + 1;
+	replace_or_append_var("SHLVL", ft_itoa(shlvl), tool->env, tool);
 }
 
 // function still needs to be finished
 // myakoven Renaming to exec_new_minishell
 void	exec_new_minishell(t_tools *tool, t_execcmd *ecmd)
 {
-	char *shlvl;
-
-	// pid_t	pid;
-	if (get_matrix_len(ecmd->argv) != 1)
+	if (get_matrix_len(ecmd->argv) > 1)
 		print_errno_exit(NULL, "too many arguments", 141, tool);
-	shlvl = NULL;
-	// pid = fork(); // if not recognized as a builtin forking is not necessary
-	// if (pid == -1)
-	// 	print_errno_exit(NULL, NULL, NULL, tool); // system error
-	// myakoven: this will print mash: strerror(errno) and exit(errno)
-	// error_exit(tool, FORKERROR); // i think i dont have the last version
-	// if (pid == 0)
 	{
 		change_shlvl(tool);
 		if (execve("./minishell", ecmd->argv, tool->env) == -1)
 			print_errno_exit(NULL, NULL, 0, tool);
-		// myakoven: this will print mash: strerror(errno) and exit(errno)
-		// error_exit(tool, EXECVEERROR);
 	}
 }
