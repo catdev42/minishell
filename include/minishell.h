@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/24 20:37:03 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/26 18:57:57 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,6 +77,7 @@ int				builtin_check_walk(t_cmd *cmd);
 int				cd(char **argv, char **env, t_tools *tools);
 char			*ft_join_one(char const *s1, char const *delim, char const *s2);
 int				replace_var(char *key, char *value, char **env);
+int				passcheck(char *start, long int lim);
 
 /************************/
 /******* CLEAN.C ********/

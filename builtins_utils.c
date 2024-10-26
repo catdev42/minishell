@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 16:57:13 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/26 18:24:43 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,7 +99,6 @@ int	append_var(char *key, char *value, char **env, t_tools *tools)
 	if (i >= tools->env_len - 1)
 		copy_env(tools, env); // adds MAXARGS
 	newvar = ft_join_one(key, "=", value);
-	// copy_env(tools, env);
 	if (!newvar)
 		return (0);
 	tools->env[i] = newvar;
@@ -118,9 +117,6 @@ int	replace_or_append_var(char *key, char *value, char **env, t_tools *tools)
 	i = 1;
 	if (!key)
 		return (0);
-	// while (env[i])
-	// {
-	/*if we find the var value*/
 	if (get_var(env, key))
 	{
 		found = true;
@@ -130,10 +126,7 @@ int	replace_or_append_var(char *key, char *value, char **env, t_tools *tools)
 			return (0);
 		free(temp);
 		env[i] = newvar;
-		// break ;
 	}
-	// 	i++;
-	// }
 	if (!found)
 		if (!append_var(key, value, env, tools))
 			return (0);
