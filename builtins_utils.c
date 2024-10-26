@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 16:15:29 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/26 16:57:13 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,12 +93,13 @@ int	append_var(char *key, char *value, char **env, t_tools *tools)
 
 	newvar = NULL;
 	i = 0;
-	i = get_matrix_len(env) + 1;
+	i = get_matrix_len(env);
 	// while (env[i])
 	// 	i++;
 	if (i >= tools->env_len - 1)
 		copy_env(tools, env); // adds MAXARGS
 	newvar = ft_join_one(key, "=", value);
+	// copy_env(tools, env);
 	if (!newvar)
 		return (0);
 	tools->env[i] = newvar;

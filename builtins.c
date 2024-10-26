@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 16:01:39 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/26 18:20:06 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -248,7 +248,7 @@ int	print_export(char **env)
 		if (env[i][0] == '_')
 		{
 			i++;
-			break ;
+			continue ;
 		}
 		key = get_key(env[i], 0);
 		if (!key)
