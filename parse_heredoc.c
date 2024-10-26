@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 18:20:04 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:27:41 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,8 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 
 	end = get_token_end(delim);
 	filename = make_heredoc_file(delim, tools);
+	if (!filename)
+		return (0);
 	len = end - delim;
 	if (tools->lastredir)
 	{
@@ -103,9 +105,22 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 	{
 		// ft_putstr_fd(1, "\n"); // do we need this? test
 		line = NULL;
+		// tools->sa->sa_handler = handle_here_signals;
+		init_sa_heredoc(tools->sa);
 		line = readline("heredoc: ");
+		ft_putstr_fd(ft_itoa(global_signal), 2);
+		if (global_signal == SIGINT)
+			return (NULL);
 		if (!line)
-			error_exit(tools, errno);
+		{
+			print_error("warning",
+				"here-document at line 3 delimited by end-of-file, wated",
+				"end");
+			// error_exit(tools, errno);
+			return (NULL);
+		}
+		init_sa_default(tools->sa);
+
 		if (ft_strncmp(line, tempalloc_delim, end - delim + 1) == 0)
 			break ;
 		templine = safe_calloc(ft_strlen(line) + 3, 1, tools);

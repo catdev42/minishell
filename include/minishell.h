@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 15:03:06 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:21:45 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -162,6 +162,10 @@ void			here_unlink(t_tools *tools);
 void			here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools);
 int				createredir_here(char *delim, int mode, int fd, t_tools *tools);
 char			*make_heredoc_file(char *delim, t_tools *tools);
+void			handle_here_signals(int sig);
+// void			init_sa_heredoc(struct sigaction *sa);
+void			init_sa_heredoc(struct sigaction *sa);
+void			init_sa_default(struct sigaction *sa);
 
 /***** parse_redir_exec.c ****/
 struct s_cmd	*parseexec(char *start, char *end_of_exec, t_tools *tools);

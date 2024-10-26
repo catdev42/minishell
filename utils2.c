@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:15:14 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 18:39:28 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 18:50:12 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,9 +21,13 @@ char	*safe_calloc(size_t nmemb, size_t size, t_tools *tools)
 
 	str = ft_calloc(nmemb, size);
 	if (tools && !str)
-		// error_exit(tools, 1);
-		// cant do this cause have to free things possibly in calling function
-		return (NULL);
+	{
+		clean_tools(tools);
+		error_exit(tools, 1);
+	}
+	// cant do this cause have to free things possibly in calling function
+	// then use normal ft_calloc in those instances
+	// return (NULL);
 	return (str);
 }
 
