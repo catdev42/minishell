@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 21:19:00 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 15:03:06 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,7 +119,7 @@ void			run_pipe(t_pipecmd *pcmd, t_tools *tools);
 /******* INIT.C ********/
 /************************/
 struct s_cmd	*makeexec(void);
-struct s_cmd	*makeredir(char *file, char *efile, int mode, int fd);
+struct s_cmd	*makeredir(char *file, char *efile, bool append, int fd);
 struct s_cmd	*makepipe(struct s_cmd *left, struct s_cmd *right);
 // void		init_tools(t_tools *tools);
 
@@ -166,13 +166,13 @@ char			*make_heredoc_file(char *delim, t_tools *tools);
 /***** parse_redir_exec.c ****/
 struct s_cmd	*parseexec(char *start, char *end_of_exec, t_tools *tools);
 struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools);
-struct s_cmd	*createredir(char *filestart, int mode, int fd, t_tools *tools);
+int				createredir(char *filestart, int mode, int fd, t_tools *tools);
 struct s_cmd	*parseargv(char *start, char *end, t_tools *tools);
 
 /***** parse_utils.c *****/
 
 int				infile_or_outfile(char *start);
-char			*get_redir_path(char *redir, t_tools *tools);
+// char			*get_redir_path(char *redir, t_tools *tools); // not used
 char			*get_token_end(char *namestart);
 
 /************************/
@@ -191,7 +191,8 @@ void			ft_bspace(void *s, size_t n);
 
 /******* utils2.c ********/
 char			*safe_calloc(size_t nmemb, size_t size, t_tools *tools);
-void			strip_quotes_final(char *start);
+int				record_exit(int exit_num, t_tools *tools);
+// void			strip_quotes_final(char *start); // absolete
 void			init_zero(size_t *i, size_t *j, char **str1, char **str2);
 // void			free_tab(char **tab);
 /******* UTILS3.C *******/

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:00:21 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 20:27:37 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 13:44:34 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,6 +80,7 @@ typedef struct s_tools
 	size_t					cl_capacity;
 
 	int						exit_code;
+	char					*exit_string;
 
 	struct s_cmd			*tree;
 

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/25 21:25:00 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 18:38:35 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,6 +48,8 @@ int	cd(char **argv, char **env, t_tools *tools)
 
 	buffer = NULL;
 	buffer = safe_calloc(MIDLEN + 1, sizeof(char), tools);
+	if (!buffer)
+		error_exit(tools, errno);
 	if (chdir(argv[1]) < 0)
 	{
 		print_error("cd", "cannot change directory to %s\n", NULL);
@@ -145,21 +147,46 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 	return (0);
 }
 
+int	ft_strisnumeric(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] && (ft_isspace(str[i]) || str[i] == '+'))
+		i++;
+	if (str[i] == '-')
+		return (0);
+	while (str[i] && ft_isdigit(str[i]))
+		i++;
+	if (i < ft_strlen(str) - 1)
+		return (0);
+	return (1);
+}
+
 int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
+	int	i;
+
 	/*if we have parsed because it was abn exit command*/
 	/*We should check args atoll*/
+	i = 0;
 	if (cmd)
 	{
-		if (get_matrix_len(cmd->argv) > 1)
+		if (get_matrix_len(cmd->argv) > 2)
 			print_error(NULL, "too many arguments", NULL);
-		// maybe a little nonsensical
-		// tree_free(tool->tree); //clean tools does this...
+		else if (get_matrix_len(cmd->argv) == 2)
+		{
+			ft_putstr_fd("exit ", 1);
+			if (ft_strisnumeric(cmd->argv[1]))
+				record_exit(ft_atol(cmd->argv[1]) % 256, tool);
+			ft_putstr_fd(tool->exit_string, 1);
+		}
+		else
+			ft_putstr_fd("exit", 1);
 	}
+	ft_putstr_fd("\n", 1);
 	/* If we are here before any tree has been created then we dont do the error thing
 	not parsed yes*/
-	
-		
 	clean_tools(tool);
 	exit(0);
 }

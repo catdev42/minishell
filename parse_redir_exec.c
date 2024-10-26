@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redir_exec.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 07:39:03 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/26 15:01:26 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,35 +28,37 @@ struct s_cmd	*parseexec(char *start, char *end_of_exec, t_tools *tools)
 	return (ret);
 }
 
+/* we enter this only if we have redirs
+we HAVE TO return a pointer to the branches...*/
 struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 {
 	int				fd_in_or_out;
-	int				mode;
+	bool			append;
 	struct s_cmd	*ret;
-	//int				i;
+	char			*keep_red_start;
 
 	ret = NULL;
-	//i = 0;
 	while (*start && start < end_of_exec)
 	{
-		mode = -1;
+		append = 0;
+		// mode = -1;
 		fd_in_or_out = -1;
 		if (isquote(*start))
 			start += skip_quotes(start, 0);
 		if (isredir(*start))
 		{
+			keep_red_start = start;
 			fd_in_or_out = infile_or_outfile(start);
 			if (start[0] == start[1] && start[0] == '<')
-			{
-				start += createredir_here(&start[2], mode, 0, tools);
-			}
+				start += createredir_here(&start[2], append, fd_in_or_out,
+						tools);
 			else
 			{
 				if (start[1] == start[0])
 					start++;
-				ret = createredir(++start, mode, fd_in_or_out, tools);
+				createredir(&start[2], append, fd_in_or_out, tools);
 			}
-			if (!ret)
+			if (!ret) // this only happens on the first finding of redir
 				ret = (struct s_cmd *)tools->lastredir;
 		}
 		start++;
@@ -65,6 +67,7 @@ struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 	tools->lastredir = NULL;
 	return ((struct s_cmd *)ret);
 }
+
 // struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 // {
 // 	int				fd_in_or_out;
@@ -103,12 +106,17 @@ struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 // 	return ((struct s_cmd *)ret);
 // }
 
-struct s_cmd	*createredir(char *filestart, int mode, int fd, t_tools *tools)
+/*
+RETURNS length of the token in line,
+STORES the redir in either last redir or the last creted redir struct*/
+int	createredir(char *filestart, int mode, int fd, t_tools *tools)
 {
 	char	*end;
+	int		len;
 
 	end = NULL;
 	end = get_token_end(filestart);
+	len = end - filestart;
 	if (tools->lastredir)
 	{
 		tools->lastredir->cmd = makeredir(filestart, end, mode, fd);
@@ -119,7 +127,7 @@ struct s_cmd	*createredir(char *filestart, int mode, int fd, t_tools *tools)
 				fd);
 	if (!tools->lastredir)
 		error_exit(tools, UNKNOWNERROR);
-	return ((struct s_cmd *)tools->lastredir);
+	return (len);
 }
 
 struct s_cmd	*parseargv(char *start, char *end, t_tools *tools)

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 23:59:13 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/23 18:35:52 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 16:50:28 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 
 static void	extend_cleanline(t_tools *tools, int add);
 
-/* EXPANDS: Returns len of variable in line */
+/* EXPANDS: Returns len of variable in line (including the $ or not?) */
 /* This is an insanely confusing function - rewrite? */
 int	copy_var(char *c_line, char *line, t_tools *tools)
 {
@@ -28,12 +28,14 @@ int	copy_var(char *c_line, char *line, t_tools *tools)
 	i = 1;
 	while (line[i] && !ft_isspace(line[i]) && !isquote(line[i])
 		&& !istoken(line[i]) && line[i] != '$')
-		i++;
+		i++; //while the char has no special meaning
 	if (i == 1)
 		return (i);
 	var = ft_substr(line, 1, i - 1);
 	if (!var)
 		error_exit(tools, 1);
+	// if (ft_strncmp(var, "?", 2))
+	// 	var_result = ft_itoa(tool->exit_code));
 	var_result = get_var_value(tools->env, var);
 	free(var);
 	if (!var_result)
@@ -42,6 +44,7 @@ int	copy_var(char *c_line, char *line, t_tools *tools)
 		+ ft_strlen(tools->cleanline))
 	{
 		extend_cleanline(tools, ft_strlen(var_result));
+		
 		c_line = &(tools->cleanline[curr_cl_ind]);
 	}
 	ft_strlcpy(c_line, var_result, tools->cl_capacity - curr_cl_ind);

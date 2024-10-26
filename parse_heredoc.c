@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/21 18:20:36 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 18:20:04 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,7 @@ void	here_unlink(t_tools *tools)
 // tools->lastredir;
 // launchreadlineloop
 // write what it sees into a file and turn it into a regular infile
-int	createredir_here(char *delim, int mode, int fd, t_tools *tools)
+int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 {
 	char	*end;
 	char	*filename;
@@ -72,11 +72,11 @@ int	createredir_here(char *delim, int mode, int fd, t_tools *tools)
 	len = end - delim;
 	if (tools->lastredir)
 	{
-		tools->lastredir->cmd = makeredir(filename, end, mode, fd);
+		tools->lastredir->cmd = makeredir(filename, end, append, fd);
 		tools->lastredir = (struct s_redircmd *)tools->lastredir->cmd;
 	}
 	else
-		tools->lastredir = (struct s_redircmd *)makeredir(filename, end, mode,
+		tools->lastredir = (struct s_redircmd *)makeredir(filename, end, append,
 				fd);
 	if (!tools->lastredir)
 		error_exit(tools, 1);

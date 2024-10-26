@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parseutils.c                                       :+:      :+:    :+:   */
+/*   parse_utils.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/18 20:38:06 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/26 13:33:29 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,31 +23,31 @@ int	infile_or_outfile(char *start)
 }
 
 
-/* Allocates a filename/path. MUST BE FREED */
-char	*get_redir_path(char *redir, t_tools *tools)
-{
-	int		i;
-	char	*filename;
-	int		start;
+// /* Allocates a filename/path. MUST BE FREED */
+// char	*get_redir_path(char *redir, t_tools *tools)
+// {
+// 	int		i;
+// 	char	*filename;
+// 	int		start;
 
-	i = 0;
-	while (redir[i] && isredir(redir[i]))
-	{
-		i++;
-	}
-	start = i;
-	while (redir[i] && !ft_isspace(redir[i]))
-	{
-		if (isquote(redir[i]))
-			i = skip_quotes(redir, i);
-		i++;
-	}
-	filename = ft_substr(redir, start, i - start);
-	if (!filename)
-		error_exit(tools, 1);
-	strip_quotes_final(filename);
-	return (filename);
-}
+// 	i = 0;
+// 	while (redir[i] && isredir(redir[i]))
+// 	{
+// 		i++;
+// 	}
+// 	start = i;
+// 	while (redir[i] && !ft_isspace(redir[i]))
+// 	{
+// 		if (isquote(redir[i]))
+// 			i = skip_quotes(redir, i);
+// 		i++;
+// 	}
+// 	filename = ft_substr(redir, start, i - start);
+// 	if (!filename)
+// 		error_exit(tools, 1);
+// 	strip_quotes_final(filename);
+// 	return (filename);
+// }
 
 /* Gets pointer to the space after the token */
 char	*get_token_end(char *namestart)

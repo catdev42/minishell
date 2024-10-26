@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/24 20:36:44 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/26 18:33:13 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,8 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 	// 	a = env(cmd, tool);
 	else if (ft_strncmp(cmd->argv[0], EXIT, 5) == 0)
 		a = ft_exit(cmd, tool);
-	tool->exit_code = a;
+	// tool->exit_code = a;
+	record_exit(a, tool);
 	return (a);
 }
 

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:07:28 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/23 18:59:48 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 13:34:51 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	copy_env(t_tools *tools, char **env)
 		{
 			ft_freetab(envp);
 			return (0); // fail
-			/*changed to envp, we must delete currently allocated*/
+			/*changed to envp, we must delete currently allocated on error*/
 		}
 		if (!ft_strlcpy(envp[i], env[i], len))
 			return (0); // fail
@@ -65,6 +65,7 @@ char	*get_var_value(char **env, char *var)
 
 	if (!env || !*env)
 		return (NULL);
+	
 	line = NULL;
 	i = 0;
 	len = ft_strlen(var);

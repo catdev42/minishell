@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/25 20:04:43 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 14:01:07 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,10 +25,10 @@ void	check_system_fail(int status, t_tools *tools, bool inmain)
 	if (WIFEXITED(status))
 	{
 		sig = WEXITSTATUS(status);
-		tools->exit_code = sig;
+		// tools->exit_code = sig;
+		record_exit(sig, tools);
 		if (inmain && sig == 142)
 			error_exit(tools, 1);
-		
 		else if (sig == SYSTEMFAIL || sig == ENOMEM || sig == EPIPE
 			|| sig == EMFILE || sig == EBADF || sig == EFAULT || sig == ENOSPC
 			|| sig == EIO || sig == ENODEV)
@@ -47,13 +47,15 @@ void	check_system_fail(int status, t_tools *tools, bool inmain)
 	else if (WIFSIGNALED(status))
 	{
 		sig = WTERMSIG(status);
-		tools->exit_code = sig;
+		// tools->exit_code = sig;
+		record_exit(sig, tools);
 		if (sig == SIGKILL)
 			return ;
 		else if (sig == SIGSEGV || sig == SIGBUS || sig == SIGFPE
 			|| sig == SIGILL || sig == SIGABRT || sig == SIGSYS)
 		{
-			tools->exit_code = sig + 128;
+			// tools->exit_code = sig + 128;
+			record_exit(sig + 128, tools);
 			error_exit(tools, sig + 128);
 		}
 	}

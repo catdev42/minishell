@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 21:18:27 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 18:38:09 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,14 @@ int	main(int argc, char **argv, char **env)
 
 int	shell_loop(t_tools *tools)
 {
+	int	fd[2];
+
+	fd[1] = dup(1);
+	fd[0] = dup(0);
 	while (1)
 	{
+		dup2(fd[0], 0);
+		dup2(fd[1], 1);
 		tools->sa->sa_handler = handle_signals;
 		if (global_signal == SIGTERM) // TODO? or done
 			break ;
@@ -44,7 +50,8 @@ int	shell_loop(t_tools *tools)
 		if (!tools->line || global_signal == SIGTERM)
 			ft_exit(NULL, tools);
 		if (global_signal)
-			tools->exit_code = global_signal + 128;
+			// tools->exit_code = global_signal + 128;
+			record_exit(global_signal + 128, tools);
 		tools->sa->sa_handler = SIG_DFL;
 		/*TODO there has to be a way to call the exit function
 		eithout a command struct
@@ -59,11 +66,11 @@ int	shell_loop(t_tools *tools)
 		tools->e_cline = tools->cleanline + ft_strlen(tools->cleanline);
 		if (!tools->cleanline)
 			continue ;
-		ft_putstr_fd(tools->cleanline, 1);
-		ft_putstr_fd("  -- test of cleanline\n", 1);
+		// ft_putstr_fd(tools->cleanline, 1);
+		// ft_putstr_fd("  -- test of cleanline\n", 1);
 		if (!parseline(tools->cleanline, tools))
 			continue ;
-		walking(tools->tree);
+		// walking(tools->tree);
 		// execution(tools->tree, tools);
 		// if (global_signal == SIGTERM)
 		// TODO? or done
