@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:07:28 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/23 18:59:48 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 15:45:21 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,8 +73,6 @@ char	*get_var_value(char **env, char *var)
 		line = ft_strnstr(env[i], var, len);
 		if (line && line[len] == '=')
 			line = line + len + 1;
-		else
-			line = NULL;
 		i++;
 	}
 	return (line);

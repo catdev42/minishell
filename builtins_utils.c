@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/24 20:36:44 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/26 16:15:29 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,9 +93,9 @@ int	append_var(char *key, char *value, char **env, t_tools *tools)
 
 	newvar = NULL;
 	i = 0;
+	i = get_matrix_len(env) + 1;
 	// while (env[i])
 	// 	i++;
-	i = get_matrix_len(env);
 	if (i >= tools->env_len - 1)
 		copy_env(tools, env); // adds MAXARGS
 	newvar = ft_join_one(key, "=", value);
@@ -117,21 +117,22 @@ int	replace_or_append_var(char *key, char *value, char **env, t_tools *tools)
 	i = 1;
 	if (!key)
 		return (0);
-	while (env[i])
+	// while (env[i])
+	// {
+	/*if we find the var value*/
+	if (get_var(env, key))
 	{
-		/*if we find the var value*/
-		if (get_var_value(env, key))
-		{
-			found = true;
-			temp = env[i];
-			newvar = ft_join_one(key, "=", value);
-			if (!newvar)
-				return (0);
-			free(temp);
-			env[i] = newvar;
-		}
-		i++;
+		found = true;
+		temp = env[i];
+		newvar = ft_join_one(key, "=", value);
+		if (!newvar)
+			return (0);
+		free(temp);
+		env[i] = newvar;
+		// break ;
 	}
+	// 	i++;
+	// }
 	if (!found)
 		if (!append_var(key, value, env, tools))
 			return (0);

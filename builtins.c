@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/25 19:28:04 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/26 16:01:39 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,24 +174,23 @@ int	pwd(t_execcmd *cmd)
 		perror("pwd: error retrieving current directory:");
 	return (1);
 }
-
-int	key_syntax_export(char *argv)
+int	key_syntax_export(char *arg)
 {
 	int	i;
 
-	if (!argv)
+	if (!arg)
 		return (0);
 	i = 0;
-	if (argv[0] == '=')
+	if (arg[0] == '=')
 	{
-		print_error("export", "not a valid identifier", argv);
+		print_error("export", "not a valid identifier", arg);
 		return (0);
 	}
-	while (argv[i] && argv[i] != '=')
+	while (arg[i] && arg[i] != '=')
 	{
-		if (!isalpha(argv[i]))
+		if (!isalpha(arg[i]))
 		{
-			print_error("export", "not a valid identifier", argv);
+			print_error("export", "not a valid identifier", arg);
 			return (0);
 		}
 		i++;
@@ -202,30 +201,30 @@ int	key_syntax_export(char *argv)
 /* gets the variable name. checks the syntax of the var name
 only if get key is not called for printing. syn_io is set to 0 for printing
 1 for non-printing */
-char	*get_key(char *argv, int syn_io)
+char	*get_key(char *arg, bool to_check_or_not_to_check_syn)
 {
 	int		i;
 	int		len;
 	char	*key;
 
-	if (!argv)
+	if (!arg)
 		return (NULL);
-	if (syn_io == 1)
+	if (to_check_or_not_to_check_syn)
 	{
-		if (!key_syntax_export(argv))
+		if (!key_syntax_export(arg))
 			return (NULL);
 	}
 	i = 0;
-	while (argv[i] && argv[i] != '=')
+	while (arg[i] && arg[i] != '=')
 		i++;
 	len = i + 1;
 	key = ft_calloc(len + 1, sizeof(char));
 	if (!key)
-		return (NULL);
+		return (NULL); //this malloc problem
 	i = 0;
 	while (i < len - 1)
 	{
-		key[i] = argv[i];
+		key[i] = arg[i];
 		i++;
 	}
 	key[i] = '\0';
@@ -243,6 +242,7 @@ int	print_export(char **env)
 	key = NULL;
 	value = NULL;
 	i = 0;
+	print_tab(env); printf("\nthis was env\n");
 	while (env[i])
 	{
 		if (env[i][0] == '_')
@@ -259,13 +259,14 @@ int	print_export(char **env)
 			free(key);
 			return (1);
 		}
-		value++;
+		value ++;
 		ft_putstr_fd("declare -x ", 1);
 		ft_putstr_fd(key, 1);
-		// ft_putstr_fd("=", 1);
+		ft_putstr_fd("=", 1);
 		ft_putstr_fd("\"", 1);
 		ft_putstr_fd(value, 1);
 		ft_putstr_fd("\"\n", 1);
+		free(key);
 		i++;
 	}
 	return (0);
@@ -279,7 +280,7 @@ int	export(t_execcmd *cmd, t_tools *tool)
 
 	if (!cmd || !cmd->argv[0])
 		return (1);
-	printf("argvlen %d\n", get_matrix_len(cmd->argv));
+	//printf("argvlen %d\n", get_matrix_len(cmd->argv));
 	if (get_matrix_len(cmd->argv) == 1)
 		return (print_export(tool->env));
 	i = 1;

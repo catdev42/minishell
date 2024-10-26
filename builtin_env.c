@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/25 07:34:37 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/26 15:31:00 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,6 +67,7 @@ int	env(char **argv, char **env, t_tools *tools)
 	return (1);
 }
 
+/* start is beginning of key and lim is its length = pointer = - to beginning*/
 int	passcheck(char *start, long int lim)
 {
 	long int	i;
@@ -75,7 +76,10 @@ int	passcheck(char *start, long int lim)
 	while (i < lim)
 	{
 		if (ft_isspace(start[i]) || isquote(start[i]) || ft_strchr("*&|<>?(){}[]", start[i]))
+		{
+			//print_error("export", "not a valid identifier", arg);
 			return (0);
+		}
 		i++;
 	}
 	return (1);

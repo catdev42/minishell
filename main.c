@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 17:32:41 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/26 14:20:03 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,8 +33,14 @@ int	main(int argc, char **argv, char **env)
 
 int	shell_loop(t_tools *tools)
 {
+	int	fd[2];
+
+	fd[1] = dup(1);
+	fd[0] = dup(0);
 	while (1)
 	{
+		dup2(fd[0], 0);
+		dup2(fd[1], 1);
 		// if (global_signal == SIGTERM) // TODO? or done
 		// 	break ;
 		tools->line = readline("minishell: ");
