@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 19:44:44 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:52:41 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,7 +42,8 @@ int	shell_loop(t_tools *tools)
 	{
 		dup2(fd[0], 0);
 		dup2(fd[1], 1);
-		tools->sa->sa_handler = handle_signals;
+		// tools->sa->sa_handler = handle_signals;
+		init_sa(tools->sa);
 		if (global_signal == SIGTERM) // TODO? or done
 			break ;
 		tools->line = readline("minishell: ");

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 19:41:56 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:48:48 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -52,8 +52,8 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 			}
 			j = i - 1;
 			while (++j < MAXARGS)
-				ft_memcpy(*argv[j - i], *argv[j], sizeof(*argv));
-			handle_node(ecmd, tools);
+				ft_memcpy(argv[j - i], argv[j], sizeof(argv));
+			handle_node((t_cmd*)ecmd, tools);
 			clean_tools(tools);
 			exit(0);
 		}

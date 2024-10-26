@@ -6,11 +6,21 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 19:27:41 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 20:11:27 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
+
+// ==250131== 40 bytes in 1 blocks are definitely lost in loss record 14 of 65
+// ==250131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+// ==250131==    by 0x403AE3: makeredir (init.c:30)
+// ==250131==    by 0x405395: createredir_here (parse_heredoc.c:81)
+// ==250131==    by 0x4057F5: parse_redirs (parse_redir_exec.c:54)
+// ==250131==    by 0x4056A8: parseexec (parse_redir_exec.c:22)
+// ==250131==    by 0x405E5F: parseline (parse.c:52)
+// ==250131==    by 0x405102: shell_loop (main.c:72)
+// ==250131==    by 0x404F42: main (main.c:31)
 
 // rewrite nullify to use actual information
 
@@ -108,7 +118,7 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 		// tools->sa->sa_handler = handle_here_signals;
 		init_sa_heredoc(tools->sa);
 		line = readline("heredoc: ");
-		ft_putstr_fd(ft_itoa(global_signal), 2);
+		// ft_putstr_fd(ft_itoa(global_signal), 2);
 		if (global_signal == SIGINT)
 			return (NULL);
 		if (!line)
@@ -134,6 +144,8 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 		}
 		free(templine);
 	}
+	close(fd);
+
 	free(line);
 	return (tools->heredocs[tools->hereindex - 1]);
 }

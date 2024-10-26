@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 19:42:06 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 20:13:01 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -77,8 +77,9 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 		a = export(cmd, tool);
 	else if (ft_strncmp(cmd->argv[0], UNSET, 6) == 0)
 		a = unset(cmd, tool);
-	// else if (ft_strncmp(cmd->argv[0], ENV, 4) == 0)
-	// 	a = env(cmd, tool);
+	else if (ft_strncmp(cmd->argv[0], ENV, 4) == 0)
+		a = env(cmd->argv, tool->env, cmd, tool);
+	// int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 	else if (ft_strncmp(cmd->argv[0], EXIT, 5) == 0)
 		a = ft_exit(cmd, tool);
 	// tool->exit_code = a;

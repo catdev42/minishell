@@ -110,7 +110,7 @@ void	error_exit(t_tools *tools, int error)
 		exit(error);
 	else if (error == 1) // if we need to exit specifically with 1
 	{
-		perror("msh"); //will print the error message with errno
+		perror("msh"); // will print the error message with errno
 		exit(1);
 	}
 	else
@@ -126,8 +126,11 @@ void	error_exit(t_tools *tools, int error)
 void	clean_tools(t_tools *tools)
 {
 	reset_tools(tools);
+	if (tools->exit_string)
+		free(tools->exit_string);
 	if (tools->env)
 		ft_freetab(tools->env);
+	clear_history();
 	// ft_memset(tools->heredocs, 0, sizeof(tools->heredocs));
 	// its not allocated...
 }

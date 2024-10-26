@@ -73,6 +73,12 @@ void	handle_node(t_cmd *cmd, t_tools *tool)
 		this just catches any unknown errors... if we dont terminate all the stuff in exec node we exit error
 	*/
 }
+// **********************/
+// /******* CLEAN.C ********/
+// /************************/
+// void			reset_tools(t_tools *tools);
+// void			tree_free(struct s_cmd *node);
+
 
 /* function forks and sets up and manages pipes*/
 

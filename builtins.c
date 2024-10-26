@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 19:43:55 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:56:35 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -167,9 +167,8 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
 	int	i;
 
-	/*if we have parsed because it was abn exit command*/
-	/*We should check args atoll*/
 	i = 0;
+	record_exit(0, tool);
 	if (cmd)
 	{
 		if (get_matrix_len(cmd->argv) > 2)
@@ -184,13 +183,11 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 		else
 			ft_putstr_fd("exit", 1);
 	}
-	else // if (!tools->line)
+	else
 		ft_putstr_fd("exit", 1);
 	ft_putstr_fd("\n", 1);
-	/* If we are here before any tree has been created then we dont do the error thing
-	not parsed yes*/
 	clean_tools(tool);
-	exit(0);
+	exit(tool->exit_code);
 }
 
 int	pwd(t_execcmd *cmd)
