@@ -6,9 +6,10 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/25 20:42:13 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:41:56 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #include "./include/minishell.h"
 
@@ -62,6 +63,7 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 	return (1);
 }
 
+/* start is beginning of key and lim is its length = pointer = - to beginning*/
 int	passcheck(char *start, long int lim)
 {
 	long int	i;
@@ -71,7 +73,10 @@ int	passcheck(char *start, long int lim)
 	{
 		if (ft_isspace(start[i]) || isquote(start[i])
 			|| ft_strchr("*&|<>?{}()[]", start[i]))
+		{
+			//print_error("export", "not a valid identifier", arg);
 			return (0);
+		}
 		i++;
 	}
 	return (1);

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 19:05:02 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:43:55 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -201,6 +201,8 @@ int	pwd(t_execcmd *cmd)
 	if (get_matrix_len(cmd->argv) > 1)
 		ft_putstr_fd("pwd: too many arguments\n", 2);
 	cwd = getcwd(NULL, 0); // should we check for malloc error
+	if (!cwd)
+		return (1);
 	if (cwd != NULL)
 	{
 		ft_putstr_fd(cwd, 1);
@@ -213,97 +215,35 @@ int	pwd(t_execcmd *cmd)
 	return (1);
 }
 
-int	key_syntax_export(char *argv)
+void	put_var(char *key, char *value)
 {
-	int	i;
-
-	if (!argv)
-		return (0);
-	i = 0;
-	if (argv[0] == '=')
-	{
-		print_error("export", "not a valid identifier", argv);
-		return (0);
-	}
-	while (argv[i] && argv[i] != '=')
-	{
-		if (!isalpha(argv[i]))
-		{
-			print_error("export", "not a valid identifier", argv);
-			return (0);
-		}
-		i++;
-	}
-	return (1);
-}
-
-/* gets the variable name. checks the syntax of the var name
-only if get key is not called for printing. syn_io is set to 0 for printing
-1 for non-printing */
-char	*get_key(char *arg, int syn_io)
-{
-	int		i;
-	int		len;
-	char	*key;
-
-	if (!arg)
-		return (NULL);
-	if (syn_io == 1)
-	{
-		if (!key_syntax_export(arg))
-			return (NULL);
-	}
-	i = 0;
-	while (arg[i] && arg[i] != '=')
-		i++;
-	len = i + 1;
-	key = ft_calloc(len + 1, sizeof(char));
-	if (!key)
-		return (NULL);
-	i = 0;
-	while (i < len - 1)
-	{
-		key[i] = arg[i];
-		i++;
-	}
-	key[i] = '\0';
-	return (key);
+	ft_putstr_fd("declare -x ", 1);
+	ft_putstr_fd(key, 1);
+	ft_putstr_fd("=", 1);
+	ft_putstr_fd("\"", 1);
+	ft_putstr_fd(value, 1);
+	ft_putstr_fd("\"\n", 1);
 }
 
 int	print_export(char **env)
 {
 	int		i;
-	char	*key;
-	char	*value;
+	char	*equalsign;
 
 	if (!env)
 		return (1);
-	key = NULL;
-	value = NULL;
 	i = 0;
 	while (env[i])
 	{
 		if (env[i][0] == '_')
 		{
 			i++;
-			break ;
+			continue ;
 		}
-		key = get_key(env[i], 0);
-		if (!key)
-			return (1);
-		value = ft_strchr(env[i], '=');
-		if (!value)
-		{
-			free(key);
-			return (1);
-		}
-		value++;
-		ft_putstr_fd("declare -x ", 1);
-		ft_putstr_fd(key, 1);
-		// ft_putstr_fd("=", 1);
-		ft_putstr_fd("\"", 1);
-		ft_putstr_fd(value, 1);
-		ft_putstr_fd("\"\n", 1);
+		equalsign = ft_strchr(env[i], '=');
+		equalsign[0] = 0;
+		put_var(env[i], &equalsign[1]);
+		equalsign[0] = 1;
 		i++;
 	}
 	return (0);
@@ -312,35 +252,25 @@ int	print_export(char **env)
 int	export(t_execcmd *cmd, t_tools *tool)
 {
 	int		i;
-	char	*key;
-	char	*value;
+	char	*equalsign;
 
 	if (!cmd || !cmd->argv[0])
 		return (1);
-	printf("argvlen %d\n", get_matrix_len(cmd->argv));
 	if (get_matrix_len(cmd->argv) == 1)
 		return (print_export(tool->env));
 	i = 1;
-	key = NULL;
-	value = NULL;
 	while (cmd->argv[i])
 	{
-		key = get_key(cmd->argv[i], 1);
-		if (!key)
-			return (1);
-		value = ft_strchr(cmd->argv[i], '=');
-		if (!value)
+		equalsign = ft_strchr(cmd->argv[i], '=');
+		if (equalsign && passcheck(cmd->argv[i], (long int)(equalsign
+					- &cmd->argv[i][0])))
 		{
-			free(key);
-			return (1);
+			equalsign[0] = 0; // nullterm to key
+			replace_or_append_var(cmd->argv[i], &equalsign[1], tool->env, tool);
+			equalsign[0] = '='; // unnullterm
 		}
-		value++;
-		if (!replace_or_append_var(key, value, tool->env, tool))
-		{
-			free(key);
-			return (1);
-		}
-		free(key); // key=NULL:
+		else
+			break ;
 		i++;
 	}
 	return (0);

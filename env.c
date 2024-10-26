@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:07:28 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 18:49:11 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:44:08 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,8 +74,6 @@ char	*get_var_value(char **env, char *var)
 		line = ft_strnstr(env[i], var, len);
 		if (line && line[len] == '=')
 			line = line + len + 1;
-		else
-			line = NULL;
 		i++;
 	}
 	return (line);

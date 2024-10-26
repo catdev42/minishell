@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 19:21:45 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/26 19:45:58 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,6 +83,13 @@ int				builtin_check_walk(t_cmd *cmd);
 int				cd(char **argv, char **env, t_tools *tools);
 char			*ft_join_one(char const *s1, char const *delim, char const *s2);
 int				replace_var(char *key, char *value, char **env);
+int				passcheck(char *start, long int lim);
+
+// /************************/
+// /******* CLEAN.C ********/
+// /************************/
+// void			reset_tools(t_tools *tools);
+// void			tree_free(struct s_cmd *node);
 
 /************************/
 /*******  ENV.C  ********/
