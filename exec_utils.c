@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 14:01:07 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/27 20:03:15 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,14 +35,6 @@ void	check_system_fail(int status, t_tools *tools, bool inmain)
 			error_exit(tools, tools->exit_code);
 		else
 			return ;
-		// where is it catched and interprete
-		/* MYAKOVEN: we are just figuring out if we
-		need to just set exit_code or exit the entire program
-		removed:
-		|| sig == EACCES || tools->exit_code == ENOENT || sig == EINVAL
-			|| sig == EAGAIN || sig == EINTR
-		NOT CRITICAL ERRORS
-		*/
 	}
 	else if (WIFSIGNALED(status))
 	{
@@ -104,7 +96,6 @@ int	file_dir_noexist(const char *path, int fd_in_or_out)
 /* Return the MODE necessary for OPEN() file or dir */
 
 int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
-// took the tools out cause not used
 {
 	int fileordir;
 

@@ -13,8 +13,8 @@
 #include "./include/minishell.h"
 
 /*forks if there is a pipe or a non builtin command else it
-executes without forking
-TODO - running minishell inside minishell*/
+executes without forking*/
+
 int	running_msh(t_tools *tools)
 {
 	pid_t	pid;
@@ -26,7 +26,6 @@ int	running_msh(t_tools *tools)
 	if ((tools->tree->type == PIPE) || (tools->tree->type != PIPE
 			&& (builtin_check_walk(tools->tree) == 0)))
 	{
-		// tools->isfork = 1;
 		pid = fork();
 		if (pid == -1)
 			print_errno_exit(NULL, NULL, 0, tools); // myakoven system fail
@@ -39,9 +38,7 @@ int	running_msh(t_tools *tools)
 		check_system_fail(status, tools, 0); // maykoven this also exits
 	}
 	else
-	{
 		run_pipeless_builtin_tree(tools->tree, tools);
-	}
 	return (1);
 }
 
@@ -73,12 +70,6 @@ void	handle_node(t_cmd *cmd, t_tools *tool)
 		this just catches any unknown errors... if we dont terminate all the stuff in exec node we exit error
 	*/
 }
-// **********************/
-// /******* CLEAN.C ********/
-// /************************/
-// void			reset_tools(t_tools *tools);
-// void			tree_free(struct s_cmd *node);
-
 
 /* function forks and sets up and manages pipes*/
 
@@ -103,8 +94,6 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 		handle_node(pcmd->left, tools); // terminating
 	}
 	close(pipefd[1]);
-	// if parent keeps the writing end open the pipe
-	// will not be considered closed by the reading process
 	pid2 = fork();
 	if (pid2 == -1)
 		print_errno_exit(NULL, NULL, 0, tools);
@@ -123,16 +112,14 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 	check_system_fail(status2, tools, 0);
 }
 
-// maybe open dir w/ opendir
 /*MYAKOVEN: I think this function only need to get the mode,
 	all other information is already written*/
 int	run_redir(t_redircmd *rcmd, t_tools *tool)
 {
 	rcmd->mode = check_file_type(rcmd, rcmd->fd);
+	// if (rcmd->mode == -1)
+	// 	exit(1); // exit fail 
 	if (rcmd->mode == -1)
-		exit(1); // exit fail
-	// not sure about this - is a return enough in all cases
-	else if (rcmd->mode == -1)
 		return (0);
 	close(rcmd->fd); // close(0)
 	rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
@@ -169,10 +156,3 @@ int	run_pipeless_builtin_tree(t_cmd *cmd, t_tools *tool)
 	}
 	return (0);
 }
-
-//**********************************************************************
-// Broken Pipe Error (SIGPIPE): A broken pipe can
-//  happen if the command on the reading end of the pipe terminates
-// unexpectedly before the writing process finishes. In this case,
-// the writing command (the one trying to send data to the pipe)
-//  will receive a SIGPIPE signal and often terminate.
