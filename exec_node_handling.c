@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/27 20:19:53 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/27 20:26:52 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ int	other_execution_type(t_tools *tool, t_execcmd *ecmd)
 	if (ft_strncmp(ecmd->argv[0], "minishell", 9) == 0)
 	{
 		exec_new_minishell(tool, ecmd);
-		return ;
+		return (1);
 	}
 	if (access(ecmd->argv[0], F_OK) == 0)
 	{

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/27 18:02:11 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/27 20:25:19 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,6 +117,7 @@ void			execute_execve(char *pathcmd, t_execcmd *ecmd, t_tools *tool);
 char			*check_cmd_path(char *path, t_execcmd *cmd, t_tools *tools);
 int				running_msh(t_tools *tools);
 int				run_pipeless_builtin_tree(t_cmd *cmd, t_tools *tool);
+int				other_execution_type(t_tools *tool, t_execcmd *ecmd);
 /* execredir */
 int				run_redir(t_redircmd *rcmd, t_tools *tool);
 void			run_pipe(t_pipecmd *pcmd, t_tools *tools);
