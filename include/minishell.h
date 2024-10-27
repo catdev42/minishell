@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 19:48:13 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/27 18:02:11 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -153,10 +153,14 @@ int				remove_two(char *first, char *second);
 /************************/
 int				shell_loop(t_tools *tools);
 void			new_line(void);
-void			handle_signals(int sig);
-void			init_sa(struct sigaction *sa);
-// void			checkexit(t_tools *tools); //retired?
 
+/************************/
+/****** SIGNALS.C *******/
+/************************/
+void			init_sa(struct sigaction *sa, void (*handler)(int));
+void			handle_reprint_sig(int sig);
+void			handle_noprint_sig(int sig);
+void			handle_here_sig(int sig);
 /************************/
 /******* PARSE.C ********/
 /************************/
@@ -170,11 +174,7 @@ void			here_unlink(t_tools *tools);
 void			here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools);
 int				createredir_here(char *delim, int mode, int fd, t_tools *tools);
 char			*make_heredoc_file(char *delim, t_tools *tools);
-void			handle_here_signals(int sig);
-// void			init_sa_heredoc(struct sigaction *sa);
-void			init_sa_heredoc(struct sigaction *sa);
-void			init_sa_default(struct sigaction *sa);
-
+void			write_heredoc(int fd, char *alloc_delim, t_tools *tools);
 /***** parse_redir_exec.c ****/
 struct s_cmd	*parseexec(char *start, char *end_of_exec, t_tools *tools);
 struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools);

@@ -100,9 +100,11 @@ UNLESS you specifically need to exit 1, in which case...put "1"
 EXTRA (if you put -1 ot 0, will return errno as a catch all)
 */
 // TODO should put malloc errors etc
+/*ERROR 1 will print perror!*/
 void	error_exit(t_tools *tools, int error)
 {
 	clean_tools(tools);
+	here_unlink(tools); //clean files
 	clear_history();
 	if (error == -1 || error == 0)
 		exit(errno);

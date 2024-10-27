@@ -6,10 +6,9 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 19:48:48 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/27 17:19:12 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
-
 
 #include "./include/minishell.h"
 
@@ -23,19 +22,22 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 	int		j;
 
 	equalsign = NULL;
-	if (get_matrix_len(argv) == 1)
-		print_tab(env);
+	if (get_matrix_len(argv) == 1) // works
+		return (!print_tab(env));  // ! cause printenv returns 0 on fail
 	if (get_matrix_len(argv) > 1)
 	{
 		pid = fork();
 		if (pid == 0)
 		{
-			i = 0;
+			// init_sa_fork(struct sigaction *s)
+			// init_sa_default(tools->sa);
+			init_sa(tools->sa, SIG_DFL);
+			i = 1;
 			while (ecmd->argv[i]) // assign env variables
 			{
 				equalsign = ft_strchr(argv[i], '=');
-				if (equalsign && 
-				passcheck(argv[i], (long int)(equalsign - &argv[i][0])))
+				if (equalsign && passcheck(argv[i], (long int)(equalsign
+							- &argv[i][0])))
 				{
 					equalsign[0] = 0; // nullterm to key
 					replace_or_append_var(argv[i], &equalsign[1], env, tools);
@@ -50,14 +52,20 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 				print_tab(tools->env);
 				exit(0);
 			}
-			j = i - 1;
-			while (++j < MAXARGS)
-				ft_memcpy(argv[j - i], argv[j], sizeof(argv));
-			handle_node((t_cmd*)ecmd, tools);
+			j = i;
+			while (ecmd->argv[i])
+			{
+				ecmd->argv[i - j] = ecmd->argv[i];
+				i++;
+			}
+			while (i - j < MAXARGS)
+				argv[i++ - j] = NULL;
+			handle_node((t_cmd *)ecmd, tools);
 			clean_tools(tools);
 			exit(0);
 		}
 		waitpid(pid, &status, 0);
+		usleep(500);
 		check_system_fail(status, tools, 0);
 	}
 	return (1);
@@ -74,7 +82,7 @@ int	passcheck(char *start, long int lim)
 		if (ft_isspace(start[i]) || isquote(start[i])
 			|| ft_strchr("*&|<>?{}()[]", start[i]))
 		{
-			//print_error("export", "not a valid identifier", arg);
+			// print_error("export", "not a valid identifier", arg);
 			return (0);
 		}
 		i++;

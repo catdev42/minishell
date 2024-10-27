@@ -6,14 +6,15 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 20:11:27 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/27 18:06:55 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
 // ==250131== 40 bytes in 1 blocks are definitely lost in loss record 14 of 65
-// ==250131==    at 0x4848899: malloc (in /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
+// ==250131==    at 0x4848899: malloc (in
+// /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
 // ==250131==    by 0x403AE3: makeredir (init.c:30)
 // ==250131==    by 0x405395: createredir_here (parse_heredoc.c:81)
 // ==250131==    by 0x4057F5: parse_redirs (parse_redir_exec.c:54)
@@ -24,49 +25,10 @@
 
 // rewrite nullify to use actual information
 
-/* Initialize the heredoc names struct */
-void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
-{
-	int		i;
-	char	*tempalloc;
-
-	i = 0;
-	while (i < MAXARGS)
-	{
-		tempalloc = NULL;
-		tempalloc = ft_itoa(i);
-		if (!tempalloc)
-			error_exit(tools, errno);
-		ft_strlcpy(heredocs[i], "heredoc", MAXARGS);
-		ft_strlcat(heredocs[i], tempalloc, MAXARGS);
-		free(tempalloc);
-		i++;
-	}
-	return ;
-}
-
-void	here_unlink(t_tools *tools)
-{
-	int	i;
-
-	char(*heredocs)[20];
-	heredocs = tools->heredocs;
-	i = 0;
-	while (i < MAXARGS)
-	{
-		if (access(heredocs[i], F_OK) == -1)
-		{
-			if (errno == ENOENT)
-				errno = 0;
-			else
-				print_error(heredocs[i], "permission", NULL);
-		}
-		else
-			unlink(heredocs[i]);
-		i++;
-	}
-	return ;
-}
+/*
+if I press control c... I have to leave heredoc function and return to minishell
+i need to create the file and record the name while in main process and launch ONLY the heredoc readline in a separate process
+*/
 
 // tools->lastredir;
 // launchreadlineloop
@@ -98,54 +60,86 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 /*Gives user the cursor - must check*/
 char	*make_heredoc_file(char *delim, t_tools *tools)
 {
-	char *end;
-	char *tempalloc_delim;
-	char *line;
-	char *templine;
-	int fd;
+	char	*end;
+	char	*tempalloc_delim;
+	int		fd;
+	pid_t	pid;
 
+	pid = -1;
 	init_zero(NULL, NULL, &end, &tempalloc_delim);
 	end = get_token_end(delim);
 	fd = open(tools->heredocs[tools->hereindex++],
 			O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
-		error_exit(tools, errno);
+		error_exit( tools, 1); // exits the program and cleansfiles
 	tempalloc_delim = ft_substr(delim, 0, end - delim);
-	while (1)
-	{
-		// ft_putstr_fd(1, "\n"); // do we need this? test
-		line = NULL;
-		// tools->sa->sa_handler = handle_here_signals;
-		init_sa_heredoc(tools->sa);
-		line = readline("heredoc: ");
-		// ft_putstr_fd(ft_itoa(global_signal), 2);
-		if (global_signal == SIGINT)
-			return (NULL);
-		if (!line)
-		{
-			print_error("warning",
-				"here-document at line 3 delimited by end-of-file, wated",
-				"end");
-			// error_exit(tools, errno);
-			return (NULL);
-		}
-		init_sa_default(tools->sa);
-
-		if (ft_strncmp(line, tempalloc_delim, end - delim + 1) == 0)
-			break ;
-		templine = safe_calloc(ft_strlen(line) + 3, 1, tools);
-		ft_strlcpy(templine, line, ft_strlen(line) + 3);
-		ft_strlcat(templine, "\n", ft_strlen(line) + 3);
-		free(line);
-		if (write(fd, templine, ft_strlen(templine)) == -1)
-		{
-			free(templine);
-			error_exit(tools, errno);
-		}
-		free(templine);
-	}
+	if (!tempalloc_delim)
+		error_exit( tools, 1); 
+	pid = fork();
+	if (pid == -1)
+		error_exit( tools, 1); 
+	if (pid == 0)
+		write_heredoc(fd, tempalloc_delim, tools); // put in fork!
+	waitpid(pid, &tools->exit_code, 0);
+	if (global_signal == SIGINT)
+		return (NULL);
+	check_system_fail(tools->exit_code, tools, 1); // we are in main
 	close(fd);
-
-	free(line);
 	return (tools->heredocs[tools->hereindex - 1]);
 }
+
+/*Gives user the cursor - must check*/
+void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
+{
+	char	*line;
+
+	while (1)
+	{
+		line = NULL;
+		init_sa(tools->sa, handle_here_sig); // passing a function
+		line = readline("heredoc: ");
+		if (global_signal == SIGINT)
+			good_exit(tools);
+		init_sa(tools->sa, SIG_DFL); // passing a function
+		if (!line || ft_strncmp(line, alloc_delim, ft_strlen(alloc_delim)) == 0)
+		{
+			if (!line)
+				print_error("warning", "here-doc delimited by EOF, wanted ",
+					alloc_delim);
+			break ;
+		}
+		if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
+		{
+			free(line);
+			free(alloc_delim);
+			print_errno_exit(NULL, NULL, errno, tools); // we are in fork
+		}
+		free(line);
+	}
+	free(line);
+	free(alloc_delim);
+	close(fd);
+	good_exit(tools); // exits for 0 for success while cleaning
+}
+
+/* Initialize the heredoc names struct */
+void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
+{
+	int		i;
+	char	*tempalloc;
+
+	i = 0;
+	while (i < MAXARGS)
+	{
+		tempalloc = NULL;
+		tempalloc = ft_itoa(i);
+		if (!tempalloc)
+			error_exit(tools, errno);
+		ft_strlcpy(heredocs[i], "heredoc", MAXARGS);
+		ft_strlcat(heredocs[i], tempalloc, MAXARGS);
+		free(tempalloc);
+		i++;
+	}
+	return ;
+}
+

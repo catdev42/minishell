@@ -1,66 +1,52 @@
 #include "./include/minishell.h"
-#include <unistd.h>
 #include <fcntl.h>
+#include <unistd.h>
 
 // Function to change directory
-int cd(char *path) {
-    if (chdir(path) < 0) {
-        printf(2, "cd: cannot change directory to %s\n", path);
-        return -1;
-    }
-    return 0;
+// int	cd(char *path)
+// {
+// 	if (chdir(path) < 0)
+// 	{
+// 		printf(2, "cd: cannot change directory to %s\n", path);
+// 		return (-1);
+// 	}
+// 	while (1)
+// 	{
+// 		printf("HELLO");
+// 	}
+// 	return (0);
+// }
+
+int	main(void)
+{
+	while (1)
+	{
+		;
+	}
+	// 	static char	buf[100];
+	// 	char		**cmd;
+	// 	// Read and execute commands
+	// 	while (getcmd(buf, sizeof(buf)) >= 0)
+	// 	{
+	// 		if (strncmp(buf, "cd ", 3) == 0)
+	// 		{
+	// 			buf[strlen(buf) - 1] = 0; // Remove newline character
+	// 			if (cd(buf + 3) < 0)
+	// 			{
+	// 				// Handle error
+	// 			}
+	// 			continue ;
+	// 		}
+	// 		if (fork() == 0)
+	// 		{
+	// 			cmd = parsecmd(buf);
+	// 			runcmd(cmd);
+	// 			exit(0);
+	// 		}
+	// 		wait(NULL);
+	// 	}
+	return (0);
 }
-
-
-int main(void) {
-    static char buf[100];
-
-    // Read and execute commands
-    while (getcmd(buf, sizeof(buf)) >= 0) {
-        if (strncmp(buf, "cd ", 3) == 0) {
-            buf[strlen(buf) - 1] = 0;  // Remove newline character
-            if (cd(buf + 3) < 0) {
-                // Handle error
-            }
-            continue;
-        }
-
-        if (fork() == 0) {
-            char **cmd = parsecmd(buf);
-            runcmd(cmd);
-            exit(0);
-        }
-        wait(NULL);
-    }
-    return 0;
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // static size_t	ft_length_long(long int n)
 // {

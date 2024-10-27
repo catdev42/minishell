@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:15:14 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 18:50:12 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/27 16:51:02 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,6 +34,7 @@ char	*safe_calloc(size_t nmemb, size_t size, t_tools *tools)
 /* exits the program if exiting*/
 int	record_exit(int exit_num, t_tools *tools)
 {
+	global_signal = 0;
 	tools->exit_code = exit_num;
 	if (tools->exit_string)
 	{

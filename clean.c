@@ -6,15 +6,21 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:22:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 19:57:20 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/27 18:07:06 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-/* RESET TOOLS: leave env var */
+// /* RESET TOOLS: leave env var */
+
 void	reset_tools(t_tools *tools)
 {
+	if (tools->exit_string)
+		free(tools->exit_string);
+	if (tools->env)
+		ft_freetab(tools->env);
+	clear_history();
 	if (tools->line)
 	{
 		ft_bzero(tools->line, tools->line_capacity);
@@ -39,10 +45,32 @@ void	reset_tools(t_tools *tools)
 	tools->e_cline = NULL;
 	tools->hereindex = 0;
 	// TODO CLEAN HEREDOC FILES
-	here_unlink(tools);
 }
 
 
+/*removes the existing files after use*/
+void	here_unlink(t_tools *tools)
+{
+	int	i;
+
+	char(*heredocs)[20];
+	heredocs = tools->heredocs;
+	i = 0;
+	while (i < MAXARGS)
+	{
+		if (access(heredocs[i], F_OK) == -1)
+		{
+			if (errno == ENOENT)
+				errno = 0;
+			else
+				print_error(heredocs[i], "permission", NULL);
+		}
+		else
+			unlink(heredocs[i]);
+		i++;
+	}
+	return ;
+}
 void	tree_free(struct s_cmd *node)
 {
 	struct s_execcmd	*ecmd;
@@ -70,10 +98,6 @@ void	tree_free(struct s_cmd *node)
 	}
 	return ;
 }
-
-
-
-
 
 // static void	handle_exec(struct s_execcmd *cmd)
 // {

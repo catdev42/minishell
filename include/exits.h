@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 11:20:46 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/27 18:02:23 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,6 +32,8 @@ int				print_error(const char *arg, const char *errline,
 /************************/
 /******* CLEAN.C ********/
 /************************/
+void			clean_fork(t_tools *tools); //leaves files
+
 void			reset_tools(t_tools *tools);
 void			tree_free(struct s_cmd *node);
 

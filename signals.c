@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 19:21:36 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/27 17:04:29 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,10 +19,23 @@ void	new_line(void)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
-
-void	handle_signals(int sig)
+// init_sa(tool->sa, handle_reprint)
+void	init_sa(struct sigaction *sa, void (*handler)(int))
 {
-	// ft_putstr_fd("I am in handle_signals", 2);
+	sa->sa_handler = handler;
+	sigemptyset(&sa->sa_mask);
+	sa->sa_flags = 0;
+	if (sigaction(SIGINT, sa, NULL) == -1)
+	{
+		perror("sigaction");
+		exit(1);
+	}
+}
+
+
+/*for while in minishell: readline function*/
+void	handle_reprint_sig(int sig)
+{
 	if (sig == SIGINT)
 	{
 		new_line();
@@ -34,61 +47,88 @@ void	handle_signals(int sig)
 		global_signal = sig;
 }
 
-void	handle_here_signals(int sig)
+/*for while in the rest of the program if something needs to be control C'd like a process killed*/
+void	handle_noprint_sig(int sig)
 {
 	if (sig == SIGINT)
 	{
-		new_line();
+		ft_putstr_fd("\n", 2);
 		global_signal = SIGINT;
 	}
 	else
 		global_signal = sig;
-	// ft_putstr_fd("I am in handle_here_signals", 2);
 }
 
-void	init_sa(struct sigaction *sa)
+/*have to test*/
+
+void	handle_here_sig(int sig)
 {
-	sa->sa_handler = handle_signals;
-	sigemptyset(&sa->sa_mask);
-	sa->sa_flags = 0;
-	if (sigaction(SIGINT, sa, NULL) == -1)
+	// ft_putstr_fd("I am in handle_here_signals", 2); // checker
+	if (sig == SIGINT)
 	{
+		// new_line();
 		global_signal = SIGINT;
-		perror("sigaction");
-		exit(1);
 	}
+	else
+		global_signal = sig;
 }
 
-void	init_sa_heredoc(struct sigaction *sa)
-{
-	sa->sa_handler = handle_here_signals;
-	sigemptyset(&sa->sa_mask);
-	sa->sa_flags = 0;
-	if (sigaction(SIGINT, sa, NULL) == -1)
-	{
-		global_signal = SIGINT;
-		perror("sigaction");
-		exit(1);
-	}
-}
+/*
+// void	init_sa_default(struct sigaction *sa)
+// {
+// 	sa->sa_handler = SIG_DFL;
+// 	sigemptyset(&sa->sa_mask);
+// 	sa->sa_flags = 0;
+// 	if (sigaction(SIGINT, sa, NULL) == -1)
+// 	{
+// 		global_signal = SIGINT;
+// 		perror("sigaction");
+// 		exit(1);
+// 	}
+// }
 
-void	init_sa_default(struct sigaction *sa)
-{
-	sa->sa_handler = SIG_DFL;
-	sigemptyset(&sa->sa_mask);
-	sa->sa_flags = 0;
-	if (sigaction(SIGINT, sa, NULL) == -1)
-	{
-		global_signal = SIGINT;
-		perror("sigaction");
-		exit(1);
-	}
-}
+// void	init_sa(struct sigaction *sa, )
+// {
+// 	sa->sa_handler = handle_signals;
+// 	sigemptyset(&sa->sa_mask);
+// 	sa->sa_flags = 0;
+// 	if (sigaction(SIGINT, sa, NULL) == -1)
+// 	{
+// 		global_signal = SIGINT;
+// 		perror("sigaction");
+// 		exit(1);
+// 	}
+// }
 
+// void	init_sa_heredoc(struct sigaction *sa)
+// {
+// 	sa->sa_handler = handle_here_signals;
+// 	sigemptyset(&sa->sa_mask);
+// 	sa->sa_flags = 0;
+// 	if (sigaction(SIGINT, sa, NULL) == -1)
+// 	{
+// 		global_signal = SIGINT;
+// 		perror("sigaction");
+// 		exit(1);
+// 	}
+// }
 
+// void	init_sa_fork(struct sigaction *sa)
+// {
+// 	sa->sa_handler = handle_here_signals;
+// 	sigemptyset(&sa->sa_mask);
+// 	sa->sa_flags = 0;
+// 	if (sigaction(SIGINT, sa, NULL) == -1)
+// 	{
+// 		global_signal = SIGINT;
+// 		perror("sigaction");
+// 		exit(1);
+// 	}
+// }
 
 // void init_sa_default(){
 
 // }
 
 // void	init_child_signals(void)
+*/

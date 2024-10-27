@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 19:52:41 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/27 18:07:38 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int	main(int argc, char **argv, char **env)
 	copy_env(&tools, env);
 	if (!tools.env || !tools.heredocs[0][0])
 		(error_exit(&tools, 1));
-	init_sa(tools.sa); // chat says this is wrong
+	init_sa(tools.sa, handle_reprint_sig); // chat says this is wrong
 	shell_loop(&tools);
 	return (0);
 }
@@ -42,21 +42,17 @@ int	shell_loop(t_tools *tools)
 	{
 		dup2(fd[0], 0);
 		dup2(fd[1], 1);
-		// tools->sa->sa_handler = handle_signals;
-		init_sa(tools->sa);
+		init_sa(tools->sa, handle_reprint_sig);
 		if (global_signal == SIGTERM) // TODO? or done
 			break ;
+		global_signal = 0;
 		tools->line = readline("minishell: ");
-		// global_signal = 0;
+		init_sa(tools->sa, handle_noprint_sig);
 		if (!tools->line || global_signal == SIGTERM)
 			ft_exit(NULL, tools);
 		if (global_signal)
-			// tools->exit_code = global_signal + 128;
 			record_exit(global_signal + 128, tools);
 		tools->sa->sa_handler = SIG_DFL;
-		/*TODO there has to be a way to call the exit function
-		eithout a command struct
-		*/
 		if (!valid_line(tools->line))
 			continue ;
 		add_history(tools->line);
@@ -67,17 +63,17 @@ int	shell_loop(t_tools *tools)
 		tools->e_cline = tools->cleanline + ft_strlen(tools->cleanline);
 		if (!tools->cleanline)
 			continue ;
-		// ft_putstr_fd(tools->cleanline, 1);
+		// ft_putstr_fd(tools->cleanline, 1); //test cleanline
 		// ft_putstr_fd("  -- test of cleanline\n", 1);
 		if (!parseline(tools->cleanline, tools))
 			continue ;
-		// walking(tools->tree);
-		// execution(tools->tree, tools);
+		// walking(tools->tree); //test tree
 		// if (global_signal == SIGTERM)
 		// TODO? or done
 		// 	break ;
 		running_msh(tools);
 		reset_tools(tools);
+		here_init(tools->heredocs, tools);
 	}
 	clean_tools(tools);
 	clear_history();
