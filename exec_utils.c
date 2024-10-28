@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/27 20:03:15 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/28 13:48:33 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -97,7 +97,7 @@ int	file_dir_noexist(const char *path, int fd_in_or_out)
 
 int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
 {
-	int fileordir;
+	int	fileordir;
 
 	if (!rcmd || fd_in_or_out < 0)
 		return (0);
@@ -105,7 +105,10 @@ int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
 	if (fileordir == 0)
 		return (-1);
 	if (fileordir == 2 && rcmd->fd == 1) // directory, outfile
-		print_error(rcmd->file, "Is a directory", NULL);
+	{
+		print_error(rcmd->file, "is a directory", NULL);
+		return (-1); //myakoven oct 28, we cant redirect this: TODO
+	}
 	if (fileordir == 1 && rcmd->append && rcmd->fd == 1)
 		// reg file (not a directory), append, outfile
 		// I HAVE TO ADDRESS APPEND IN REDIR CREATION (myakoven)

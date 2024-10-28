@@ -63,8 +63,10 @@ void	handle_node(t_cmd *cmd, t_tools *tool)
 		pcmd = (t_pipecmd *)cmd;
 		run_pipe(pcmd, tool);
 	}
-	else
-		print_errno_exit(NULL, "unknown error", 141, tool);
+	/*There is no else here, every process should have exited,
+		we only get to this error if somethign went wrong
+		*/
+	print_errno_exit(NULL, "unknown error", 141, tool);
 	/*
 	This is an error exit, because there is no else,
 		this just catches any unknown errors... if we dont terminate all the stuff in exec node we exit error
@@ -117,10 +119,10 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 int	run_redir(t_redircmd *rcmd, t_tools *tool)
 {
 	rcmd->mode = check_file_type(rcmd, rcmd->fd);
-	// if (rcmd->mode == -1)
-	// 	exit(1); // exit fail 
+	// MYAKOVEN: IF NOT A VALID REDIR: EXIT FORK
+	// error is already printed
 	if (rcmd->mode == -1)
-		return (0);
+		error_exit(tool, tool->exit_code);
 	close(rcmd->fd); // close(0)
 	rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
 	// opening at fd 0 if zero was closed
