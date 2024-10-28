@@ -6,13 +6,13 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 15:25:59 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:11:56 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-volatile sig_atomic_t	global_signal = 0; 
+volatile sig_atomic_t	global_signal = 0;
 
 int	main(int argc, char **argv, char **env)
 {
@@ -21,13 +21,13 @@ int	main(int argc, char **argv, char **env)
 
 	if (argc > 1 || argv[1])
 		ft_putstr_fd("This program does not accept arguments\n", 2);
-	ft_memset(&tools, 0, sizeof(t_tools)); 
+	ft_memset(&tools, 0, sizeof(t_tools));
 	tools.sa = &sa;
 	here_init(tools.heredocs, &tools);
 	copy_env(&tools, env);
 	if (!tools.env || !tools.heredocs[0][0])
 		(error_exit_main(&tools, 1));
-	init_sa(tools.sa, handle_reprint_sig); 
+	init_sa(tools.sa, handle_reprint_sig);
 	shell_loop(&tools);
 	return (0);
 }
@@ -42,13 +42,14 @@ int	shell_loop(t_tools *tools)
 	{
 		dup2(fd[0], 0);
 		dup2(fd[1], 1);
-		reset_tools(tools); 
+		here_unlink(tools);
+		reset_tools(tools);
 		init_sa(tools->sa, handle_reprint_sig);
-		if (global_signal == SIGTERM) 
+		if (global_signal == SIGTERM)
 			break ;
 		global_signal = 0;
 		tools->line = readline("minishell: ");
-		init_sa(tools->sa, handle_noprint_sig);
+		init_sa(tools->sa, handle_printn_sig);
 		if (!tools->line || global_signal == SIGTERM)
 			ft_exit(NULL, tools);
 		if (global_signal)
@@ -70,7 +71,6 @@ int	shell_loop(t_tools *tools)
 			continue ;
 		// walking(tools->tree); //test tree
 		running_msh(tools);
-		here_unlink(tools);
 	}
 	close(fd[1]);
 	close(fd[0]);

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/27 17:04:29 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:38:14 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,6 @@ void	init_sa(struct sigaction *sa, void (*handler)(int))
 	}
 }
 
-
 /*for while in minishell: readline function*/
 void	handle_reprint_sig(int sig)
 {
@@ -48,7 +47,7 @@ void	handle_reprint_sig(int sig)
 }
 
 /*for while in the rest of the program if something needs to be control C'd like a process killed*/
-void	handle_noprint_sig(int sig)
+void	handle_printn_sig(int sig)
 {
 	if (sig == SIGINT)
 	{
@@ -58,6 +57,15 @@ void	handle_noprint_sig(int sig)
 	else
 		global_signal = sig;
 }
+
+// void	handle_printc_sig(int sig)
+// {
+// 	if (sig == SIGINT)
+	
+// 		ft_putstr_fd("\n", 2);
+	
+// 	global_signal = sig;
+// }
 
 /*have to test*/
 

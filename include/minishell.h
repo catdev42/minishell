@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 15:20:33 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:38:50 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -160,8 +160,9 @@ void			new_line(void);
 /************************/
 void			init_sa(struct sigaction *sa, void (*handler)(int));
 void			handle_reprint_sig(int sig);
-void			handle_noprint_sig(int sig);
+void			handle_printn_sig(int sig);
 void			handle_here_sig(int sig);
+// void			handle_printc_sig(int sig);
 /************************/
 /******* PARSE.C ********/
 /************************/
