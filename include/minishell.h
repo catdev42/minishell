@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 17:59:26 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:04:55 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,16 +58,12 @@ extern volatile sig_atomic_t global_signal; // TODO
 
 // volatile sig_atomic_t	global_signal = 0;
 
-/*TEMP*/
-// int				passcheck(char *start, long int lim);
-// int				replace_or_append_var(char *key, char *value, char **env,
-// 					t_tools *tools);
-// int				append_var(char *key, char *value, char **env, t_tools *tools);
-// int				env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools);
-// int				env(char **argv, char **env, t_tools *tools);
+
 /*TESTERS*/
 void			walking(struct s_cmd *cmd);
 
+/*TEMP*/
+void			free_things(char **s1, char **s2, char **s3, int fd);
 
 /************************/
 /******* BUILTINS.c ****/
@@ -94,9 +90,6 @@ int				append_var(char *key, char *value, char **env, t_tools *tools);
 int				echo(t_execcmd *cmd);
 
 int				cd(char **argv, char **env, t_tools *tools);
-
-
-
 
 /************************/
 /*******  ENV.C  ********/
@@ -213,7 +206,6 @@ int				skip_quotes(char *line, int i);
 int				skip_token(char *start, int i);
 
 #endif
-
 
 // int				pwd(t_execcmd *cmd);
 // int				ft_exit(t_execcmd *cmd, t_tools *tool);

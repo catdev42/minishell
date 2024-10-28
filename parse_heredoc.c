@@ -6,13 +6,13 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 17:38:36 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:04:27 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-static void	free_things(char **s1, char **s2, char **s3, int fd);
+// static void	free_things(char **s1, char **s2, char **s3, int fd);
 
 // ==250131== 40 bytes in 1 blocks are definitely lost in loss record 14 of 65
 // ==250131==    at 0x4848899: malloc (in
@@ -105,7 +105,7 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 /*Gives user the cursor - must check*/
 void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 {
-	init_sa(tools->sa, SIG_DFL); //in fork
+	init_sa(tools->sa, SIG_DFL); // in fork
 	free_things(&tools->cleanline, &tools->line, NULL, -1);
 	while (1)
 	{
@@ -116,7 +116,6 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 			if (!tools->line)
 				print_error("warning", "here-doc delimited by EOF, wanted ",
 					alloc_delim);
-			free_things(NULL, NULL, &alloc_delim, fd);
 			break ;
 		}
 		tools->cleanline = clean_line(tools->line, ft_strlen(tools->line),
@@ -133,14 +132,14 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 	good_exit(tools); // will free line and cleanline!
 }
 
-static void	free_things(char **s1, char **s2, char **s3, int fd)
+void	free_things(char **s1, char **s2, char **s3, int fd)
 {
 	if (s1 && *s1)
 	{
-		free(*s2);
+		free(*s1);
 		*s1 = NULL;
 	}
-	if (s2 && *s1)
+	if (s2 && *s2)
 	{
 		free(*s2);
 		*s2 = NULL;

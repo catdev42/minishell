@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:22:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 15:23:55 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:01:35 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ void	reset_tools(t_tools *tools)
 	if (tools->cleanline)
 	{
 		ft_bzero(tools->cleanline, tools->cl_capacity);
-		free(tools->cleanline);
+		free(tools->cleanline); //problem in fork
 	}
 	if (tools->tree)
 		tree_free(tools->tree);
