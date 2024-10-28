@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 17:59:55 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:36:00 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -173,7 +173,7 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 		else if (get_matrix_len(cmd->argv) == 2)
 		{
 			ft_putstr_fd("exit ", 1);
-			if (ft_strisnumeric(cmd->argv[1]))
+			if (!ft_strisnumeric(cmd->argv[1]))
 				record_exit(ft_atol(cmd->argv[1]) % 256, tool);
 			ft_putstr_fd(tool->exit_string, 1);
 		}

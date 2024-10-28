@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 18:32:04 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:07:14 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -67,7 +67,8 @@ struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 		}
 		start++;
 	}
-	parseargv(tools->s, end_of_exec, tools);
+	if (!parseargv(tools->s, end_of_exec, tools))
+		return (NULL);
 	tools->lastredir = NULL;
 	return ((struct s_cmd *)ret);
 }
@@ -108,7 +109,7 @@ struct s_cmd	*parseargv(char *start, char *end, t_tools *tools)
 	index = 0;
 	if (!ecmd)
 		error_exit_main(tools, 1);
-	while (start[i] && (&start[i] < end))
+	while (start && start[i] && (&start[i] < end))
 	{
 		if (index == MAXARGS)
 		{

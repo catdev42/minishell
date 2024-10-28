@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 22:18:59 by myakoven          #+#    #+#             */
-/*   Updated: 2024/02/14 16:05:22 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:34:35 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,6 +43,33 @@ long	ft_atol(const char *nptr)
 {
 	long	num;
 	long	sign;
+
+	num = 0;
+	sign = 1;
+	while (*nptr == ' ' || (*nptr >= 9 && *nptr <= 13))
+		nptr++;
+	if (*nptr == '-' || *nptr == '+')
+	{
+		if (*nptr == '+')
+			nptr++;
+		else if (*nptr == '-')
+		{
+			sign = -1;
+			nptr++;
+		}
+	}
+	while (*nptr >= '0' && *nptr <= '9')
+	{
+		num = num * 10 + (*nptr - 48);
+		nptr++;
+	}
+	return (num * sign);
+}
+
+long long	ft_atoll(const char *nptr)
+{
+	long long	num;
+	long long	sign;
 
 	num = 0;
 	sign = 1;

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/19 19:22:22 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/20 14:04:52 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 19:34:10 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,6 +54,7 @@ size_t				ft_strlcat(char *dst, const char *src, size_t size);
 
 int					ft_atoi(const char *nptr);
 long				ft_atol(const char *nptr);
+long long			ft_atoll(const char *nptr);
 
 void				*ft_calloc(size_t nmemb, size_t size);
 char				*ft_strdup(const char *s);
