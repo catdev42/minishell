@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 23:59:13 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:54:51 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,9 +34,10 @@ int	copy_var(char *c_line, char *line, t_tools *tools)
 	var = ft_substr(line, 1, i - 1);
 	if (!var)
 		error_exit_main(tools, 1);
-	// if (ft_strncmp(var, "?", 2))
-	// 	var_result = ft_itoa(tool->exit_code));
-	var_result = get_var_value(tools->env, var);
+	if (ft_strncmp(var, "?", 2))
+		var_result = tools->exit_string;
+	else
+		var_result = get_var_value(tools->env, var);
 	free(var);
 	if (!var_result)
 		return (i);

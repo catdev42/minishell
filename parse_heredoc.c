@@ -6,11 +6,13 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 15:22:30 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 16:44:45 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
+
+static void	free_things(char **s1, char **s2, char **s3, int fd);
 
 // ==250131== 40 bytes in 1 blocks are definitely lost in loss record 14 of 65
 // ==250131==    at 0x4848899: malloc (in
@@ -60,10 +62,10 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 /*Gives user the cursor - must check*/
 char	*make_heredoc_file(char *delim, t_tools *tools)
 {
-	char *end;
-	char *tempalloc_delim;
-	int fd;
-	pid_t pid;
+	char	*end;
+	char	*tempalloc_delim;
+	int		fd;
+	pid_t	pid;
 
 	pid = -1;
 	init_zero(NULL, NULL, &end, &tempalloc_delim);
@@ -89,7 +91,9 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 	record_exit(tools->exit_code, tools);
 	if (tools->exit_code == 130)
 	{
+		ft_putstr_fd("^C", 2);
 		here_unlink(tools);
+		close(fd);
 		return (NULL);
 	}
 	close(fd);
@@ -99,42 +103,57 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 /*Gives user the cursor - must check*/
 void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 {
-	char	*line;
-
+	// char	*line;
+	free_things(&tools->cleanline, &tools->line, NULL, -1);
 	while (1)
 	{
-		line = NULL;
 		init_sa(tools->sa, SIG_DFL); // passing a function
-		line = readline("heredoc: ");
-		// if (global_signal == SIGINT)
-		// {
-		// 	free(line);
-		// 	exit(errno);
-		// }
-		// good_exit(tools);
-		init_sa(tools->sa, SIG_DFL); // passing a function
-		if (!line || ft_strncmp(line, alloc_delim, ft_strlen(alloc_delim)) == 0)
+		tools->line = readline("heredoc: ");
+		if (!tools->line || ft_strncmp(tools->line, alloc_delim,
+				ft_strlen(alloc_delim)) == 0)
 		{
-			if (!line)
+			if (!tools->line)
 				print_error("warning", "here-doc delimited by EOF, wanted ",
 					alloc_delim);
-			free(line);
+			free_things(NULL, NULL, &alloc_delim, fd);
 			break ;
 		}
-		if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
+		tools->cleanline = clean_line(tools->line, ft_strlen(tools->line),
+				tools);
+		if (!tools->cleanline || write(fd, tools->cleanline,
+				ft_strlen(tools->cleanline)) == -1 || write(fd, "\n", 1) == -1)
 		{
-			free(line);
+			free_things(&alloc_delim, NULL, NULL, -1);
 			free(alloc_delim);
+			close(fd);
 			print_errno_exit(NULL, NULL, errno, tools); // we are in fork
 		}
-		free(line);
-		line = NULL;
+		free_things(&tools->line, &tools->cleanline, NULL, -1);
 	}
-	free(alloc_delim);
-	close(fd);
-	good_exit(tools);
+	free_things(NULL, NULL, &alloc_delim, fd);
+	good_exit(tools); // will free line and cleanline!
 }
 
+static void	free_things(char **s1, char **s2, char **s3, int fd)
+{
+	if (*s1)
+	{
+		free(*s2);
+		*s1 = NULL;
+	}
+	if (*s1)
+	{
+		free(*s2);
+		*s2 = NULL;
+	}
+	if (*s3)
+	{
+		free(*s3);
+		*s3 = NULL;
+	}
+	if (fd >= 0)
+		close(fd);
+}
 /* Initialize the heredoc names struct */
 void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
 {

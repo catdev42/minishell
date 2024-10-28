@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/27 17:19:12 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:42:17 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -82,7 +82,7 @@ int	passcheck(char *start, long int lim)
 		if (ft_isspace(start[i]) || isquote(start[i])
 			|| ft_strchr("*&|<>?{}()[]", start[i]))
 		{
-			// print_error("export", "not a valid identifier", arg);
+			print_error("export", "not a valid identifier", start);
 			return (0);
 		}
 		i++;
