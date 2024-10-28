@@ -3,15 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   exec_node_handling.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/27 20:26:52 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/28 13:52:21 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
+/*Builtins, minishell launch, existing path*/
 int	other_execution_type(t_tools *tool, t_execcmd *ecmd)
 {
 	if (is_builtin(ecmd->argv[0]))

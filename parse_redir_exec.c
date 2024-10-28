@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redir_exec.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/27 20:28:14 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/28 13:53:58 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,19 +35,16 @@ struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 	int				fd_in_or_out;
 	bool			append;
 	struct s_cmd	*ret;
-	//char			*keep_red_start;
 
 	ret = NULL;
 	while (*start && start < end_of_exec)
 	{
 		append = 0;
-		// mode = -1;
 		fd_in_or_out = -1;
 		if (isquote(*start))
 			start += skip_quotes(start, 0);
 		if (isredir(*start))
 		{
-			//keep_red_start = start;
 			fd_in_or_out = infile_or_outfile(start);
 			if (start[0] == start[1] && start[0] == '<')
 			{
@@ -70,44 +67,6 @@ struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 	tools->lastredir = NULL;
 	return ((struct s_cmd *)ret);
 }
-
-// struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
-// {
-// 	int				fd_in_or_out;
-// 	int				mode;
-// 	struct s_cmd	*ret;
-
-// 	ret = NULL;
-// 	while (*start && start < end_of_exec)
-// 	{
-// 		mode = -1;
-// 		fd_in_or_out = -1;
-// 		if (isquote(*start))
-// 			start += skip_quotes(start, 0);
-// 		if (isredir(*start))
-// 		{
-// 			fd_in_or_out = infile_or_outfile(start);
-// 			if (start[0] == start[1] && start[0] == '<')
-// 			{
-// 				createredir_here(&start[2], mode, 0, tools);
-// 				start = start + skip_token(start, 0);
-// 			}
-// 			else
-// 			{
-// 				if (start[1] == start[0])
-// 					start++;
-// 				ret = createredir(++start, mode, fd_in_or_out, tools);
-// 				// (struct t_execcmd *)ret->appe
-// 			}
-// 			if (!ret)
-// 				ret = (struct s_cmd *)tools->lastredir;
-// 		}
-// 		start++;
-// 	}
-// 	parseargv(tools->s, end_of_exec, tools);
-// 	tools->lastredir = NULL;
-// 	return ((struct s_cmd *)ret);
-// }
 
 /*
 RETURNS length of the token in line,
