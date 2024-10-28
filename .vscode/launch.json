@@ -21,11 +21,11 @@
 				"ignoreFailures": true
 			}
 			,
-			{
-				"description": "Set follow-fork-mode to child",
-				"text": "set follow-fork-mode child"
-			}
-			,
+			// {
+			// 	"description": "Set follow-fork-mode to child",
+			// 	"text": "set follow-fork-mode child"
+			// }
+			// ,
 			{
 				"description": "Set Disassembly Flavor to Intel",
 				"text": "-gdb-set disassembly-flavor intel",

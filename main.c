@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:46:15 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,7 @@ int	shell_loop(t_tools *tools)
 	{
 		dup2(fd[0], 0);
 		dup2(fd[1], 1);
+		reset_tools(tools); // diff place
 		init_sa(tools->sa, handle_reprint_sig);
 		if (global_signal == SIGTERM) // TODO? or done
 			break ;
@@ -72,9 +73,11 @@ int	shell_loop(t_tools *tools)
 		// TODO? or done
 		// 	break ;
 		running_msh(tools);
-		reset_tools(tools);
-		here_init(tools->heredocs, tools);
+		// here_init(tools->heredocs, tools);
+		// different place NOOOOO dnt do it already done
 	}
+	close(fd[1]);
+	close(fd[0]);
 	clean_tools(tools);
 	clear_history();
 	// exit(tools->exit_code); //SUGGESTED TODO

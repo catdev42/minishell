@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 00:42:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:42:30 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,8 @@ struct s_cmd	*parseline(char *cline, t_tools *tools)
 	}
 	if (!tools->tree)
 		tools->tree = parseexec(tools->s, tools->e_cline, tools);
+	if (!tools->tree) // isnt necessary but not bad
+		return (0);
 	nullify(tools->cleanline, tools);
 	remove_useless_quotes_final(tools->cleanline, tools->cl_capacity);
 	return (tools->tree);
