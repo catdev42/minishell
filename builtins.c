@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:59:55 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -55,7 +55,7 @@ int	cd(char **argv, char **env, t_tools *tools)
 		print_error("cd", "cannot change directory to %s\n", NULL);
 		return (1); // error
 	}
-	if (!replace_var("PWD", getcwd(buffer, MIDLEN), env)) /* if it errors*/
+	if (!replace_or_append_var("PWD", getcwd(buffer, MIDLEN), env, tools))
 		return (1);
 	free(buffer);
 	return (0);

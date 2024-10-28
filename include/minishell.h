@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 17:38:50 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 17:59:26 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,45 +59,52 @@ extern volatile sig_atomic_t global_signal; // TODO
 // volatile sig_atomic_t	global_signal = 0;
 
 /*TEMP*/
-char			*get_var(char **env, char *var);
-int				passcheck(char *start, long int lim);
-int				replace_or_append_var(char *key, char *value, char **env,
-					t_tools *tools);
-int				append_var(char *key, char *value, char **env, t_tools *tools);
-int				env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools);
+// int				passcheck(char *start, long int lim);
+// int				replace_or_append_var(char *key, char *value, char **env,
+// 					t_tools *tools);
+// int				append_var(char *key, char *value, char **env, t_tools *tools);
+// int				env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools);
 // int				env(char **argv, char **env, t_tools *tools);
 /*TESTERS*/
 void			walking(struct s_cmd *cmd);
 
+
 /************************/
 /******* BUILTINS.c ****/
 /************************/
-int				pwd(t_execcmd *cmd);
-int				ft_exit(t_execcmd *cmd, t_tools *tool);
-// int				env(t_execcmd *cmd, t_tools *tool);
-int				unset(t_execcmd *cmd, t_tools *tool);
-int				export(t_execcmd *cmd, t_tools *tool);
-// int				cd(t_execcmd *cmd, t_tools *tool);
-int				echo(t_execcmd *cmd);
 int				builtin_check_walk(t_cmd *cmd);
 
-int				cd(char **argv, char **env, t_tools *tools);
-char			*ft_join_one(char const *s1, char const *delim, char const *s2);
-int				replace_var(char *key, char *value, char **env);
-int				passcheck(char *start, long int lim);
+int				pwd(t_execcmd *cmd);
 
-// /************************/
-// /******* CLEAN.C ********/
-// /************************/
-// void			reset_tools(t_tools *tools);
-// void			tree_free(struct s_cmd *node);
+int				env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools);
+int				passcheck(char *start, long int lim);
+char			*ft_join_one(char const *s1, char const *delim, char const *s2);
+
+int				ft_exit(t_execcmd *cmd, t_tools *tool);
+
+int				unset(t_execcmd *cmd, t_tools *tool);
+
+int				export(t_execcmd *cmd, t_tools *tool);
+// int				replace_var(char *key, char *value, char **env);
+int				replace_or_append_var(char *key, char *value, char **env,
+					t_tools *tools);
+
+int				append_var(char *key, char *value, char **env, t_tools *tools);
+
+int				echo(t_execcmd *cmd);
+
+int				cd(char **argv, char **env, t_tools *tools);
+
+
+
 
 /************************/
 /*******  ENV.C  ********/
 /************************/
+char			*get_var(char **env, char *var);
+
 int				copy_env(t_tools *tools, char **env);
 char			*get_var_value(char **env, char *var);
-// char	*get_env_var(t_tools *tools, char *var);
 
 /************************/
 /********* EXEC *********/
@@ -121,8 +128,6 @@ int				other_execution_type(t_tools *tool, t_execcmd *ecmd);
 /* execredir */
 int				run_redir(t_redircmd *rcmd, t_tools *tool);
 void			run_pipe(t_pipecmd *pcmd, t_tools *tools);
-// pid_t			pipe_fork(int fd, t_cmd *cmd, int pfd, t_tools *tool);
-// void			run_pipe(t_pipecmd *pcmd, t_tools *tools);
 
 /************************/
 /******* INIT.C ********/
@@ -130,7 +135,6 @@ void			run_pipe(t_pipecmd *pcmd, t_tools *tools);
 struct s_cmd	*makeexec(void);
 struct s_cmd	*makeredir(char *file, char *efile, bool append, int fd);
 struct s_cmd	*makepipe(struct s_cmd *left, struct s_cmd *right);
-// void		init_tools(t_tools *tools);
 
 /************************/
 /******** LINE.C ********/
@@ -162,7 +166,6 @@ void			init_sa(struct sigaction *sa, void (*handler)(int));
 void			handle_reprint_sig(int sig);
 void			handle_printn_sig(int sig);
 void			handle_here_sig(int sig);
-// void			handle_printc_sig(int sig);
 /************************/
 /******* PARSE.C ********/
 /************************/
@@ -186,7 +189,6 @@ struct s_cmd	*parseargv(char *start, char *end, t_tools *tools);
 /***** parse_utils.c *****/
 
 int				infile_or_outfile(char *start);
-// char			*get_redir_path(char *redir, t_tools *tools); // not used
 char			*get_token_end(char *namestart);
 
 /************************/
@@ -198,17 +200,11 @@ int				valid_line(char *line);
 int				istoken(char c);
 int				isquote(char c);
 int				isredir(char c);
-/*
-int				skip_spaces(char *s);
-void			ft_bspace(void *s, size_t n);
-*/
 
 /******* utils2.c ********/
 char			*safe_calloc(size_t nmemb, size_t size, t_tools *tools);
 int				record_exit(int exit_num, t_tools *tools);
-// void			strip_quotes_final(char *start); // absolete
 void			init_zero(size_t *i, size_t *j, char **str1, char **str2);
-// void			free_tab(char **tab);
 /******* UTILS3.C *******/
 int				print_tab(char **envp);
 int				get_matrix_len(char **matrix);
@@ -216,8 +212,19 @@ int				check_quotes(char *line, int i);
 int				skip_quotes(char *line, int i);
 int				skip_token(char *start, int i);
 
-// int		check_quotes(char *line, int i);
-// char	*get_redir_error(char *line, int i, int goodtokens);
-// int		check_redirects(t_tools *tools);
-
 #endif
+
+
+// int				pwd(t_execcmd *cmd);
+// int				ft_exit(t_execcmd *cmd, t_tools *tool);
+// // int				env(t_execcmd *cmd, t_tools *tool);
+// int				unset(t_execcmd *cmd, t_tools *tool);
+// int				export(t_execcmd *cmd, t_tools *tool);
+// // int				cd(t_execcmd *cmd, t_tools *tool);
+// int				echo(t_execcmd *cmd);
+// int				builtin_check_walk(t_cmd *cmd);
+
+// int				cd(char **argv, char **env, t_tools *tools);
+// char			*ft_join_one(char const *s1, char const *delim, char const *s2);
+// int				replace_var(char *key, char *value, char **env);
+// int				passcheck(char *start, long int lim);
