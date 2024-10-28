@@ -6,12 +6,11 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:22:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 19:01:35 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 20:50:03 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
-
 
 /*removes the existing files after use*/
 void	here_unlink(t_tools *tools)
@@ -43,13 +42,13 @@ void	reset_tools(t_tools *tools)
 	if (tools->line)
 	{
 		ft_bzero(tools->line, tools->line_capacity);
-		free(tools->line);
+		free_things(&tools->line, NULL, NULL, -1);
 	}
 	tools->line = NULL;
 	if (tools->cleanline)
 	{
 		ft_bzero(tools->cleanline, tools->cl_capacity);
-		free(tools->cleanline); //problem in fork
+		free_things(&tools->cleanline, NULL, NULL, -1);
 	}
 	if (tools->tree)
 		tree_free(tools->tree);
@@ -61,6 +60,27 @@ void	reset_tools(t_tools *tools)
 	tools->lastredir = NULL;
 	tools->e_cline = NULL;
 	tools->hereindex = 0;
+}
+
+void	free_things(char **s1, char **s2, char **s3, int fd)
+{
+	if (s1 && *s1)
+	{
+		free(*s1);
+		*s1 = NULL;
+	}
+	if (s2 && *s2)
+	{
+		free(*s2);
+		*s2 = NULL;
+	}
+	if (s3 && *s3)
+	{
+		free(*s3);
+		*s3 = NULL;
+	}
+	if (fd >= 0)
+		close(fd);
 }
 
 /* part of reset */

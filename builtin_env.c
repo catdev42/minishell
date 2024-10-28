@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 15:42:17 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 21:06:13 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,8 +29,6 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 		pid = fork();
 		if (pid == 0)
 		{
-			// init_sa_fork(struct sigaction *s)
-			// init_sa_default(tools->sa);
 			init_sa(tools->sa, SIG_DFL);
 			i = 1;
 			while (ecmd->argv[i]) // assign env variables
@@ -64,8 +62,9 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 			clean_tools(tools);
 			exit(0);
 		}
+		
 		waitpid(pid, &status, 0);
-		usleep(500);
+		// usleep(500);
 		check_system_fail(status, tools, 0);
 	}
 	return (1);

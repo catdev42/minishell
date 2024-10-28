@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 19:36:00 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 21:16:17 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,32 +59,6 @@ int	cd(char **argv, char **env, t_tools *tools)
 		return (1);
 	free(buffer);
 	return (0);
-}
-
-int	replace_var(char *key, char *value, char **env)
-{
-	int		i;
-	char	*temp;
-	char	*newvar;
-
-	i = 1;
-	if (!key)
-		return (0);
-	while (env[i])
-	{
-		/*if we find the var value*/
-		if (get_var_value(env, key))
-		{
-			temp = env[i];
-			newvar = ft_join_one(key, "=", value);
-			if (!newvar)
-				return (0);
-			free(temp);
-			env[i] = newvar;
-		}
-		i++;
-	}
-	return (1);
 }
 
 // reallocation is dest not provided

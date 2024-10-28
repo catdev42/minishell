@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 17:11:56 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 21:15:05 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,12 +49,17 @@ int	shell_loop(t_tools *tools)
 			break ;
 		global_signal = 0;
 		tools->line = readline("minishell: ");
+		// if (peek(PIPE))
+		// 	fork()	
+		// 	parse in fork
+		// else if (! first alpha word is a builting)
+		// 	fork
+		// 	else run buitlin
 		init_sa(tools->sa, handle_printn_sig);
 		if (!tools->line || global_signal == SIGTERM)
 			ft_exit(NULL, tools);
 		if (global_signal)
 			record_exit(global_signal + 128, tools);
-		tools->sa->sa_handler = SIG_DFL;
 		if (!valid_line(tools->line))
 			continue ;
 		add_history(tools->line);

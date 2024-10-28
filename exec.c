@@ -62,12 +62,11 @@ void	handle_node(t_cmd *cmd, t_tools *tool)
 	{
 		pcmd = (t_pipecmd *)cmd;
 		run_pipe(pcmd, tool);
-		good_exit(tool);
 	}
 	/*There is no else here, every process should have exited,
 		we only get to this error if somethign went wrong
 		*/
-	print_errno_exit(NULL, "unknown error", 141, tool);
+	print_errno_exit("fork", "unknown error", 141, tool);
 	/*
 	This is an error exit, because there is no else,
 		this just catches any unknown errors... if we dont terminate all the stuff in exec node we exit error
@@ -96,7 +95,7 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 		close(pipefd[1]);
 		handle_node(pcmd->left, tools); // terminating
 	}
-	close(pipefd[1]);
+	// close(pipefd[1]);
 	pid2 = fork();
 	if (pid2 == -1)
 		print_errno_exit(NULL, NULL, 0, tools);
@@ -113,6 +112,7 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 	check_system_fail(status1, tools, 0);
 	waitpid(pid2, &status2, 0);
 	check_system_fail(status2, tools, 0);
+	good_exit(tools);
 }
 
 /*MYAKOVEN: I think this function only need to get the mode,

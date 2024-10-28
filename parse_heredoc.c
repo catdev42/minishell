@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 19:04:27 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 20:49:55 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,26 +132,7 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 	good_exit(tools); // will free line and cleanline!
 }
 
-void	free_things(char **s1, char **s2, char **s3, int fd)
-{
-	if (s1 && *s1)
-	{
-		free(*s1);
-		*s1 = NULL;
-	}
-	if (s2 && *s2)
-	{
-		free(*s2);
-		*s2 = NULL;
-	}
-	if (s3 && *s3)
-	{
-		free(*s3);
-		*s3 = NULL;
-	}
-	if (fd >= 0)
-		close(fd);
-}
+
 /* Initialize the heredoc names struct */
 void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
 {
