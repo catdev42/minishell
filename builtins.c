@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 19:56:35 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 07:04:00 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -165,9 +165,6 @@ int	ft_strisnumeric(char *str)
 
 int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
-	int	i;
-
-	i = 0;
 	record_exit(0, tool);
 	if (cmd)
 	{

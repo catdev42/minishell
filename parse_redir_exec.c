@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redir_exec.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 19:00:32 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 07:04:33 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 	int				fd_in_or_out;
 	bool			append;
 	struct s_cmd	*ret;
-	char			*keep_red_start;
+	//char			*keep_red_start;
 
 	ret = NULL;
 	while (*start && start < end_of_exec)
@@ -47,7 +47,7 @@ struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 			start += skip_quotes(start, 0);
 		if (isredir(*start))
 		{
-			keep_red_start = start;
+			//keep_red_start = start;
 			fd_in_or_out = infile_or_outfile(start);
 			if (start[0] == start[1] && start[0] == '<')
 			{
