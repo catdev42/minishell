@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:22:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/27 18:07:06 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 13:09:28 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,11 +16,6 @@
 
 void	reset_tools(t_tools *tools)
 {
-	if (tools->exit_string)
-		free(tools->exit_string);
-	if (tools->env)
-		ft_freetab(tools->env);
-	clear_history();
 	if (tools->line)
 	{
 		ft_bzero(tools->line, tools->line_capacity);
