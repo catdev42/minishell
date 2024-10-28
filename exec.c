@@ -62,6 +62,7 @@ void	handle_node(t_cmd *cmd, t_tools *tool)
 	{
 		pcmd = (t_pipecmd *)cmd;
 		run_pipe(pcmd, tool);
+		good_exit(tool);
 	}
 	/*There is no else here, every process should have exited,
 		we only get to this error if somethign went wrong
@@ -123,7 +124,7 @@ int	run_redir(t_redircmd *rcmd, t_tools *tool)
 	// error is already printed
 	if (rcmd->mode == -1)
 		error_exit_main(tool, tool->exit_code);
-	close(rcmd->fd); 
+	close(rcmd->fd);
 	rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
 	if (rcmd->fd == -1)
 	{
