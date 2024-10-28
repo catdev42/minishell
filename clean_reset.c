@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   e_reset.c                                          :+:      :+:    :+:   */
+/*   clean_reset.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:22:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:14:35 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:23:55 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,6 @@ void	here_unlink(t_tools *tools)
 /* RESET TOOLS: leave env var and exit_string */
 void	reset_tools(t_tools *tools)
 {
-	here_unlink(tools);
 	if (tools->line)
 	{
 		ft_bzero(tools->line, tools->line_capacity);

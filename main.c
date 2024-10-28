@@ -6,13 +6,13 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:46:15 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:25:59 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-volatile sig_atomic_t	global_signal = 0; // delete?
+volatile sig_atomic_t	global_signal = 0; 
 
 int	main(int argc, char **argv, char **env)
 {
@@ -21,13 +21,13 @@ int	main(int argc, char **argv, char **env)
 
 	if (argc > 1 || argv[1])
 		ft_putstr_fd("This program does not accept arguments\n", 2);
-	ft_memset(&tools, 0, sizeof(t_tools)); // init tools to zero
+	ft_memset(&tools, 0, sizeof(t_tools)); 
 	tools.sa = &sa;
 	here_init(tools.heredocs, &tools);
 	copy_env(&tools, env);
 	if (!tools.env || !tools.heredocs[0][0])
 		(error_exit_main(&tools, 1));
-	init_sa(tools.sa, handle_reprint_sig); // chat says this is wrong
+	init_sa(tools.sa, handle_reprint_sig); 
 	shell_loop(&tools);
 	return (0);
 }
@@ -42,9 +42,9 @@ int	shell_loop(t_tools *tools)
 	{
 		dup2(fd[0], 0);
 		dup2(fd[1], 1);
-		reset_tools(tools); // diff place
+		reset_tools(tools); 
 		init_sa(tools->sa, handle_reprint_sig);
-		if (global_signal == SIGTERM) // TODO? or done
+		if (global_signal == SIGTERM) 
 			break ;
 		global_signal = 0;
 		tools->line = readline("minishell: ");
@@ -69,33 +69,12 @@ int	shell_loop(t_tools *tools)
 		if (!parseline(tools->cleanline, tools))
 			continue ;
 		// walking(tools->tree); //test tree
-		// if (global_signal == SIGTERM)
-		// TODO? or done
-		// 	break ;
 		running_msh(tools);
-		// here_init(tools->heredocs, tools);
-		// different place NOOOOO dnt do it already done
+		here_unlink(tools);
 	}
 	close(fd[1]);
 	close(fd[0]);
 	clean_tools(tools);
 	clear_history();
-	// exit(tools->exit_code); //SUGGESTED TODO
 	return (0);
 }
-
-// CHECK IF THIS SHOULD BE A BUILTIN??? TODO TO DO
-/* Liretally checks if exit was typed into the line as the first command */
-
-/* OBSOLETE */
-// void	checkexit(t_tools *tools)
-// {
-// 	if (!tools->line || (!strncmp(tools->line, "exit", 4)
-// 			&& (ft_isspace(tools->line[5]) || tools->line[5] == 0)))
-// 	{
-// 		if (ft_strlen(tools->line) > 5)
-// 			print_error("exit", "this command does not accept arguments", NULL);
-// 			else
-// 			error_exit_main(tools, 0);
-// 	}
-// }

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:40:45 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 15:22:30 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,12 +60,12 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 /*Gives user the cursor - must check*/
 char	*make_heredoc_file(char *delim, t_tools *tools)
 {
-	char	*end;
-	char	*tempalloc_delim;
-	int		fd;
+	char *end;
+	char *tempalloc_delim;
+	int fd;
+	pid_t pid;
 
-	// pid_t	pid;
-	// pid = -1;
+	pid = -1;
 	init_zero(NULL, NULL, &end, &tempalloc_delim);
 	end = get_token_end(delim);
 	fd = open(tools->heredocs[tools->hereindex++],
@@ -75,38 +75,42 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 	tempalloc_delim = ft_substr(delim, 0, end - delim);
 	if (!tempalloc_delim)
 		error_exit_main(tools, 1);
-	// pid = fork();
-	// if (pid == -1)
-	// 	error_exit_main( tools, 1);
-	// if (pid == 0)
-	if (!write_heredoc(fd, tempalloc_delim, tools))
+	pid = fork();
+	if (pid == -1)
+		error_exit_main(tools, 1);
+	if (pid == 0)
+		write_heredoc(fd, tempalloc_delim, tools); // put in fork!
+	// else
+	// 	init_sa(tools->sa, handle_noprint_sig);
+	waitpid(pid, &tools->exit_code, 0);
+	// if (global_signal == SIGINT)
+	// 	return (NULL);
+	check_system_fail(tools->exit_code, tools, 1); // we are in main
+	record_exit(tools->exit_code, tools);
+	if (tools->exit_code == 130)
 	{
-		free(tempalloc_delim);
-		return(0);
-	}; // put in fork!
-	// waitpid(pid, &tools->exit_code, 0);
-	if (global_signal == SIGINT)
+		here_unlink(tools);
 		return (NULL);
-	// check_system_fail(tools->exit_code, tools, 1); // we are in main
+	}
 	close(fd);
 	return (tools->heredocs[tools->hereindex - 1]);
 }
 
 /*Gives user the cursor - must check*/
-int	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
+void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 {
 	char	*line;
 
 	while (1)
 	{
 		line = NULL;
-		init_sa(tools->sa, handle_noprint_sig); // passing a function
+		init_sa(tools->sa, SIG_DFL); // passing a function
 		line = readline("heredoc: ");
-		if (global_signal == SIGINT)
-		{
-			free(line);
-			return (0);
-		}
+		// if (global_signal == SIGINT)
+		// {
+		// 	free(line);
+		// 	exit(errno);
+		// }
 		// good_exit(tools);
 		init_sa(tools->sa, SIG_DFL); // passing a function
 		if (!line || ft_strncmp(line, alloc_delim, ft_strlen(alloc_delim)) == 0)
@@ -114,6 +118,7 @@ int	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 			if (!line)
 				print_error("warning", "here-doc delimited by EOF, wanted ",
 					alloc_delim);
+			free(line);
 			break ;
 		}
 		if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
@@ -123,12 +128,11 @@ int	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 			print_errno_exit(NULL, NULL, errno, tools); // we are in fork
 		}
 		free(line);
+		line = NULL;
 	}
-	free(line);
 	free(alloc_delim);
 	close(fd);
-	return (1);
-	// good_exit(tools); // exits for 0 for success while cleaning
+	good_exit(tools);
 }
 
 /* Initialize the heredoc names struct */
