@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/27 20:26:11 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -49,7 +49,7 @@ int	cd(char **argv, char **env, t_tools *tools)
 	buffer = NULL;
 	buffer = safe_calloc(MIDLEN + 1, sizeof(char), tools);
 	if (!buffer)
-		error_exit(tools, errno);
+		error_exit_main(tools, errno);
 	if (chdir(argv[1]) < 0)
 	{
 		print_error("cd", "cannot change directory to %s\n", NULL);

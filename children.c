@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:22:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 15:45:35 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,7 +21,7 @@
 // 	{
 // 		if (tools->children[i] == 0)
 // 			{tools->children[i] = pid;
-//             return 1;}
+//             return (1);}
 // 		i++;
 //         if i
 // 	}
@@ -39,7 +39,7 @@
 // 			if (kill(pid, 0))
 // 			{
 // 				ft_putstr_fd(2, "msh: error: the process is still alive!");
-// 				error_exit(tools, 0);
+// 				error_exit_main(tools, 0);
 // 			}
 // 			tools->children[i] = 0;
 // 			return (1);

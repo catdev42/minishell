@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 00:42:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/25 16:09:38 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ struct s_cmd	*createpipe(struct s_cmd *left, struct s_cmd *right,
 	if (!tools->lastpipe)
 	{
 		clean_two(left, right);
-		error_exit(tools, 1); // EXITS ENTIRE PROGRAM ON ALLOCATION ERROR!
+		error_exit_main(tools, 1); // EXITS ENTIRE PROGRAM ON ALLOCATION ERROR!
 	}
 	if (!tools->tree)
 		tools->tree = (struct s_cmd *)tools->lastpipe;

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:15:14 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/27 16:51:02 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char	*safe_calloc(size_t nmemb, size_t size, t_tools *tools)
 	if (tools && !str)
 	{
 		clean_tools(tools);
-		error_exit(tools, 1);
+		error_exit_main(tools, 1);
 	}
 	// cant do this cause have to free things possibly in calling function
 	// then use normal ft_calloc in those instances
@@ -43,7 +43,7 @@ int	record_exit(int exit_num, t_tools *tools)
 	}
 	tools->exit_string = ft_ltoa(exit_num);
 	if (!tools->exit_string)
-		error_exit(tools, errno);
+		error_exit_main(tools, errno);
 	return (exit_num);
 }
 

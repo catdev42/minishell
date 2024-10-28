@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/27 20:25:19 by spitul           ###   ########.fr       */
+/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ extern volatile sig_atomic_t global_signal; // TODO
 # define UNSET "unset"
 # define ENV "env"
 # define EXIT "exit"
-/* error codes to send to error exit function error_exit(t_tools *tools,
+/* error codes to send to error exit function error_exit_main(t_tools *tools,
 		int error)*/
 # define SYSTEMFAIL 142
 # define FORKFAIL 141

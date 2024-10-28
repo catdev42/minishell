@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 13:33:29 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	infile_or_outfile(char *start)
 // 	}
 // 	filename = ft_substr(redir, start, i - start);
 // 	if (!filename)
-// 		error_exit(tools, 1);
+// 		error_exit_main(tools, 1);
 // 	strip_quotes_final(filename);
 // 	return (filename);
 // }

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/27 18:06:55 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,7 +53,7 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 		tools->lastredir = (struct s_redircmd *)makeredir(filename, end, append,
 				fd);
 	if (!tools->lastredir)
-		error_exit(tools, 1);
+		error_exit_main(tools, 1);
 	return (len);
 }
 
@@ -71,13 +71,13 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 	fd = open(tools->heredocs[tools->hereindex++],
 			O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
-		error_exit( tools, 1); // exits the program and cleansfiles
+		error_exit_main( tools, 1); // exits the program and cleansfiles
 	tempalloc_delim = ft_substr(delim, 0, end - delim);
 	if (!tempalloc_delim)
-		error_exit( tools, 1); 
+		error_exit_main( tools, 1); 
 	pid = fork();
 	if (pid == -1)
-		error_exit( tools, 1); 
+		error_exit_main( tools, 1); 
 	if (pid == 0)
 		write_heredoc(fd, tempalloc_delim, tools); // put in fork!
 	waitpid(pid, &tools->exit_code, 0);
@@ -134,7 +134,7 @@ void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
 		tempalloc = NULL;
 		tempalloc = ft_itoa(i);
 		if (!tempalloc)
-			error_exit(tools, errno);
+			error_exit_main(tools, errno);
 		ft_strlcpy(heredocs[i], "heredoc", MAXARGS);
 		ft_strlcat(heredocs[i], tempalloc, MAXARGS);
 		free(tempalloc);

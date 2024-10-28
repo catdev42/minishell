@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/27 18:07:38 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	main(int argc, char **argv, char **env)
 	here_init(tools.heredocs, &tools);
 	copy_env(&tools, env);
 	if (!tools.env || !tools.heredocs[0][0])
-		(error_exit(&tools, 1));
+		(error_exit_main(&tools, 1));
 	init_sa(tools.sa, handle_reprint_sig); // chat says this is wrong
 	shell_loop(&tools);
 	return (0);
@@ -93,6 +93,6 @@ int	shell_loop(t_tools *tools)
 // 		if (ft_strlen(tools->line) > 5)
 // 			print_error("exit", "this command does not accept arguments", NULL);
 // 			else
-// 			error_exit(tools, 0);
+// 			error_exit_main(tools, 0);
 // 	}
 // }

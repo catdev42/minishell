@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 13:53:58 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ int	createredir(char *filestart, int mode, int fd, t_tools *tools)
 		tools->lastredir = (struct s_redircmd *)makeredir(filestart, end, mode,
 				fd);
 	if (!tools->lastredir)
-		error_exit(tools, UNKNOWNERROR);
+		error_exit_main(tools, UNKNOWNERROR);
 	return (len);
 }
 
@@ -103,7 +103,7 @@ struct s_cmd	*parseargv(char *start, char *end, t_tools *tools)
 	i = 0;
 	index = 0;
 	if (!ecmd)
-		error_exit(tools, 1);
+		error_exit_main(tools, 1);
 	while (start[i] && (&start[i] < end))
 	{
 		if (index == MAXARGS)

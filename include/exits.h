@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/27 18:02:23 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void	good_exit(t_tools *tools);
 
 int				print_errno_exit(const char *arg, const char *errline,
 					int custom_fail, t_tools *tools);
-void			error_exit(t_tools *tools, int error);
+void			error_exit_main(t_tools *tools, int error);
 struct s_cmd	*clean_two(struct s_cmd *first, struct s_cmd *second);
 void			clean_tools(t_tools *tools);
 int				print_error(const char *arg, const char *errline,

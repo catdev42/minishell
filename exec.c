@@ -122,7 +122,7 @@ int	run_redir(t_redircmd *rcmd, t_tools *tool)
 	// MYAKOVEN: IF NOT A VALID REDIR: EXIT FORK
 	// error is already printed
 	if (rcmd->mode == -1)
-		error_exit(tool, tool->exit_code);
+		error_exit_main(tool, tool->exit_code);
 	close(rcmd->fd); // close(0)
 	rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
 	// opening at fd 0 if zero was closed
