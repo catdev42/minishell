@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 21:06:13 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/10/30 20:04:34 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 			clean_tools(tools);
 			exit(0);
 		}
-		
 		waitpid(pid, &status, 0);
 		// usleep(500);
 		check_system_fail(status, tools, 0);

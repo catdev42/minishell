@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 19:04:55 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/02 09:25:45 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,7 +95,7 @@ int				cd(char **argv, char **env, t_tools *tools);
 /*******  ENV.C  ********/
 /************************/
 char			*get_var(char **env, char *var);
-
+int				get_var_i(char **env, char *var);
 int				copy_env(t_tools *tools, char **env);
 char			*get_var_value(char **env, char *var);
 

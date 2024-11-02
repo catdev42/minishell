@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 21:16:17 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/02 09:33:12 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,17 +98,19 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 	int		i;
 	int		j;
 	char	*temp;
+//	int		found_var;
 
 	i = 1;
 	if (!cmd)
 		return (1);
 	while (cmd->argv[i])
 	{
-		/*if we find the var value*/
-		if (get_var(tools->env, cmd->argv[i]))
+		j = -2;
+		j = get_var_i(tools->env, cmd->argv[i]);
+		if (j > -1)
 		{
-			temp = tools->env[i];
-			j = i;
+			temp = tools->env[j];
+			//j = found_var;
 			while (tools->env[j])
 			{
 				tools->env[j] = tools->env[j + 1];
@@ -126,10 +128,10 @@ int	ft_strisnumeric(char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i] && (ft_isspace(str[i]) || str[i] == '+'))
+	while (str[i] && (ft_isspace(str[i]) || str[i] == '+' || str[i] == '-'))
 		i++;
-	if (str[i] == '-')
-		return (0);
+	// if (str[i] == '-') exit accepts negative numbers
+	// 	return (0);
 	while (str[i] && ft_isdigit(str[i]))
 		i++;
 	if (i < ft_strlen(str) - 1)
@@ -211,7 +213,7 @@ int	print_export(char **env)
 		equalsign = ft_strchr(env[i], '=');
 		equalsign[0] = 0;
 		put_var(env[i], &equalsign[1]);
-		equalsign[0] = 1;
+		equalsign[0] = '=';
 		i++;
 	}
 	return (0);
