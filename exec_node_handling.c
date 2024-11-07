@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/07 17:08:55 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/07 17:16:19 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -42,6 +42,8 @@ void	run_exec_node(t_tools *tool, t_execcmd *ecmd)
 	i = 0;
 	cmdpath = NULL;
 	path = NULL;
+	if (!ecmd->argv[0])
+		good_exit(tool);
 	if (!other_execution_type(tool, ecmd))
 	{
 		path = get_var_value(tool->env, "PATH");
