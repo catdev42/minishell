@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_fork.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 14:08:00 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:11:38 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/06 20:57:15 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,15 +25,19 @@ void	clean_tools(t_tools *tools)
 /* A GOOD EXIT */
 void	good_exit(t_tools *tools)
 {
+	int e;
+
+	e = tools->exit_code;
 	clean_tools(tools);
-	exit(0);
+	// printf("exit code in good exit %d\n", tools->exit_code);
+	exit(e);
 }
 
 // should only delete heredoc files if exiting the main process....
 int	print_errno_exit(const char *arg, const char *errline, int custom_fail,
 		t_tools *tools)
 {
-	ft_putstr_fd("msh: ", 2);
+	ft_putstr_fd("hiersuccesmsh: ", 2);
 	if (arg)
 	{
 		ft_putstr_fd(arg, 2);

@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/02 09:33:12 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/05 18:56:11 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,6 @@ char	*ft_join_one(char const *s1, char const *delim, char const *s2)
 	return (fullstr);
 }
 
-// int	export(t_execcmd *cmd, t_tools *tool)
-// {
-// 	return (1);
-// }
-
 int	unset(t_execcmd *cmd, t_tools *tools)
 {
 	int		i;
@@ -105,7 +100,7 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 		return (1);
 	while (cmd->argv[i])
 	{
-		j = -2;
+		j = -1;
 		j = get_var_i(tools->env, cmd->argv[i]);
 		if (j > -1)
 		{
@@ -141,24 +136,33 @@ int	ft_strisnumeric(char *str)
 
 int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
-	record_exit(0, tool);
+	//record_exit(0, tool);
+	
 	if (cmd)
 	{
+		ft_putstr_fd("exit\n", 1);
 		if (get_matrix_len(cmd->argv) > 2)
-			print_error(NULL, "too many arguments", NULL);
+		{
+			print_error("exit", "too many arguments", NULL);
+			record_exit(1, tool);
+		}
 		else if (get_matrix_len(cmd->argv) == 2)
 		{
-			ft_putstr_fd("exit ", 1);
-			if (!ft_strisnumeric(cmd->argv[1]))
+			//ft_putstr_fd("exit ", 1);
+			if (ft_strisnumeric(cmd->argv[1]))
 				record_exit(ft_atol(cmd->argv[1]) % 256, tool);
-			ft_putstr_fd(tool->exit_string, 1);
+			else
+			{
+				print_error("exit", "numeric argument required", NULL);
+				record_exit(2, tool);
+			}
+			//ft_putstr_fd(tool->exit_string, 1);
 		}
 		else
-			ft_putstr_fd("exit", 1);
+			record_exit (0, tool);
 	}
-	else
-		ft_putstr_fd("exit", 1);
-	ft_putstr_fd("\n", 1);
+	// else
+	// 	ft_putstr_fd("exit", 1);
 	clean_tools(tool);
 	exit(tool->exit_code);
 }
@@ -170,7 +174,7 @@ int	pwd(t_execcmd *cmd)
 	cwd = NULL;
 	if (get_matrix_len(cmd->argv) > 1)
 		ft_putstr_fd("pwd: too many arguments\n", 2);
-	cwd = getcwd(NULL, 0); // should we check for malloc error
+	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		return (1);
 	if (cwd != NULL)

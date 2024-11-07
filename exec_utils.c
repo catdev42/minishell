@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/07 06:47:22 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,37 +18,48 @@
 
 	* in main status errno is caught and we need to determine to close the whole program or not
  */
-void	check_system_fail(int status, t_tools *tools, bool inmain)
+void	check_system_fail(int status, t_tools *tool, bool inmain)
 {
 	int	sig;
 
 	if (WIFEXITED(status))
 	{
 		sig = WEXITSTATUS(status);
-		// tools->exit_code = sig;
-		record_exit(sig, tools);
-		if (inmain && sig == 142)
-			error_exit_main(tools, 1);
+		if (sig == 0)
+		{
+			ft_putstr_fd("hier 0\n", 2);
+			record_exit(sig, tool);
+			return ;
+		}
+		else if (inmain && sig == 142) // isnt being attributed nowhere in the programm
+		{
+			ft_putstr_fd("hier 1\n", 2);
+			record_exit(1, tool);
+			error_exit_main(tool, 1);
+		}
 		else if (sig == SYSTEMFAIL || sig == ENOMEM || sig == EPIPE
 			|| sig == EMFILE || sig == EBADF || sig == EFAULT || sig == ENOSPC
 			|| sig == EIO || sig == ENODEV)
-			error_exit_main(tools, tools->exit_code);
+			{ft_putstr_fd("hier 2\n", 2);error_exit_main(tool, tool->exit_code);}
 		else
-			return ;
+		{
+			record_exit(1, tool);
+			ft_putstr_fd("hier 3\n", 2);
+			error_exit_main(tool, -4);
+		}
 	}
 	else if (WIFSIGNALED(status))
 	{
 		sig = WTERMSIG(status);
-		// tools->exit_code = sig;
-		record_exit(sig, tools);
+		record_exit(sig + 128, tool);
 		if (sig == SIGKILL)
 			return ;
 		else if (sig == SIGSEGV || sig == SIGBUS || sig == SIGFPE
 			|| sig == SIGILL || sig == SIGABRT || sig == SIGSYS)
 		{
-			// tools->exit_code = sig + 128;
-			record_exit(sig + 128, tools);
-			error_exit_main(tools, sig + 128);
+			// tool->exit_code = sig + 128;
+			record_exit(sig + 128, tool);
+			error_exit_main(tool, sig + 128);
 		}
 	}
 	else
@@ -60,7 +71,7 @@ void	check_system_fail(int status, t_tools *tools, bool inmain)
 /*
 
 THIS IS MY  CALL OF check_file_type and FAILURE checker...
-	mode = check_file_type(start, fd_in_or_out, tools); // TODO !!!
+	mode = check_file_type(start, fd_in_or_out, tool); // TODO !!!
 	if (mode == -1) //because 0 is returned for O_RDONLY
 		return (NULL); return out or exit fork
 You can do this in your code cause it should work for builtin in the main process...

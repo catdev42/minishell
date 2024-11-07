@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/02 09:25:45 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/03 10:04:40 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,7 +33,7 @@
 extern volatile sig_atomic_t global_signal; // TODO
 
 # include "../libft/libft.h"
-# include "builtins.h"
+//# include "builtins.h"
 # include "structs.h"
 /**/
 # include "exits.h"

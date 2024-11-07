@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 14:08:00 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:16:50 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/06 21:09:53 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ If NULL at a specific position, that position is NOT printed
 */
 int	print_error(const char *arg, const char *errline, const char *errarg)
 {
-	ft_putstr_fd("msh: ", 2);
+	ft_putstr_fd("print_error msh: ", 2);
 	if (arg)
 	{
 		ft_putstr_fd(arg, 2);
@@ -56,6 +56,7 @@ NO PRINTING: use print_errno_exit */
 /*ERROR 1 will print perror!*/
 void	error_exit_main(t_tools *tools, int error)
 {
+	printf("\n%d\n", error);
 	clean_tools(tools);
 	here_unlink(tools); // clean files
 	clear_history();
@@ -65,7 +66,7 @@ void	error_exit_main(t_tools *tools, int error)
 		exit(error);
 	else if (error == 1)
 	{
-		perror("msh");
+		perror("error exit main msh");
 		exit(1);
 	}
 	else

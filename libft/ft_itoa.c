@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   ft_itoa.c                                          :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 14:20:33 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/20 14:09:30 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/05 13:38:41 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -64,7 +64,7 @@ char	*ft_itoa(int n)
 static size_t	ft_length_long(long int n)
 {
 	size_t		len;
-	long int	num;
+	long int	num; //not really needed
 
 	num = n;
 	len = 1;
