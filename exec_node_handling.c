@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_node_handling.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/30 19:59:17 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/07 17:08:55 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,8 @@ int	other_execution_type(t_tools *tool, t_execcmd *ecmd)
 {
 	if (is_builtin(ecmd->argv[0]))
 		exit(run_builtin(ecmd, tool));
-	if (ft_strncmp(ecmd->argv[0], "minishell", 9) == 0 || ft_strncmp(ecmd->argv[0], "./minishell", 11) == 0)
+	if (ft_strncmp(ecmd->argv[0], "minishell", 10) == 0
+		|| ft_strncmp(ecmd->argv[0], "./minishell", 12) == 0)
 	{
 		exec_new_minishell(tool, ecmd);
 		return (1);

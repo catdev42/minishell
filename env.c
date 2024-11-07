@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   env.c                                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:07:28 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/02 22:16:50 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/07 17:01:27 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ int	copy_env(t_tools *tools, char **env)
 		{
 			ft_freetab(envp);
 			return (0); // fail
-						/*changed to envp,
-							we must delete currently allocated on error*/
+			/*changed to envp,
+				we must delete currently allocated on error*/
 		}
 		if (!ft_strlcpy(envp[i], env[i], len))
 			return (0); // fail
@@ -72,8 +72,8 @@ char	*get_var_value(char **env, char *var)
 	while (env[i] && !line)
 	{
 		line = ft_strnstr(env[i], var, len);
-		if (line && line[len] == '=')
-			return (line = line + len + 1);
+		if (line && len < ft_strlen(line) && line[len] == '=')
+			return (line + len + 1);
 		line = NULL;
 		i++;
 	}

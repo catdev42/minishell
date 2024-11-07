@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/06 23:27:27 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/07 16:54:24 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,8 +98,8 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 	int		i;
 	int		j;
 	char	*temp;
-//	int		found_var;
 
+	//	int		found_var;
 	i = 1;
 	if (!cmd)
 		return (1);
@@ -110,7 +110,7 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 		if (j > -1)
 		{
 			temp = tools->env[j];
-			//j = found_var;
+			// j = found_var;
 			while (tools->env[j])
 			{
 				tools->env[j] = tools->env[j + 1];
@@ -127,37 +127,40 @@ int	ft_strisnumeric(char *str)
 	size_t	i;
 
 	i = 0;
-	while (str[i] && (ft_isspace(str[i]) || str[i] == '+' || str[i] == '-'))
+	while (str[i] && ft_isspace(str[i]))
 		i++;
-	// if (str[i] == '-') exit accepts negative numbers
-	// 	return (0);
+	if (str[i] == '-' || str[i] == '+')
+		i++;
 	while (str[i] && ft_isdigit(str[i]))
 		i++;
-	if (i < ft_strlen(str) - 1)
+	if (i < ft_strlen(str))
 		return (0);
 	return (1);
 }
 
 int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
-	record_exit(0, tool);
+	long long int	num;
+
+	if (cmd && get_matrix_len(cmd->argv) > 2)
+		print_error(NULL, "too many arguments", NULL);
 	if (cmd)
 	{
-		if (get_matrix_len(cmd->argv) > 2)
-			print_error(NULL, "too many arguments", NULL);
-		else if (get_matrix_len(cmd->argv) == 2)
-		{
-			ft_putstr_fd("exit ", 1);
-			if (!ft_strisnumeric(cmd->argv[1]))
-				record_exit(ft_atol(cmd->argv[1]) % 256, tool);
-			ft_putstr_fd(tool->exit_string, 1);
-		}
-		else
-			ft_putstr_fd("exit", 1);
+		if (get_matrix_len(cmd->argv == 2))
+			if (ft_strisnumeric(cmd->argv[1]))
+			{
+				num = ft_atoll(cmd->argv[1]);
+				while (num < 0)
+					num = num + 256;
+				num = num % 256;
+				record_exit(num, tool);
+			}
+			else if (!ft_strisnumeric(cmd->argv[1]))
+				record_exit(2, tool);
 	}
-	else
-		ft_putstr_fd("exit", 1);
-	ft_putstr_fd("\n", 1);
+	if (!cmd)
+		record_exit(0, tool);
+	ft_putstr_fd("exit ", 1);
 	clean_tools(tool);
 	exit(tool->exit_code);
 }
