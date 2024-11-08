@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/07 16:54:24 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/08 14:09:25 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -146,7 +146,8 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 		print_error(NULL, "too many arguments", NULL);
 	if (cmd)
 	{
-		if (get_matrix_len(cmd->argv == 2))
+		if (get_matrix_len(cmd->argv) == 2)
+		{
 			if (ft_strisnumeric(cmd->argv[1]))
 			{
 				num = ft_atoll(cmd->argv[1]);
@@ -157,10 +158,11 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 			}
 			else if (!ft_strisnumeric(cmd->argv[1]))
 				record_exit(2, tool);
+		}
 	}
 	if (!cmd)
 		record_exit(0, tool);
-	ft_putstr_fd("exit ", 1);
+	ft_putstr_fd("exit\n", 1);
 	clean_tools(tool);
 	exit(tool->exit_code);
 }

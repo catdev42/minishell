@@ -6,13 +6,13 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 21:17:24 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/08 14:08:10 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-/*checks if here is a non builtin command in a pipefree tree*/
+/*checks if here is a builtin command in a pipefree tree*/
 int	builtin_check_walk(t_cmd *cmd)
 {
 	struct s_execcmd	*ecmd;
@@ -27,6 +27,8 @@ int	builtin_check_walk(t_cmd *cmd)
 		if (cmd->type == EXEC)
 		{
 			ecmd = (t_execcmd *)cmd;
+			if (!ecmd->argv[0])
+				return (0);
 			res = is_builtin(ecmd->argv[0]);
 			return (res);
 		}
