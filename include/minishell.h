@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/02 09:25:45 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/08 16:24:51 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,7 +57,6 @@ extern volatile sig_atomic_t global_signal; // TODO
 # define UNKNOWNERROR 143
 
 // volatile sig_atomic_t	global_signal = 0;
-
 
 /*TESTERS*/
 void			walking(struct s_cmd *cmd);
@@ -158,7 +157,7 @@ void			new_line(void);
 void			init_sa(struct sigaction *sa, void (*handler)(int));
 void			handle_reprint_sig(int sig);
 void			handle_printn_sig(int sig);
-void			handle_here_sig(int sig);
+void			handle_recordonly_sig(int sig);
 /************************/
 /******* PARSE.C ********/
 /************************/

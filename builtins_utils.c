@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/08 14:08:10 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/08 16:14:36 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,6 +47,8 @@ int	is_builtin(char *s)
 	int	a;
 
 	a = 0;
+	if (!s)
+		return (0);
 	if (ft_strncmp(s, ECHO, 5) == 0)
 		a = 1;
 	else if (ft_strncmp(s, CD, 3) == 0)

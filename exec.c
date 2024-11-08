@@ -26,12 +26,13 @@ int	running_msh(t_tools *tools)
 	if ((tools->tree->type == PIPE) || (tools->tree->type != PIPE
 			&& (builtin_check_walk(tools->tree) == 0)))
 	{
+		init_sa(tools->sa, handle_printn_sig);
 		pid = fork();
 		if (pid == -1)
 			print_errno_exit(NULL, NULL, 0, tools); // myakoven system fail
 		if (pid == 0)
 		{
-			tools->sa->sa_handler = SIG_DFL; // NEW TODO
+			init_sa(tools->sa, SIG_DFL);
 			handle_node(tools->tree, tools);
 		}
 		waitpid(pid, &status, 0);

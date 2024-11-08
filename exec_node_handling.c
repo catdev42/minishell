@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/07 17:16:19 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/08 18:07:45 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,12 +17,12 @@ int	other_execution_type(t_tools *tool, t_execcmd *ecmd)
 {
 	if (is_builtin(ecmd->argv[0]))
 		exit(run_builtin(ecmd, tool));
-	if (ft_strncmp(ecmd->argv[0], "minishell", 10) == 0
-		|| ft_strncmp(ecmd->argv[0], "./minishell", 12) == 0)
-	{
-		exec_new_minishell(tool, ecmd);
-		return (1);
-	}
+	// if (ft_strncmp(ecmd->argv[0], "minishell", 10) == 0
+	// 	|| ft_strncmp(ecmd->argv[0], "./minishell", 12) == 0)
+	// {
+	// 	exec_new_minishell(tool, ecmd);
+	// 	return (1);
+	// }
 	if (access(ecmd->argv[0], F_OK) == 0)
 	{
 		if (access(ecmd->argv[0], X_OK) != 0)

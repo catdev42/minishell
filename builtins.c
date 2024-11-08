@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/08 14:09:25 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/08 16:31:42 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -157,7 +157,10 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 				record_exit(num, tool);
 			}
 			else if (!ft_strisnumeric(cmd->argv[1]))
+			{
 				record_exit(2, tool);
+				print_error("exit", "numeric argument required", cmd->argv[1]);
+			}
 		}
 	}
 	if (!cmd)

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 21:15:05 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/08 18:13:22 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,7 +50,7 @@ int	shell_loop(t_tools *tools)
 		global_signal = 0;
 		tools->line = readline("minishell: ");
 		// if (peek(PIPE))
-		// 	fork()	
+		// 	fork()
 		// 	parse in fork
 		// else if (! first alpha word is a builting)
 		// 	fork
@@ -68,7 +68,10 @@ int	shell_loop(t_tools *tools)
 		tools->cleanline = clean_line(tools->line, ft_strlen(tools->line),
 				tools);
 		tools->e_cline = tools->cleanline + ft_strlen(tools->cleanline);
+		// pointer + len is address of end
 		if (!tools->cleanline)
+			continue ;
+		if (ismini(tools->cleanline))
 			continue ;
 		// ft_putstr_fd(tools->cleanline, 1); //test cleanline
 		// ft_putstr_fd("  -- test of cleanline\n", 1);
