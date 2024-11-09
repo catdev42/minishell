@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/09 14:41:24 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/09 18:07:18 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -107,9 +107,9 @@ int	execute_minishell(t_tools *tools)
 	}
 	waitpid(pid, &tools->exit_code, 0);
 	check_system_fail(tools->exit_code, tools, 1); 
-	// we are in main
-			// if (global_signal == SIGINT)
-													// {
+	// we are in main and mimi doesnt get closed by sigint
+	// if (global_signal == SIGINT)
+	// {
 	// here_unlink(tools);
 	// close(fd);
 	// return (NULL);

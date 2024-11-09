@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/09 12:12:19 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/09 18:11:10 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,10 +23,7 @@ int	other_execution_type(t_tools *tool, t_execcmd *ecmd)
 	if (ft_strncmp(ecmd->argv[0], "minishell", 10) == 0
 		|| ft_strncmp(ecmd->argv[0], "./minishell", 12) == 0)
 	{
-		// exec_new_minishell(tool, ecmd);
-		print_error(NULL, "This minishell does not handle this!", NULL);
-		good_exit(tool);
-		
+		print_errno_exit(NULL, "This minishell does not handle this!", 1, tool);
 	}
 	if (!ft_strncmp(argv[0], "/", 1) || !ft_strncmp(argv[0], "./", 2)
 		|| !ft_strncmp(argv[0], "../", 3))
