@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/09 18:07:18 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/09 23:41:29 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,11 +23,11 @@ int	main(int argc, char **argv, char **env)
 		ft_putstr_fd("This program does not accept arguments\n", 2);
 	ft_memset(&tools, 0, sizeof(t_tools));
 	tools.sa = &sa;
+	init_sa(tools.sa, handle_reprint_sig);
 	here_init(tools.heredocs, &tools);
 	copy_env(&tools, env);
 	if (!tools.env || !tools.heredocs[0][0])
 		(error_exit_main(&tools, 1));
-	init_sa(tools.sa, handle_reprint_sig);
 	shell_loop(&tools);
 	return (0);
 }
@@ -40,11 +40,11 @@ int	shell_loop(t_tools *tools)
 	fd[0] = dup(0);
 	while (1)
 	{
+		init_sa(tools->sa, handle_reprint_sig);
 		dup2(fd[0], 0);
 		dup2(fd[1], 1);
 		here_unlink(tools);
 		reset_tools(tools);
-		init_sa(tools->sa, handle_reprint_sig);
 		if (global_signal == SIGTERM)
 			break ;
 		global_signal = 0;
@@ -71,13 +71,20 @@ int	shell_loop(t_tools *tools)
 		// pointer + len is address of end
 		if (!tools->cleanline)
 			continue ;
-		printf("length of cleanline: %i\n", ft_strlen(tools->cleanline));
 		// ft_putstr_fd(tools->cleanline, 1); //test cleanline
 		// ft_putstr_fd("  -- test of cleanline\n", 1);
 		if (!parseline(tools->cleanline, tools))
 			continue ;
-		if (ismini(tools->cleanline), tools)
+		// printf("length of cleanline: %li\n", ft_strlen(tools->cleanline));
+		// if (!ismini(tools->cleanline, tools))
+		// 	continue ;
+		if (tools->tree->type == EXEC && ((t_execcmd *)tools->tree)->argv[0]
+			&& !ft_strncmp(((t_execcmd *)tools->tree)->argv[0], "./minishell",
+				12))
+		{
+			fork_new_minishell(tools);
 			continue ;
+		}
 		// walking(tools->tree); //test tree
 		running_msh(tools);
 	}
@@ -88,46 +95,43 @@ int	shell_loop(t_tools *tools)
 	return (0);
 }
 
-int	execute_minishell(t_tools *tools)
+/*reference: heredoc execution*/
+/*should return 0 on some sort of failure, */
+int	fork_new_minishell(t_tools *tools)
 {
-	char	*end;
-	int		fd;
 	pid_t	pid;
 
 	pid = -1;
+	init_sa(tools->sa, SIG_IGN);
 	pid = fork();
 	if (pid == -1)
 		error_exit_main(tools, 1);
-	init_sa(tools->sa, handle_recordonly_sig);
 	if (pid == 0)
 	{
+		// init_sa(tools->sa, handle_reprint_sig);
 		if (tools->tree->type == EXEC)
 			exec_new_minishell(tools, (t_execcmd *)tools->tree);
-		print_errno_exit(NULL, "This minishell does not handle this", 1, tools);
+		printf("Am i still in this child process?\n");
+		print_errno_exit(NULL, "This msh does not handle this", 1, tools);
 	}
 	waitpid(pid, &tools->exit_code, 0);
-	check_system_fail(tools->exit_code, tools, 1); 
-	// we are in main and mimi doesnt get closed by sigint
-	// if (global_signal == SIGINT)
-	// {
-	// here_unlink(tools);
-	// close(fd);
-	// return (NULL);
-	// }
-	init_sa(tools->sa, handle_printn_sig);
+	printf("I exited child now");
+	check_system_fail(tools->exit_code, tools, 1);
+	// we are in main and mini doesnt get closed by sigint
 	record_exit(tools->exit_code, tools);
-	return (0);
+	return (tools->exit_code);
 }
-
+/*should this return */
 int	ismini(char *cleanline, t_tools *tools)
 {
-	int	successfullexit;
+	int	is_exit_bad;
 
-	successfullexit = -1;
+	is_exit_bad = 0;
 	if (!ft_strncmp(cleanline, "minishell", 20) || !ft_strncmp(cleanline,
 			"./minishell", 20))
-	{
-		execute_minishell(tools);
-		return (1);
-	}
+		is_exit_bad = fork_new_minishell(tools);
+	// if (is_exit_good = )
+	if (is_exit_bad)
+		return (0);
+	return (1);
 }

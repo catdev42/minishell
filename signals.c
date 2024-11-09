@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/08 16:24:51 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/09 23:05:27 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -73,6 +73,7 @@ void	handle_printn_sig(int sig)
 /**DO NOTHING EXCEPT SET GLOBAL */
 void	handle_recordonly_sig(int sig)
 {
+	printf("I am in record only sig handler\n");
 	if (sig == SIGINT)
 	{
 		global_signal = SIGINT;

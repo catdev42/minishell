@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/08 16:24:51 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/09 22:03:16 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,7 +103,6 @@ char			*get_var_value(char **env, char *var);
 /************************/
 /*exec_utils*/
 void			check_system_fail(int status, t_tools *tools, bool inmain);
-void			change_shlvl(t_tools *tool);
 int				is_builtin(char *s);
 int				run_builtin(t_execcmd *cmd, t_tools *tool);
 int				file_dir_noexist(const char *path, int fd_in_or_out);
@@ -111,7 +110,6 @@ int				check_file_type(t_redircmd *rcmd, int fd_in_or_out);
 /* exec */
 void			handle_node(t_cmd *cmd, t_tools *tool);
 void			run_exec_node(t_tools *tool, t_execcmd *ecmd);
-void			exec_new_minishell(t_tools *tool, t_execcmd *ecmd);
 void			execute_execve(char *pathcmd, t_execcmd *ecmd, t_tools *tool);
 char			*check_cmd_path(char *path, t_execcmd *cmd, t_tools *tools);
 int				running_msh(t_tools *tools);
@@ -120,6 +118,14 @@ int				other_execution_type(t_tools *tool, t_execcmd *ecmd);
 /* execredir */
 int				run_redir(t_redircmd *rcmd, t_tools *tool);
 void			run_pipe(t_pipecmd *pcmd, t_tools *tools);
+
+/************************/
+/******* SHELLinSHELL.C ********/
+/************************/
+int				ismini(char *cleanline, t_tools *tools);
+void			change_shlvl(t_tools *tool);
+void			exec_new_minishell(t_tools *tool, t_execcmd *ecmd);
+int				fork_new_minishell(t_tools *tools);
 
 /************************/
 /******* INIT.C ********/
@@ -167,11 +173,13 @@ struct s_cmd	*createpipe(struct s_cmd *left, struct s_cmd *right,
 char			*peek(char *line, char *end, int token);
 /*static nullify*/
 /******parse_heredoc.c*****/
-void			here_unlink(t_tools *tools);
 void			here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools);
 int				createredir_here(char *delim, int mode, int fd, t_tools *tools);
 char			*make_heredoc_file(char *delim, t_tools *tools);
 void			write_heredoc(int fd, char *alloc_delim, t_tools *tools);
+char			*clean_line_expand_only(char *line, int linelen,
+					t_tools *tools);
+
 /***** parse_redir_exec.c ****/
 struct s_cmd	*parseexec(char *start, char *end_of_exec, t_tools *tools);
 struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools);
