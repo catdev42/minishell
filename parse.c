@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 00:42:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:42:30 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/09 11:45:26 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,7 +88,7 @@ char	*peek(char *line, char *end, int token)
 	while (line[i] && &line[i] < end)
 	{
 		if (isquote(line[i]))
-			i = skip_quotes(line, i);
+			i = skip_token(line, i);
 		if (istoken(line[i]))
 		{
 			if (isredir(line[i]) && token == REDIR)
@@ -102,7 +102,9 @@ char	*peek(char *line, char *end, int token)
 				break ;
 			}
 		}
-		i++; // TODO test SIGNAL HANDLER command
+		else if (token == ALPHA && ft_isspace(line[i]) && !istoken(line[i+1]))
+			return (&line[i+1]);
+		++i; // TODO test SIGNAL HANDLER command
 	}
 	return (tokenaddress);
 }
@@ -114,7 +116,7 @@ static void	nullify(char *cline, t_tools *tools)
 	i = 0;
 	while (&cline[i] < tools->e_cline)
 	{
-		if (isspace(cline[i]))
+		if (ft_isspace(cline[i]))
 			cline[i] = 0;
 		else
 			i = skip_token(cline, i);

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/08 18:13:22 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/09 14:41:24 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,11 +71,12 @@ int	shell_loop(t_tools *tools)
 		// pointer + len is address of end
 		if (!tools->cleanline)
 			continue ;
-		if (ismini(tools->cleanline))
-			continue ;
+		printf("length of cleanline: %i\n", ft_strlen(tools->cleanline));
 		// ft_putstr_fd(tools->cleanline, 1); //test cleanline
 		// ft_putstr_fd("  -- test of cleanline\n", 1);
 		if (!parseline(tools->cleanline, tools))
+			continue ;
+		if (ismini(tools->cleanline), tools)
 			continue ;
 		// walking(tools->tree); //test tree
 		running_msh(tools);
@@ -85,4 +86,48 @@ int	shell_loop(t_tools *tools)
 	clean_tools(tools);
 	clear_history();
 	return (0);
+}
+
+int	execute_minishell(t_tools *tools)
+{
+	char	*end;
+	int		fd;
+	pid_t	pid;
+
+	pid = -1;
+	pid = fork();
+	if (pid == -1)
+		error_exit_main(tools, 1);
+	init_sa(tools->sa, handle_recordonly_sig);
+	if (pid == 0)
+	{
+		if (tools->tree->type == EXEC)
+			exec_new_minishell(tools, (t_execcmd *)tools->tree);
+		print_errno_exit(NULL, "This minishell does not handle this", 1, tools);
+	}
+	waitpid(pid, &tools->exit_code, 0);
+	check_system_fail(tools->exit_code, tools, 1); 
+	// we are in main
+			// if (global_signal == SIGINT)
+													// {
+	// here_unlink(tools);
+	// close(fd);
+	// return (NULL);
+	// }
+	init_sa(tools->sa, handle_printn_sig);
+	record_exit(tools->exit_code, tools);
+	return (0);
+}
+
+int	ismini(char *cleanline, t_tools *tools)
+{
+	int	successfullexit;
+
+	successfullexit = -1;
+	if (!ft_strncmp(cleanline, "minishell", 20) || !ft_strncmp(cleanline,
+			"./minishell", 20))
+	{
+		execute_minishell(tools);
+		return (1);
+	}
 }

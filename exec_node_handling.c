@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/08 18:07:45 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/09 12:12:19 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,19 +15,29 @@
 /*Builtins, minishell launch, existing path*/
 int	other_execution_type(t_tools *tool, t_execcmd *ecmd)
 {
+	char	**argv;
+
+	argv = ecmd->argv;
 	if (is_builtin(ecmd->argv[0]))
 		exit(run_builtin(ecmd, tool));
-	// if (ft_strncmp(ecmd->argv[0], "minishell", 10) == 0
-	// 	|| ft_strncmp(ecmd->argv[0], "./minishell", 12) == 0)
-	// {
-	// 	exec_new_minishell(tool, ecmd);
-	// 	return (1);
-	// }
-	if (access(ecmd->argv[0], F_OK) == 0)
+	if (ft_strncmp(ecmd->argv[0], "minishell", 10) == 0
+		|| ft_strncmp(ecmd->argv[0], "./minishell", 12) == 0)
 	{
-		if (access(ecmd->argv[0], X_OK) != 0)
-			print_errno_exit(NULL, NULL, 0, tool);
-		execute_execve(ecmd->argv[0], ecmd, tool);
+		// exec_new_minishell(tool, ecmd);
+		print_error(NULL, "This minishell does not handle this!", NULL);
+		good_exit(tool);
+		
+	}
+	if (!ft_strncmp(argv[0], "/", 1) || !ft_strncmp(argv[0], "./", 2)
+		|| !ft_strncmp(argv[0], "../", 3))
+	{
+		if (access(ecmd->argv[0], F_OK) == 0)
+		{
+			if (access(ecmd->argv[0], X_OK) != 0)
+				print_errno_exit(NULL, NULL, 0, tool);
+			execute_execve(ecmd->argv[0], ecmd, tool);
+		}
+		print_errno_exit(ecmd->argv[0], "No such file or directory", 127, tool);
 	}
 	return (0);
 }

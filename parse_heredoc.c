@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 20:49:55 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/09 12:16:10 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,7 +118,7 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 					alloc_delim);
 			break ;
 		}
-		tools->cleanline = clean_line(tools->line, ft_strlen(tools->line),
+		tools->cleanline = clean_line_expand_only(tools->line, ft_strlen(tools->line),
 				tools);
 		if (!tools->cleanline || write(fd, tools->cleanline,
 				ft_strlen(tools->cleanline)) == -1 || write(fd, "\n", 1) == -1)
@@ -153,3 +153,28 @@ void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
 	}
 	return ;
 }
+
+char	*clean_line_expand_only(char *line, int linelen, t_tools *tools)
+{
+	char	*c_line;
+	size_t	i;
+	size_t	j;
+
+	init_zero(&i, &j, &c_line, NULL);
+	tools->cl_capacity = linelen * 2;
+	tools->cleanline = safe_calloc(tools->cl_capacity + 2, 1, tools);
+	c_line = tools->cleanline;
+	while (line[i] && j < tools->cl_capacity)
+	{
+		if (line[i] == '\'' || line[i] == '"')
+			i = i + copy_quotes(&c_line[j], &line[i], tools);
+		else if (line[i] == '$' && line[i - 1] != '\\' && line[i + 1] != ' ')
+			i = i + copy_var(&c_line[j], &line[i], tools);
+		else
+			c_line[j++] = line[i++];
+		j = ft_strlen(c_line);
+		c_line = tools->cleanline;
+	}
+	return (c_line);
+}
+

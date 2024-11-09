@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:00:21 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:51:40 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/09 11:45:08 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ extern volatile sig_atomic_t global_signal; // TODO
 # define EXEC 1
 # define REDIR 2
 # define PIPE 3
+# define ALPHA 4
 
 struct						s_cmd
 {

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/09 13:12:02 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,6 @@ void	check_system_fail(int status, t_tools *tools, bool inmain)
 	if (WIFEXITED(status))
 	{
 		sig = WEXITSTATUS(status);
-		// tools->exit_code = sig;
 		record_exit(sig, tools);
 		if (inmain && sig == 142)
 			error_exit_main(tools, 1);
@@ -33,28 +32,24 @@ void	check_system_fail(int status, t_tools *tools, bool inmain)
 			|| sig == EMFILE || sig == EBADF || sig == EFAULT || sig == ENOSPC
 			|| sig == EIO || sig == ENODEV)
 			error_exit_main(tools, tools->exit_code);
-		else
-			return ;
+		/* we use this one cause it doesnt need to print error every time,
+			just exit!*/
 	}
 	else if (WIFSIGNALED(status))
 	{
 		sig = WTERMSIG(status);
-		// tools->exit_code = sig;
 		record_exit(sig, tools);
 		if (sig == SIGKILL)
 			return ;
 		else if (sig == SIGSEGV || sig == SIGBUS || sig == SIGFPE
 			|| sig == SIGILL || sig == SIGABRT || sig == SIGSYS)
 		{
-			// tools->exit_code = sig + 128;
 			record_exit(sig + 128, tools);
 			error_exit_main(tools, sig + 128);
 		}
 	}
-	else
-		return ;
-	/*we dont exit unless the above, this is just an exra catcher for compiler
-		*/// exit(0); // temporary?
+	return ;
+	/*we dont exit unless the above, this is just an exra catcher for compiler*/
 }
 
 /*
@@ -107,7 +102,7 @@ int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
 	if (fileordir == 2 && rcmd->fd == 1) // directory, outfile
 	{
 		print_error(rcmd->file, "is a directory", NULL);
-		return (-1); //myakoven oct 28, we cant redirect this: TODO
+		return (-1); // myakoven oct 28, we cant redirect this: TODO
 	}
 	if (fileordir == 1 && rcmd->append && rcmd->fd == 1)
 		// reg file (not a directory), append, outfile
@@ -121,7 +116,8 @@ int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
 		return (O_RDONLY);
 	else if (fileordir == 2 && rcmd->fd == 0)
 		// special condition for infile which is a directory
-		return (O_RDONLY | __O_DIRECTORY);
+		// return (O_RDONLY | __O_DIRECTORY);
+		return (O_RDONLY | O_DIRECTORY);
 	return (0);
 }
 
