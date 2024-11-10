@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_heredoc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 12:54:19 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 19:53:45 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 				fd);
 	if (!tools->lastredir)
 		error_exit_main(tools, 1);
+	// tools->lastredir->isheredoc = 1;
 	return (len);
 }
 
@@ -99,6 +100,7 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 	}
 	record_exit(tools->exit_code, tools);
 	close(fd);
+	free(tempalloc_delim);
 	return (tools->heredocs[tools->hereindex - 1]);
 }
 

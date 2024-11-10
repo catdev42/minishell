@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:00:21 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/09 11:45:08 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 19:49:18 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ struct						s_execcmd
 struct						s_redircmd
 {
 	int						type;
-
+	// bool					isheredoc;
 	bool					append;
 	// 0xt thing redir or exec
 	struct s_cmd			*cmd;
@@ -90,8 +90,8 @@ typedef struct s_tools
 	char					*cmd_end;
 	char					heredocs[MAXARGS][MAXARGS];
 	int						hereindex;
-	struct s_pipecmd 		*lastpipe;   // just set to null
-	struct s_redircmd 		*lastredir;  // just set to null
+	struct s_pipecmd *lastpipe;   // just set to null
+	struct s_redircmd *lastredir; // just set to null
 }							t_tools;
 
 #endif

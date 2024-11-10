@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:22:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 20:50:03 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 19:49:41 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	here_unlink(t_tools *tools)
 /* RESET TOOLS: leave env var and exit_string */
 void	reset_tools(t_tools *tools)
 {
+	if (tools->tree)
+		tree_free(tools->tree);
 	if (tools->line)
 	{
 		ft_bzero(tools->line, tools->line_capacity);
@@ -50,8 +52,6 @@ void	reset_tools(t_tools *tools)
 		ft_bzero(tools->cleanline, tools->cl_capacity);
 		free_things(&tools->cleanline, NULL, NULL, -1);
 	}
-	if (tools->tree)
-		tree_free(tools->tree);
 	tools->tree = NULL;
 	tools->cleanline = NULL;
 	tools->cmd_end = NULL;
@@ -102,12 +102,14 @@ void	tree_free(struct s_cmd *node)
 	{
 		rcmd = (struct s_redircmd *)node;
 		tree_free(rcmd->cmd);
+		free(rcmd);
 	}
 	else if (node && node->type == PIPE)
 	{
 		pcmd = (struct s_pipecmd *)node;
 		tree_free(pcmd->left);
 		tree_free(pcmd->right);
+		free(pcmd);
 	}
 	return ;
 }
