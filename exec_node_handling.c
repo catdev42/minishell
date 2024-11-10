@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 12:54:19 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 19:13:00 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,10 +28,12 @@ int	other_execution_type(t_tools *tool, t_execcmd *ecmd)
 	if (!ft_strncmp(argv[0], "/", 1) || !ft_strncmp(argv[0], "./", 2)
 		|| !ft_strncmp(argv[0], "../", 3))
 	{
+		if (file_dir_noexist(ecmd->argv[0], 0) == 2)
+			print_errno_exit(ecmd->argv[0], "Is a directory", 126, tool);
 		if (access(ecmd->argv[0], F_OK) == 0)
 		{
 			if (access(ecmd->argv[0], X_OK) != 0)
-				print_errno_exit(NULL, NULL, 0, tool);
+				print_errno_exit(NULL, NULL, 126, tool);
 			execute_execve(ecmd->argv[0], ecmd, tool);
 		}
 		print_errno_exit(ecmd->argv[0], "No such file or directory", 127, tool);

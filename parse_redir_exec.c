@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redir_exec.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/07 17:14:38 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 18:51:37 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 					append = true;
 				}
 				createredir(++start, append, fd_in_or_out, tools);
+				start += (get_token_end(start) - start);
 			}
 			if (!ret) // this only happens on the first finding of redir
 				ret = (struct s_cmd *)tools->lastredir;

@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/10 17:53:11 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 19:05:10 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,15 +26,18 @@ void	check_system_fail(int status, t_tools *tool, bool inmain)
 	{
 		sig = WEXITSTATUS(status);
 		record_exit(sig, tool);
+		if (sig == 0 || sig == 2 || sig == 126 || sig == 127)
+			return ;
 		if (inmain && sig == 142)
 			error_exit_main(tool, 1);
 		else if (sig == SYSTEMFAIL || sig == ENOMEM || sig == EPIPE
 			|| sig == EMFILE || sig == EBADF || sig == EFAULT || sig == ENOSPC
 			|| sig == EIO || sig == ENODEV)
-				error_exit_main(tool, tool->exit_code);
-		
-			// else
-			// 	(!inmain) exit_with_code()
+			error_exit_main(tool, tool->exit_code);
+		else
+			record_exit(1, tool);
+		// else
+		// 	(!inmain) exit_with_code()
 		// else
 		// {
 		// 	record_exit(1, tool);
@@ -56,7 +59,7 @@ void	check_system_fail(int status, t_tools *tool, bool inmain)
 			error_exit_main(tool, sig + 128);
 		}
 	}
-	// record_exit(1, tool); //CHECK TODO
+	// record_exit(1, tool); // CHECK TODO
 	return ;
 	/*we dont exit unless the above, this is just an exra catcher for compiler*/
 }
