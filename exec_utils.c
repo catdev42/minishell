@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/07 06:47:22 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 09:08:55 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,27 +25,28 @@ void	check_system_fail(int status, t_tools *tool, bool inmain)
 	if (WIFEXITED(status))
 	{
 		sig = WEXITSTATUS(status);
+		printf("sig ist %d \n", sig);
 		if (sig == 0)
 		{
-			ft_putstr_fd("hier 0\n", 2);
+		//	if (!inmain)
+				//good_exit(tool);}
 			record_exit(sig, tool);
 			return ;
 		}
-		else if (inmain && sig == 142) // isnt being attributed nowhere in the programm
+		else if (inmain && sig == 142) 
 		{
-			ft_putstr_fd("hier 1\n", 2);
-			record_exit(1, tool);
 			error_exit_main(tool, 1);
 		}
 		else if (sig == SYSTEMFAIL || sig == ENOMEM || sig == EPIPE
 			|| sig == EMFILE || sig == EBADF || sig == EFAULT || sig == ENOSPC
 			|| sig == EIO || sig == ENODEV)
-			{ft_putstr_fd("hier 2\n", 2);error_exit_main(tool, tool->exit_code);}
+				error_exit_main(tool, tool->exit_code);
 		else
 		{
 			record_exit(1, tool);
-			ft_putstr_fd("hier 3\n", 2);
-			error_exit_main(tool, -4);
+			if (inmain == 0)
+				error_exit_main(tool, 1); 
+			return ;
 		}
 	}
 	else if (WIFSIGNALED(status))

@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/03 10:04:40 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/08 20:43:35 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,7 +110,7 @@ int				run_builtin(t_execcmd *cmd, t_tools *tool);
 int				file_dir_noexist(const char *path, int fd_in_or_out);
 int				check_file_type(t_redircmd *rcmd, int fd_in_or_out);
 /* exec */
-void			handle_node(t_cmd *cmd, t_tools *tool);
+int				handle_node(t_cmd *cmd, t_tools *tool);
 void			run_exec_node(t_tools *tool, t_execcmd *ecmd);
 void			exec_new_minishell(t_tools *tool, t_execcmd *ecmd);
 void			execute_execve(char *pathcmd, t_execcmd *ecmd, t_tools *tool);

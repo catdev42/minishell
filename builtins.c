@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/05 18:56:11 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 09:28:00 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -93,7 +93,6 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 	int		i;
 	int		j;
 	char	*temp;
-//	int		found_var;
 
 	i = 1;
 	if (!cmd)
@@ -105,7 +104,6 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 		if (j > -1)
 		{
 			temp = tools->env[j];
-			//j = found_var;
 			while (tools->env[j])
 			{
 				tools->env[j] = tools->env[j + 1];
@@ -162,7 +160,7 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 			record_exit (0, tool);
 	}
 	// else
-	// 	ft_putstr_fd("exit", 1);
+	// 	ft_putstr_fd("exit", 1); 
 	clean_tools(tool);
 	exit(tool->exit_code);
 }
@@ -233,6 +231,7 @@ int	export(t_execcmd *cmd, t_tools *tool)
 	if (get_matrix_len(cmd->argv) == 1)
 		return (print_export(tool->env));
 	i = 1;
+	record_exit(0, tool);
 	while (cmd->argv[i])
 	{
 		equalsign = ft_strchr(cmd->argv[i], '=');
@@ -244,8 +243,12 @@ int	export(t_execcmd *cmd, t_tools *tool)
 			equalsign[0] = '='; // unnullterm
 		}
 		else
-			break ;
+		{
+			record_exit(1, tool);
+			i++;
+			continue ;
+		}
 		i++;
 	}
-	return (0);
+	return (tool->exit_code);
 }

@@ -35,14 +35,14 @@ int	running_msh(t_tools *tool)
 			handle_node(tool->tree, tool);
 		}
 		waitpid(pid, &status, 0);
-		check_system_fail(status, tool, 0); // maykoven this also exits
+		check_system_fail(status, tool, 1); // maykoven this also exits
 	}
 	else
 		run_pipeless_builtin_tree(tool->tree, tool);
 	return (1);
 }
 
-void	handle_node(t_cmd *cmd, t_tools *tool)
+int	handle_node(t_cmd *cmd, t_tools *tool)
 {
 	t_execcmd	*ecmd;
 	t_redircmd	*rcmd;
@@ -63,9 +63,9 @@ void	handle_node(t_cmd *cmd, t_tools *tool)
 		pcmd = (t_pipecmd *)cmd;
 		run_pipe(pcmd, tool);
 	}
-	else 
-		return ; //the parent process does return here - 
-		// for example aftre the run_pipe is done - execve will be exiting the children
+	printf("\nhier we have the exit code in handle node %d\n", tool->exit_code);
+	return (tool->exit_code); //the parent process does return here? - 
+		// for example after the run_pipe is done - execve will be exiting the children
 
 }
 
@@ -108,17 +108,21 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tool)
 	check_system_fail(status1, tool, 0);
 	waitpid(pid2, &status2, 0);
 	check_system_fail(status2, tool, 0);
-	ft_putstr_fd("test", 2);
-	//good_exit(tool);
+	// ft_putstr_fd("test", 2);
+	good_exit(tool);
 }
 
+/* checks if the file exists and 
+sets the redirection by opening the file at the required fd */
 int	run_redir(t_redircmd *rcmd, t_tools *tool)
 {
 	rcmd->mode = check_file_type(rcmd, rcmd->fd);
 	// MYAKOVEN: IF NOT A VALID REDIR: EXIT FORK
 	// error is already printed
 	if (rcmd->mode == -1)
-		return (-100);// error_exit_main(tool, -100); //check sabina if ok
+	{
+		error_exit_main(tool, 1);
+	}
 	close(rcmd->fd);
 	rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
 	if (rcmd->fd == -1)
@@ -126,7 +130,7 @@ int	run_redir(t_redircmd *rcmd, t_tools *tool)
 		print_errno_exit(NULL, strerror(errno), 1, tool);
 	}
 	handle_node(rcmd->cmd, tool);
-	return (1); //(success)
+	return (0); //(success)
 }
 
 int	run_pipeless_builtin_tree(t_cmd *cmd, t_tools *tool)
