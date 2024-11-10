@@ -6,11 +6,18 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 21:35:52 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/26 14:31:59 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 16:26:45 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
+
+void	tools_init(t_tools *tools)
+{
+	tools->exit_code = 0;
+	tools->env_len = 0;
+	tools->hereindex = 0;
+}
 
 struct s_cmd	*makeexec(void)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 13:57:44 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 16:29:11 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,6 +22,7 @@ int	main(int argc, char **argv, char **env)
 	if (argc > 1 || argv[1])
 		ft_putstr_fd("This program does not accept arguments\n", 2);
 	ft_memset(&tools, 0, sizeof(t_tools));
+	record_exit(0, &tools);
 	tools.sa = &sa;
 	init_sa(tools.sa, handle_reprint_sig);
 	here_init(tools.heredocs, &tools);
@@ -121,22 +122,6 @@ int	fork_new_minishell(t_tools *tools)
 	record_exit(tools->exit_code, tools);
 	return (tools->exit_code);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 /*should this return */
 int	ismini(char *cleanline, t_tools *tools)

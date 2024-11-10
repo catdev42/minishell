@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   minishell.h                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 12:23:59 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 16:27:42 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -133,6 +133,7 @@ int				fork_new_minishell(t_tools *tools);
 struct s_cmd	*makeexec(void);
 struct s_cmd	*makeredir(char *file, char *efile, bool append, int fd);
 struct s_cmd	*makepipe(struct s_cmd *left, struct s_cmd *right);
+void			tools_init(t_tools *tools);
 
 /************************/
 /******** LINE.C ********/
