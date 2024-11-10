@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/10 12:23:08 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 17:00:54 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,12 +75,17 @@ int	passcheck(char *start, long int lim)
 	long int	i;
 
 	i = 0;
+	if (lim == 0 || ft_isdigit(start[i]))
+	{
+		print_error("export", "not a valid identifier", /* start */ NULL);
+		return (0);
+	}
 	while (i < lim)
 	{
 		if (ft_isspace(start[i]) || isquote(start[i])
 			|| ft_strchr("*&|<>?{}()[]-+~°^§$#\%,.:;?!", start[i]))
 		{
-			print_error("export", "not a valid identifier", start);
+			print_error("export", "not a valid identifier", /* start */ NULL);
 			return (0);
 		}
 		i++;

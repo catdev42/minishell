@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/10 12:59:24 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 17:53:11 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,8 +31,8 @@ void	check_system_fail(int status, t_tools *tool, bool inmain)
 		else if (sig == SYSTEMFAIL || sig == ENOMEM || sig == EPIPE
 			|| sig == EMFILE || sig == EBADF || sig == EFAULT || sig == ENOSPC
 			|| sig == EIO || sig == ENODEV)
-			// if (inmain)
 				error_exit_main(tool, tool->exit_code);
+		
 			// else
 			// 	(!inmain) exit_with_code()
 		// else
@@ -56,6 +56,7 @@ void	check_system_fail(int status, t_tools *tool, bool inmain)
 			error_exit_main(tool, sig + 128);
 		}
 	}
+	// record_exit(1, tool); //CHECK TODO
 	return ;
 	/*we dont exit unless the above, this is just an exra catcher for compiler*/
 }

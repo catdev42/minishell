@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/10 13:56:59 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 17:19:00 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,16 @@ int	cd(char **argv, char **env, t_tools *tools)
 
 	buffer = NULL;
 	buffer = safe_calloc(MIDLEN + 1, sizeof(char), tools);
+	if (get_matrix_len(argv) > 2)
+	{
+		print_error(argv[0], "too many arguments", NULL);
+		return (1);
+	}
 	if (!buffer)
 		error_exit_main(tools, errno);
 	if (chdir(argv[1]) < 0)
 	{
-		print_error("cd", "cannot change directory to %s\n", NULL);
+		print_error("cd", strerror(errno), NULL);
 		return (1); // error
 	}
 	if (!replace_or_append_var("PWD", getcwd(buffer, MIDLEN), env, tools))
@@ -191,13 +196,13 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 // 	exit(tool->exit_code);
 // }
 
-int	pwd(t_execcmd *cmd)
+int	pwd(void)
 {
 	char	*cwd;
 
 	cwd = NULL;
-	if (get_matrix_len(cmd->argv) > 1)
-		ft_putstr_fd("pwd: too many arguments\n", 2);
+	// if (get_matrix_len(cmd->argv) > 1)
+	// 	;
 	cwd = getcwd(NULL, 0); // should we check for malloc error
 	if (!cwd)
 		return (1);
@@ -250,6 +255,7 @@ int	print_export(char **env)
 int	export(t_execcmd *cmd, t_tools *tool)
 {
 	int		i;
+	int		pass;
 	char	*equalsign;
 
 	if (!cmd || !cmd->argv[0])
@@ -257,18 +263,22 @@ int	export(t_execcmd *cmd, t_tools *tool)
 	if (get_matrix_len(cmd->argv) == 1)
 		return (print_export(tool->env));
 	i = 1;
+	pass = 0;
 	record_exit(0, tool);
 	while (cmd->argv[i])
 	{
 		equalsign = ft_strchr(cmd->argv[i], '=');
-		if (equalsign && passcheck(cmd->argv[i], (long int)(equalsign
-					- &cmd->argv[i][0])))
+		if (equalsign)
+			pass = passcheck(cmd->argv[i], (long int)(equalsign
+						- &cmd->argv[i][0]));
+		if (equalsign && pass != 0)
 		{
 			equalsign[0] = 0; // nullterm to key
 			replace_or_append_var(cmd->argv[i], &equalsign[1], tool->env, tool);
 			equalsign[0] = '='; // unnullterm
 		}
-		else
+		else if ((equalsign && pass == 0) || (!equalsign
+				&& !passcheck(cmd->argv[i], ft_strlen(cmd->argv[i]))))
 		{
 			record_exit(1, tool);
 			i++;

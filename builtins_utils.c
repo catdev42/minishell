@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/08 16:14:36 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 16:18:31 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -76,7 +76,7 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 	else if (ft_strncmp(cmd->argv[0], CD, 3) == 0)
 		a = cd(cmd->argv, tool->env, tool);
 	else if (ft_strncmp(cmd->argv[0], PWD, 4) == 0)
-		a = pwd(cmd);
+		a = pwd();
 	else if (ft_strncmp(cmd->argv[0], EXPORT, 7) == 0)
 		a = export(cmd, tool);
 	else if (ft_strncmp(cmd->argv[0], UNSET, 6) == 0)

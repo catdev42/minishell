@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lineutils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 23:59:13 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/09 11:30:21 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 17:39:13 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,27 +18,52 @@ static void	extend_cleanline(t_tools *tools, int add);
 /* This is an insanely confusing function - rewrite? */
 int	copy_var(char *c_line, char *line, t_tools *tools)
 {
-	char	*var;
+	char	*var_alloc;
 	char	*var_result;
 	int		i;
 	int		curr_cl_ind;
 
-	var = NULL;
+	// char	*var_res_alloc;
+	// var_res_alloc = NULL;
+	var_alloc = NULL;
 	curr_cl_ind = c_line - tools->cleanline;
 	i = 1;
 	while (line[i] && !ft_isspace(line[i]) && !isquote(line[i])
 		&& !istoken(line[i]) && line[i] != '$')
-		i++; // while the char has no special meaning
+		i++;
 	if (i == 1)
+	{
+		c_line[0] = '$';
 		return (i);
-	var = ft_substr(line, 1, i - 1);
-	if (!var)
+	}
+	var_alloc = ft_substr(line, 1, i - 1);
+	if (!var_alloc)
 		error_exit_main(tools, 1);
-	if (!ft_strncmp(var, "?", 2))
+	// if (i > 2 && !ft_strncmp(var_alloc, "?", 1))
+	// {
+	// 	var_res_alloc = ft_join_one(tools->exit_string, "",
+	// 			get_var_value(tools->env, &var_alloc[1]));
+	// 	if (!var_res_alloc)
+	// 		return (i);
+	// 	if (tools->cl_capacity < ft_strlen(var_res_alloc)
+	// 		+ ft_strlen(tools->cleanline))
+	// 	{
+	// 		extend_cleanline(tools, ft_strlen(var_result));
+	// 		c_line = &(tools->cleanline[curr_cl_ind]);
+	// 	}
+	// 	ft_strlcpy(c_line, var_res_alloc, tools->cl_capacity - curr_cl_ind);
+	// 	free(var_alloc);
+	// 	free(var_res_alloc);
+	// 	return (i);
+	// }
+	if (!ft_strncmp(var_alloc, "?", 1))
+	{
 		var_result = tools->exit_string;
+		i = 2;
+	}
 	else
-		var_result = get_var_value(tools->env, var);
-	free(var);
+		var_result = get_var_value(tools->env, var_alloc);
+	free(var_alloc);
 	if (!var_result)
 		return (i);
 	if (tools->cl_capacity < ft_strlen(var_result)
@@ -117,4 +142,3 @@ int	remove_two(char *first, char *second)
 	}
 	return (i);
 }
-

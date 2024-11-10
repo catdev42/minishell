@@ -146,11 +146,17 @@ int	run_pipeless_builtin_tree(t_cmd *cmd, t_tools *tool)
 		rcmd = (t_redircmd *)cmd;
 		rcmd->mode = check_file_type(rcmd, rcmd->fd);
 		if (rcmd->mode == -1)
+		{
+			record_exit(1, tool);
 			return (0);
+		}
 		close(rcmd->fd);
 		rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
 		if (rcmd->fd == -1)
-			return (0); // $?
+		{
+			record_exit(1, tool);
+			return (0);
+		}
 		run_pipeless_builtin_tree(rcmd->cmd, tool);
 	}
 	if (cmd->type == EXEC)

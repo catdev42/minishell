@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 12:23:59 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 16:18:15 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ void			free_things(char **s1, char **s2, char **s3, int fd);
 /************************/
 int				builtin_check_walk(t_cmd *cmd);
 
-int				pwd(t_execcmd *cmd);
+int				pwd(void);
 
 int				env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools);
 int				passcheck(char *start, long int lim);
