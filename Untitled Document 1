@@ -1,0 +1,94 @@
+———————————— builtins
+Test   1: ✅ echo hello world 
+Test   2: ✅ echo "hello world" 
+Test   3: ✅ echo 'hello world' 
+Test   4: ✅ echo hello'world' 
+Test   5: ✅ echo hello""world 
+Test   6: ✅ echo '' 
+Test   7: ❌ echo "$PWD" 
+mini output = ("/home/spitul/Documents/home/minishell_new/tester)
+bash output = (/home/spitul/Documents/home/minishell_new/tester)
+mini exit code = "/home/spitul/Documents/home/minishell_new/tester
+bash exit code = 0
+Test   8: ✅ echo '$PWD' 
+Test   9: ✅ echo "aspas ->'" 
+Test  10: ✅ echo "aspas -> ' " 
+Test  11: ✅ echo 'aspas ->"' 
+Test  12: ✅ echo 'aspas -> " ' 
+Test  13: ✅ echo "> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<" 
+Test  14: ✅ echo '> >> < * ? [ ] | ; [ ] || && ( ) & # $  <<' 
+Test  15: ❌ echo "exit_code ->$? user ->$USER home -> $HOME" 
+mini output = (exit_code -> user ->spitul home -> /home/spitul)
+bash output = (exit_code ->0 user ->spitul home -> /home/spitul)
+Test  16: ✅ echo 'exit_code ->$? user ->$USER home -> $HOME' 
+Test  17: ❌ echo "$" 
+mini output = ()
+bash output = ($)
+Test  18: ✅ echo '$' 
+Test  19: ❌ echo $ 
+mini output = ()
+bash output = ($)
+Test  20: ❌ echo $? 
+mini output = ()
+bash output = (0)
+Test  21: ❌ echo $?HELLO 
+mini output = ()
+bash output = (0HELLO)
+Test  22: ✅ pwd 
+Test  23: ✅⚠️  pwd oi 
+mini error = ( too many arguments)
+bash error = ()
+Test  24: ❌ export hello 
+mini exit code = 1
+bash exit code = 0
+Test  25: ✅ export HELLO=123 
+Test  26: ✅⚠️  export A- 
+mini error = ()
+bash error = ( not a valid identifier)
+Test  27: ❌ export HELLO=123 A 
+mini exit code = 1
+bash exit code = 0
+Test  28: ✅ export HELLO="123 A-" 
+Test  29: ❌ export hello world 
+mini exit code = 1
+bash exit code = 0
+Test  30: ✅⚠️  export HELLO-=123 
+mini error = ( not a valid identifier`HELLO-=123')
+bash error = ( not a valid identifier)
+Test  31: ❌ export = 
+mini exit code = 0
+bash exit code = 1
+mini error = ()
+bash error = ( not a valid identifier)
+Test  32: ✅⚠️  export 123 
+mini error = ()
+bash error = ( not a valid identifier)
+Test  33: ✅ unset 
+Test  34: ✅ unset HELLO 
+Test  35: ✅ unset HELLO1 HELLO2 
+Test  36: ✅ unset HOME 
+Test  37: ✅ unset PATH 
+Test  38: ✅ unset SHELL 
+Test  39: ✅ cd $PWD 
+Test  40: ❌ cd $PWD hi 
+mini exit code = 0
+bash exit code = 1
+mini error = ()
+bash error = ( too many arguments)
+Test  41: ✅⚠️  cd 123123 
+mini error = ( cannot change directory to %s)
+bash error = ( No such file or directory)
+Test  42: ✅ exit 123 
+Test  43: ✅ exit 298 
+Test  44: ✅ exit +100 
+Test  45: ✅ exit "+100" 
+Test  46: ✅ exit +"100" 
+Test  47: ✅ exit -100 
+Test  48: ✅ exit "-100" 
+Test  49: ✅ exit -"100" 
+Test  50: ✅ exit hello 
+Test  51: ✅ exit 42 world 
+Test  52: ❌  
+mini exit code =
+bash exit code = 0
+40/52
