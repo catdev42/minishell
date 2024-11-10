@@ -26,12 +26,13 @@ int	running_msh(t_tools *tools)
 	if ((tools->tree->type == PIPE) || (tools->tree->type != PIPE
 			&& (builtin_check_walk(tools->tree) == 0)))
 	{
+		init_sa(tools->sa, handle_printn_sig);
 		pid = fork();
 		if (pid == -1)
 			print_errno_exit(NULL, NULL, 0, tools); // myakoven system fail
 		if (pid == 0)
 		{
-			tools->sa->sa_handler = SIG_DFL; // NEW TODO
+			init_sa(tools->sa, SIG_DFL);
 			handle_node(tools->tree, tools);
 		}
 		waitpid(pid, &status, 0);
@@ -112,7 +113,8 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 	check_system_fail(status1, tools, 0);
 	waitpid(pid2, &status2, 0);
 	check_system_fail(status2, tools, 0);
-	good_exit(tools);
+	// good_exit(tools);
+	exit_with_code(tools, tools->exit_code);
 }
 
 /*MYAKOVEN: I think this function only need to get the mode,
@@ -123,7 +125,7 @@ int	run_redir(t_redircmd *rcmd, t_tools *tool)
 	// MYAKOVEN: IF NOT A VALID REDIR: EXIT FORK
 	// error is already printed
 	if (rcmd->mode == -1)
-		error_exit_main(tool, tool->exit_code);
+		exit_with_code(tool, 1);
 	close(rcmd->fd);
 	rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
 	if (rcmd->fd == -1)
@@ -144,11 +146,17 @@ int	run_pipeless_builtin_tree(t_cmd *cmd, t_tools *tool)
 		rcmd = (t_redircmd *)cmd;
 		rcmd->mode = check_file_type(rcmd, rcmd->fd);
 		if (rcmd->mode == -1)
+		{
+			record_exit(1, tool);
 			return (0);
+		}
 		close(rcmd->fd);
 		rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
 		if (rcmd->fd == -1)
-			return (0); // $?
+		{
+			record_exit(1, tool);
+			return (0);
+		}
 		run_pipeless_builtin_tree(rcmd->cmd, tool);
 	}
 	if (cmd->type == EXEC)

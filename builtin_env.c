@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtin_env.c                                      :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 21:06:13 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 17:00:54 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 			clean_tools(tools);
 			exit(0);
 		}
-		
 		waitpid(pid, &status, 0);
 		// usleep(500);
 		check_system_fail(status, tools, 0);
@@ -76,12 +75,17 @@ int	passcheck(char *start, long int lim)
 	long int	i;
 
 	i = 0;
+	if (lim == 0 || ft_isdigit(start[i]))
+	{
+		print_error("export", "not a valid identifier", /* start */ NULL);
+		return (0);
+	}
 	while (i < lim)
 	{
 		if (ft_isspace(start[i]) || isquote(start[i])
-			|| ft_strchr("*&|<>?{}()[]", start[i]))
+			|| ft_strchr("*&|<>?{}()[]-+~°^§$#\%,.:;?!", start[i]))
 		{
-			print_error("export", "not a valid identifier", start);
+			print_error("export", "not a valid identifier", /* start */ NULL);
 			return (0);
 		}
 		i++;

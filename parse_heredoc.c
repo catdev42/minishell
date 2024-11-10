@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 20:49:55 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 19:53:45 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -57,6 +57,7 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 				fd);
 	if (!tools->lastredir)
 		error_exit_main(tools, 1);
+	// tools->lastredir->isheredoc = 1;
 	return (len);
 }
 
@@ -99,6 +100,7 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 	}
 	record_exit(tools->exit_code, tools);
 	close(fd);
+	free(tempalloc_delim);
 	return (tools->heredocs[tools->hereindex - 1]);
 }
 
@@ -118,8 +120,8 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 					alloc_delim);
 			break ;
 		}
-		tools->cleanline = clean_line(tools->line, ft_strlen(tools->line),
-				tools);
+		tools->cleanline = clean_line_expand_only(tools->line,
+				ft_strlen(tools->line), tools);
 		if (!tools->cleanline || write(fd, tools->cleanline,
 				ft_strlen(tools->cleanline)) == -1 || write(fd, "\n", 1) == -1)
 		{
@@ -131,7 +133,6 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 	free_things(NULL, NULL, &alloc_delim, fd);
 	good_exit(tools); // will free line and cleanline!
 }
-
 
 /* Initialize the heredoc names struct */
 void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
@@ -152,4 +153,28 @@ void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
 		i++;
 	}
 	return ;
+}
+
+char	*clean_line_expand_only(char *line, int linelen, t_tools *tools)
+{
+	char	*c_line;
+	size_t	i;
+	size_t	j;
+
+	init_zero(&i, &j, &c_line, NULL);
+	tools->cl_capacity = linelen * 2;
+	tools->cleanline = safe_calloc(tools->cl_capacity + 2, 1, tools);
+	c_line = tools->cleanline;
+	while (line[i] && j < tools->cl_capacity)
+	{
+		if (line[i] == '\'' || line[i] == '"')
+			i = i + copy_quotes(&c_line[j], &line[i], tools);
+		else if (line[i] == '$' && line[i - 1] != '\\' && line[i + 1] != ' ')
+			i = i + copy_var(&c_line[j], &line[i], tools);
+		else
+			c_line[j++] = line[i++];
+		j = ft_strlen(c_line);
+		c_line = tools->cleanline;
+	}
+	return (c_line);
 }

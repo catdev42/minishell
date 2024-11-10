@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:00:21 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:51:40 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 19:49:18 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,7 @@ extern volatile sig_atomic_t global_signal; // TODO
 # define EXEC 1
 # define REDIR 2
 # define PIPE 3
+# define ALPHA 4
 
 struct						s_cmd
 {
@@ -37,7 +38,7 @@ struct						s_execcmd
 struct						s_redircmd
 {
 	int						type;
-
+	// bool					isheredoc;
 	bool					append;
 	// 0xt thing redir or exec
 	struct s_cmd			*cmd;
@@ -89,8 +90,8 @@ typedef struct s_tools
 	char					*cmd_end;
 	char					heredocs[MAXARGS][MAXARGS];
 	int						hereindex;
-	struct s_pipecmd 		*lastpipe;   // just set to null
-	struct s_redircmd 		*lastredir;  // just set to null
+	struct s_pipecmd *lastpipe;   // just set to null
+	struct s_redircmd *lastredir; // just set to null
 }							t_tools;
 
 #endif

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exits.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 14:11:31 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,8 @@
 /************************/
 /******* ERROR.C ********/
 /************************/
-void	good_exit(t_tools *tools);
+void			good_exit(t_tools *tools);
+void			exit_with_code(t_tools *tools, int code);
 
 int				print_errno_exit(const char *arg, const char *errline,
 					int custom_fail, t_tools *tools);
@@ -32,8 +33,7 @@ int				print_error(const char *arg, const char *errline,
 /************************/
 /******* CLEAN.C ********/
 /************************/
-void			clean_fork(t_tools *tools); //leaves files
-
+void			here_unlink(t_tools *tools);
 void			reset_tools(t_tools *tools);
 void			tree_free(struct s_cmd *node);
 

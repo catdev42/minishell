@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 21:16:17 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 17:19:00 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,11 +48,16 @@ int	cd(char **argv, char **env, t_tools *tools)
 
 	buffer = NULL;
 	buffer = safe_calloc(MIDLEN + 1, sizeof(char), tools);
+	if (get_matrix_len(argv) > 2)
+	{
+		print_error(argv[0], "too many arguments", NULL);
+		return (1);
+	}
 	if (!buffer)
 		error_exit_main(tools, errno);
 	if (chdir(argv[1]) < 0)
 	{
-		print_error("cd", "cannot change directory to %s\n", NULL);
+		print_error("cd", strerror(errno), NULL);
 		return (1); // error
 	}
 	if (!replace_or_append_var("PWD", getcwd(buffer, MIDLEN), env, tools))
@@ -88,27 +93,24 @@ char	*ft_join_one(char const *s1, char const *delim, char const *s2)
 	return (fullstr);
 }
 
-// int	export(t_execcmd *cmd, t_tools *tool)
-// {
-// 	return (1);
-// }
-
 int	unset(t_execcmd *cmd, t_tools *tools)
 {
 	int		i;
 	int		j;
 	char	*temp;
 
+	//	int		found_var;
 	i = 1;
 	if (!cmd)
 		return (1);
 	while (cmd->argv[i])
 	{
-		/*if we find the var value*/
-		if (get_var(tools->env, cmd->argv[i]))
+		j = -2;
+		j = get_var_i(tools->env, cmd->argv[i]);
+		if (j > -1)
 		{
-			temp = tools->env[i];
-			j = i;
+			temp = tools->env[j];
+			// j = found_var;
 			while (tools->env[j])
 			{
 				tools->env[j] = tools->env[j + 1];
@@ -120,54 +122,87 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 	}
 	return (0);
 }
-
 int	ft_strisnumeric(char *str)
 {
 	size_t	i;
 
 	i = 0;
-	while (str[i] && (ft_isspace(str[i]) || str[i] == '+'))
+	while (str[i] && ft_isspace(str[i]))
 		i++;
-	if (str[i] == '-')
-		return (0);
+	if (str[i] == '-' || str[i] == '+')
+		i++;
 	while (str[i] && ft_isdigit(str[i]))
 		i++;
-	if (i < ft_strlen(str) - 1)
+	if (i < ft_strlen(str))
 		return (0);
 	return (1);
 }
 
 int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
-	record_exit(0, tool);
+	ft_putstr_fd("exit\n", 1);
 	if (cmd)
 	{
 		if (get_matrix_len(cmd->argv) > 2)
-			print_error(NULL, "too many arguments", NULL);
+		{
+			print_error("exit", "too many arguments", NULL);
+			record_exit(1, tool);
+		}
 		else if (get_matrix_len(cmd->argv) == 2)
 		{
-			ft_putstr_fd("exit ", 1);
-			if (!ft_strisnumeric(cmd->argv[1]))
-				record_exit(ft_atol(cmd->argv[1]) % 256, tool);
-			ft_putstr_fd(tool->exit_string, 1);
+			if (ft_strisnumeric(cmd->argv[1]))
+				record_exit(ft_atol(cmd->argv[1]), tool);
+			else
+			{
+				print_error("exit", "numeric argument required", NULL);
+				record_exit(2, tool);
+			}
 		}
 		else
-			ft_putstr_fd("exit", 1);
+			record_exit(0, tool);
 	}
 	else
-		ft_putstr_fd("exit", 1);
-	ft_putstr_fd("\n", 1);
+		record_exit(0, tool);
 	clean_tools(tool);
 	exit(tool->exit_code);
 }
 
-int	pwd(t_execcmd *cmd)
+// int	ft_exit(t_execcmd *cmd, t_tools *tool)
+// {
+// 	ft_putstr_fd("exit\n", 1);
+// 	if (cmd && get_matrix_len(cmd->argv) > 2)
+// 	{
+// 		print_error(NULL, "too many arguments", NULL);
+// 		record_exit(1, tool);
+// 	}
+// 	if (cmd)
+// 	{
+// 		if (get_matrix_len(cmd->argv) == 2)
+// 		{
+// 			if (ft_strisnumeric(cmd->argv[1]))
+// 				record_exit(ft_atoll(cmd->argv[1]), tool);
+// 			else if (!ft_strisnumeric(cmd->argv[1]))
+// 			{
+// 				record_exit(2, tool);
+// 				print_error("exit", "numeric argument required", cmd->argv[1]);
+// 			}
+// 			else
+// 				record_exit(0, tool);
+// 		}
+// 	}
+// 	if (!cmd)
+// 		record_exit(0, tool);
+// 	clean_tools(tool);
+// 	exit(tool->exit_code);
+// }
+
+int	pwd(void)
 {
 	char	*cwd;
 
 	cwd = NULL;
-	if (get_matrix_len(cmd->argv) > 1)
-		ft_putstr_fd("pwd: too many arguments\n", 2);
+	// if (get_matrix_len(cmd->argv) > 1)
+	// 	;
 	cwd = getcwd(NULL, 0); // should we check for malloc error
 	if (!cwd)
 		return (1);
@@ -211,7 +246,7 @@ int	print_export(char **env)
 		equalsign = ft_strchr(env[i], '=');
 		equalsign[0] = 0;
 		put_var(env[i], &equalsign[1]);
-		equalsign[0] = 1;
+		equalsign[0] = '=';
 		i++;
 	}
 	return (0);
@@ -220,6 +255,7 @@ int	print_export(char **env)
 int	export(t_execcmd *cmd, t_tools *tool)
 {
 	int		i;
+	int		pass;
 	char	*equalsign;
 
 	if (!cmd || !cmd->argv[0])
@@ -227,19 +263,28 @@ int	export(t_execcmd *cmd, t_tools *tool)
 	if (get_matrix_len(cmd->argv) == 1)
 		return (print_export(tool->env));
 	i = 1;
+	pass = 0;
+	record_exit(0, tool);
 	while (cmd->argv[i])
 	{
 		equalsign = ft_strchr(cmd->argv[i], '=');
-		if (equalsign && passcheck(cmd->argv[i], (long int)(equalsign
-					- &cmd->argv[i][0])))
+		if (equalsign)
+			pass = passcheck(cmd->argv[i], (long int)(equalsign
+						- &cmd->argv[i][0]));
+		if (equalsign && pass != 0)
 		{
 			equalsign[0] = 0; // nullterm to key
 			replace_or_append_var(cmd->argv[i], &equalsign[1], tool->env, tool);
 			equalsign[0] = '='; // unnullterm
 		}
-		else
-			break ;
+		else if ((equalsign && pass == 0) || (!equalsign
+				&& !passcheck(cmd->argv[i], ft_strlen(cmd->argv[i]))))
+		{
+			record_exit(1, tool);
+			i++;
+			continue ;
+		}
 		i++;
 	}
-	return (0);
+	return (tool->exit_code);
 }

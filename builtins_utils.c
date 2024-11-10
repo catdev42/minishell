@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/28 21:17:24 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 16:18:31 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-/*checks if here is a non builtin command in a pipefree tree*/
+/*checks if here is a builtin command in a pipefree tree*/
 int	builtin_check_walk(t_cmd *cmd)
 {
 	struct s_execcmd	*ecmd;
@@ -27,6 +27,8 @@ int	builtin_check_walk(t_cmd *cmd)
 		if (cmd->type == EXEC)
 		{
 			ecmd = (t_execcmd *)cmd;
+			if (!ecmd->argv[0])
+				return (0);
 			res = is_builtin(ecmd->argv[0]);
 			return (res);
 		}
@@ -45,6 +47,8 @@ int	is_builtin(char *s)
 	int	a;
 
 	a = 0;
+	if (!s)
+		return (0);
 	if (ft_strncmp(s, ECHO, 5) == 0)
 		a = 1;
 	else if (ft_strncmp(s, CD, 3) == 0)
@@ -72,7 +76,7 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 	else if (ft_strncmp(cmd->argv[0], CD, 3) == 0)
 		a = cd(cmd->argv, tool->env, tool);
 	else if (ft_strncmp(cmd->argv[0], PWD, 4) == 0)
-		a = pwd(cmd);
+		a = pwd();
 	else if (ft_strncmp(cmd->argv[0], EXPORT, 7) == 0)
 		a = export(cmd, tool);
 	else if (ft_strncmp(cmd->argv[0], UNSET, 6) == 0)

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:07:28 by spitul            #+#    #+#             */
-/*   Updated: 2024/10/26 19:44:08 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/07 17:01:27 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,8 +41,8 @@ int	copy_env(t_tools *tools, char **env)
 		{
 			ft_freetab(envp);
 			return (0); // fail
-						/*changed to envp,
-							we must delete currently allocated on error*/
+			/*changed to envp,
+				we must delete currently allocated on error*/
 		}
 		if (!ft_strlcpy(envp[i], env[i], len))
 			return (0); // fail
@@ -57,7 +57,7 @@ int	copy_env(t_tools *tools, char **env)
 // if (i == tools->env_len - 1)
 // 	copy_env(tools, env)
 
-/* Return the pointer to the variable definition or NULL if not found */
+/* Return the pointer to the variable value or NULL if not found */
 char	*get_var_value(char **env, char *var)
 {
 	int		i;
@@ -72,8 +72,9 @@ char	*get_var_value(char **env, char *var)
 	while (env[i] && !line)
 	{
 		line = ft_strnstr(env[i], var, len);
-		if (line && line[len] == '=')
-			line = line + len + 1;
+		if (line && len < ft_strlen(line) && line[len] == '=')
+			return (line + len + 1);
+		line = NULL;
 		i++;
 	}
 	return (line);
@@ -96,7 +97,31 @@ char	*get_var(char **env, char *var)
 		line = ft_strnstr(env[i], var, len);
 		if (line && line[len] == '=')
 			return (line);
+		line = NULL;
 		i++;
 	}
 	return (NULL);
+}
+
+/* returns the index of the found variable or -1 */
+int	get_var_i(char **env, char *var)
+{
+	int		i;
+	size_t	len;
+	char	*line;
+
+	if (!env || !*env || !var)
+		return (-1);
+	line = NULL;
+	i = 0;
+	len = ft_strlen(var);
+	while (env[i] && !line)
+	{
+		line = ft_strnstr(env[i], var, len);
+		if (line && line[len] == '=')
+			return (i);
+		line = NULL;
+		i++;
+	}
+	return (-1);
 }

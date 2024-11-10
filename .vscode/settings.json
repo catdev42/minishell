@@ -3,6 +3,9 @@
         "type_traits": "c",
         "minishell.h": "c",
         "readline.h": "c",
-        "structs.h": "c"
+        "structs.h": "c",
+        "__locale": "c",
+        "cctype": "c",
+        "locale": "c"
     }
 }
