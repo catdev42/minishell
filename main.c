@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/09 23:41:29 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 13:24:25 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -75,9 +75,6 @@ int	shell_loop(t_tools *tools)
 		// ft_putstr_fd("  -- test of cleanline\n", 1);
 		if (!parseline(tools->cleanline, tools))
 			continue ;
-		// printf("length of cleanline: %li\n", ft_strlen(tools->cleanline));
-		// if (!ismini(tools->cleanline, tools))
-		// 	continue ;
 		if (tools->tree->type == EXEC && ((t_execcmd *)tools->tree)->argv[0]
 			&& !ft_strncmp(((t_execcmd *)tools->tree)->argv[0], "./minishell",
 				12))
@@ -108,30 +105,27 @@ int	fork_new_minishell(t_tools *tools)
 		error_exit_main(tools, 1);
 	if (pid == 0)
 	{
-		// init_sa(tools->sa, handle_reprint_sig);
 		if (tools->tree->type == EXEC)
 			exec_new_minishell(tools, (t_execcmd *)tools->tree);
-		printf("Am i still in this child process?\n");
-		print_errno_exit(NULL, "This msh does not handle this", 1, tools);
+		print_errno_exit(NULL, "mini : should be only command", 1, tools);
 	}
 	waitpid(pid, &tools->exit_code, 0);
-	printf("I exited child now");
+	// printf("I exited child now");
 	check_system_fail(tools->exit_code, tools, 1);
 	// we are in main and mini doesnt get closed by sigint
 	record_exit(tools->exit_code, tools);
 	return (tools->exit_code);
 }
-/*should this return */
-int	ismini(char *cleanline, t_tools *tools)
-{
-	int	is_exit_bad;
+// /*should this return */
+// int	ismini(char *cleanline, t_tools *tools)
+// {
+// 	int	is_exit_bad;
 
-	is_exit_bad = 0;
-	if (!ft_strncmp(cleanline, "minishell", 20) || !ft_strncmp(cleanline,
-			"./minishell", 20))
-		is_exit_bad = fork_new_minishell(tools);
-	// if (is_exit_good = )
-	if (is_exit_bad)
-		return (0);
-	return (1);
-}
+// 	is_exit_bad = 0;
+// 	if (!ft_strncmp(cleanline, "minishell", 20) || !ft_strncmp(cleanline,
+// 			"./minishell", 20))
+// 		is_exit_bad = fork_new_minishell(tools);
+// 	if (is_exit_bad)
+// 		return (0);
+// 	return (1);
+// }

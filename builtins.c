@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/08 16:31:42 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 12:46:18 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -151,8 +151,8 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 			if (ft_strisnumeric(cmd->argv[1]))
 			{
 				num = ft_atoll(cmd->argv[1]);
-				while (num < 0)
-					num = num + 256;
+				// while (num < 0)
+				// 	num = num + 256;
 				num = num % 256;
 				record_exit(num, tool);
 			}
