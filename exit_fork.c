@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 14:08:00 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 12:55:01 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 14:10:32 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,10 +30,10 @@ void	good_exit(t_tools *tools)
 	// exit(tools->exit_code);
 }
 
-void	exit_with_code(t_tools *tools)
+void	exit_with_code(t_tools *tools, int code)
 {
 	clean_tools(tools);
-	exit(tools->exit_code);
+	exit(code);
 }
 
 // should only delete heredoc files if exiting the main process....

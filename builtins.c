@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/10 12:56:02 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 13:56:59 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -135,9 +135,9 @@ int	ft_strisnumeric(char *str)
 
 int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
+	ft_putstr_fd("exit\n", 1);
 	if (cmd)
 	{
-		ft_putstr_fd("exit\n", 1);
 		if (get_matrix_len(cmd->argv) > 2)
 		{
 			print_error("exit", "too many arguments", NULL);
@@ -146,51 +146,47 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 		else if (get_matrix_len(cmd->argv) == 2)
 		{
 			if (ft_strisnumeric(cmd->argv[1]))
-				record_exit(ft_atol(cmd->argv[1]) % 256, tool);
+				record_exit(ft_atol(cmd->argv[1]), tool);
 			else
 			{
 				print_error("exit", "numeric argument required", NULL);
 				record_exit(2, tool);
 			}
-			// ft_putstr_fd(tool->exit_string, 1);
 		}
 		else
 			record_exit(0, tool);
 	}
 	else
-		print_error(NULL, strerror(errno), NULL);
+		record_exit(0, tool);
 	clean_tools(tool);
 	exit(tool->exit_code);
 }
 
 // int	ft_exit(t_execcmd *cmd, t_tools *tool)
 // {
-// 	long long int	num;
-
+// 	ft_putstr_fd("exit\n", 1);
 // 	if (cmd && get_matrix_len(cmd->argv) > 2)
+// 	{
 // 		print_error(NULL, "too many arguments", NULL);
+// 		record_exit(1, tool);
+// 	}
 // 	if (cmd)
 // 	{
 // 		if (get_matrix_len(cmd->argv) == 2)
 // 		{
 // 			if (ft_strisnumeric(cmd->argv[1]))
-// 			{
-// 				num = ft_atoll(cmd->argv[1]);
-// 				while (num < 0)
-// 					num = num + 256;
-// 				num = num % 256;
-// 				record_exit(num, tool);
-// 			}
+// 				record_exit(ft_atoll(cmd->argv[1]), tool);
 // 			else if (!ft_strisnumeric(cmd->argv[1]))
 // 			{
 // 				record_exit(2, tool);
 // 				print_error("exit", "numeric argument required", cmd->argv[1]);
 // 			}
+// 			else
+// 				record_exit(0, tool);
 // 		}
 // 	}
 // 	if (!cmd)
 // 		record_exit(0, tool);
-// 	ft_putstr_fd("exit\n", 1);
 // 	clean_tools(tool);
 // 	exit(tool->exit_code);
 // }
@@ -243,7 +239,7 @@ int	print_export(char **env)
 			continue ;
 		}
 		equalsign = ft_strchr(env[i], '=');
-		equalsign[0] = 0; 
+		equalsign[0] = 0;
 		put_var(env[i], &equalsign[1]);
 		equalsign[0] = '=';
 		i++;

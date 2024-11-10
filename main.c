@@ -6,7 +6,7 @@
 /*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 13:11:05 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/10 13:57:44 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -115,7 +115,7 @@ int	fork_new_minishell(t_tools *tools)
 		print_errno_exit(NULL, "This msh does not handle this", 1, tools);
 	}
 	waitpid(pid, &tools->exit_code, 0);
-	printf("I exited child now");
+	// printf("I exited child now");
 	check_system_fail(tools->exit_code, tools, 1);
 	// we are in main and mini doesnt get closed by sigint
 	record_exit(tools->exit_code, tools);

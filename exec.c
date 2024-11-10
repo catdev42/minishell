@@ -113,7 +113,8 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 	check_system_fail(status1, tools, 0);
 	waitpid(pid2, &status2, 0);
 	check_system_fail(status2, tools, 0);
-	good_exit(tools);
+	// good_exit(tools);
+	exit_with_code(tools, tools->exit_code);
 }
 
 /*MYAKOVEN: I think this function only need to get the mode,
@@ -124,7 +125,7 @@ int	run_redir(t_redircmd *rcmd, t_tools *tool)
 	// MYAKOVEN: IF NOT A VALID REDIR: EXIT FORK
 	// error is already printed
 	if (rcmd->mode == -1)
-		error_exit_main(tool, 1);
+		exit_with_code(tool, 1);
 	close(rcmd->fd);
 	rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
 	if (rcmd->fd == -1)
