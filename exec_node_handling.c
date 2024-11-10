@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_node_handling.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/09 18:11:10 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 12:54:19 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 

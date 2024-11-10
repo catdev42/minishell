@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_fork.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 14:08:00 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:11:38 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 12:55:01 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,13 @@ void	good_exit(t_tools *tools)
 {
 	clean_tools(tools);
 	exit(0);
+	// exit(tools->exit_code);
+}
+
+void	exit_with_code(t_tools *tools)
+{
+	clean_tools(tools);
+	exit(tools->exit_code);
 }
 
 // should only delete heredoc files if exiting the main process....
@@ -51,5 +58,3 @@ int	print_errno_exit(const char *arg, const char *errline, int custom_fail,
 	else
 		exit(errno);
 }
-
-

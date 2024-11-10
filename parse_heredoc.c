@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_heredoc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/09 12:16:10 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 12:54:19 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -118,8 +118,8 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 					alloc_delim);
 			break ;
 		}
-		tools->cleanline = clean_line_expand_only(tools->line, ft_strlen(tools->line),
-				tools);
+		tools->cleanline = clean_line_expand_only(tools->line,
+				ft_strlen(tools->line), tools);
 		if (!tools->cleanline || write(fd, tools->cleanline,
 				ft_strlen(tools->cleanline)) == -1 || write(fd, "\n", 1) == -1)
 		{
@@ -131,7 +131,6 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 	free_things(NULL, NULL, &alloc_delim, fd);
 	good_exit(tools); // will free line and cleanline!
 }
-
 
 /* Initialize the heredoc names struct */
 void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
@@ -177,4 +176,3 @@ char	*clean_line_expand_only(char *line, int linelen, t_tools *tools)
 	}
 	return (c_line);
 }
-

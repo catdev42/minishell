@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/08 16:31:42 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 12:56:02 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,11 +88,6 @@ char	*ft_join_one(char const *s1, char const *delim, char const *s2)
 	return (fullstr);
 }
 
-// int	export(t_execcmd *cmd, t_tools *tool)
-// {
-// 	return (1);
-// }
-
 int	unset(t_execcmd *cmd, t_tools *tools)
 {
 	int		i;
@@ -140,35 +135,65 @@ int	ft_strisnumeric(char *str)
 
 int	ft_exit(t_execcmd *cmd, t_tools *tool)
 {
-	long long int	num;
-
-	if (cmd && get_matrix_len(cmd->argv) > 2)
-		print_error(NULL, "too many arguments", NULL);
 	if (cmd)
 	{
-		if (get_matrix_len(cmd->argv) == 2)
+		ft_putstr_fd("exit\n", 1);
+		if (get_matrix_len(cmd->argv) > 2)
+		{
+			print_error("exit", "too many arguments", NULL);
+			record_exit(1, tool);
+		}
+		else if (get_matrix_len(cmd->argv) == 2)
 		{
 			if (ft_strisnumeric(cmd->argv[1]))
+				record_exit(ft_atol(cmd->argv[1]) % 256, tool);
+			else
 			{
-				num = ft_atoll(cmd->argv[1]);
-				while (num < 0)
-					num = num + 256;
-				num = num % 256;
-				record_exit(num, tool);
-			}
-			else if (!ft_strisnumeric(cmd->argv[1]))
-			{
+				print_error("exit", "numeric argument required", NULL);
 				record_exit(2, tool);
-				print_error("exit", "numeric argument required", cmd->argv[1]);
 			}
+			// ft_putstr_fd(tool->exit_string, 1);
 		}
+		else
+			record_exit(0, tool);
 	}
-	if (!cmd)
-		record_exit(0, tool);
-	ft_putstr_fd("exit\n", 1);
+	else
+		print_error(NULL, strerror(errno), NULL);
 	clean_tools(tool);
 	exit(tool->exit_code);
 }
+
+// int	ft_exit(t_execcmd *cmd, t_tools *tool)
+// {
+// 	long long int	num;
+
+// 	if (cmd && get_matrix_len(cmd->argv) > 2)
+// 		print_error(NULL, "too many arguments", NULL);
+// 	if (cmd)
+// 	{
+// 		if (get_matrix_len(cmd->argv) == 2)
+// 		{
+// 			if (ft_strisnumeric(cmd->argv[1]))
+// 			{
+// 				num = ft_atoll(cmd->argv[1]);
+// 				while (num < 0)
+// 					num = num + 256;
+// 				num = num % 256;
+// 				record_exit(num, tool);
+// 			}
+// 			else if (!ft_strisnumeric(cmd->argv[1]))
+// 			{
+// 				record_exit(2, tool);
+// 				print_error("exit", "numeric argument required", cmd->argv[1]);
+// 			}
+// 		}
+// 	}
+// 	if (!cmd)
+// 		record_exit(0, tool);
+// 	ft_putstr_fd("exit\n", 1);
+// 	clean_tools(tool);
+// 	exit(tool->exit_code);
+// }
 
 int	pwd(t_execcmd *cmd)
 {
@@ -218,7 +243,7 @@ int	print_export(char **env)
 			continue ;
 		}
 		equalsign = ft_strchr(env[i], '=');
-		equalsign[0] = 0;
+		equalsign[0] = 0; 
 		put_var(env[i], &equalsign[1]);
 		equalsign[0] = '=';
 		i++;
@@ -236,6 +261,7 @@ int	export(t_execcmd *cmd, t_tools *tool)
 	if (get_matrix_len(cmd->argv) == 1)
 		return (print_export(tool->env));
 	i = 1;
+	record_exit(0, tool);
 	while (cmd->argv[i])
 	{
 		equalsign = ft_strchr(cmd->argv[i], '=');
@@ -247,8 +273,12 @@ int	export(t_execcmd *cmd, t_tools *tool)
 			equalsign[0] = '='; // unnullterm
 		}
 		else
-			break ;
+		{
+			record_exit(1, tool);
+			i++;
+			continue ;
+		}
 		i++;
 	}
-	return (0);
+	return (tool->exit_code);
 }

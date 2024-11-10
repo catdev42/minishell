@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/09 23:41:29 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 13:11:05 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -121,6 +121,23 @@ int	fork_new_minishell(t_tools *tools)
 	record_exit(tools->exit_code, tools);
 	return (tools->exit_code);
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /*should this return */
 int	ismini(char *cleanline, t_tools *tools)
 {
