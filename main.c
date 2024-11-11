@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 18:06:20 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/11 04:41:32 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -119,17 +119,17 @@ int	fork_new_minishell(t_tools *tools)
 	return (tools->exit_code);
 }
 
-/*should this return */
-int	ismini(char *cleanline, t_tools *tools)
-{
-	int	is_exit_bad;
+// /*should this return */
+// int	ismini(char *cleanline, t_tools *tools)
+// {
+// 	int	is_exit_bad;
 
-	is_exit_bad = 0;
-	if (!ft_strncmp(cleanline, "minishell", 20) || !ft_strncmp(cleanline,
-			"./minishell", 20))
-		is_exit_bad = fork_new_minishell(tools);
-	// if (is_exit_good = )
-	if (is_exit_bad)
-		return (0);
-	return (1);
-}
+// 	is_exit_bad = 0;
+// 	if (!ft_strncmp(cleanline, "minishell", 20) || !ft_strncmp(cleanline,
+// 			"./minishell", 20))
+// 		is_exit_bad = fork_new_minishell(tools);
+// 	// if (is_exit_good = )
+// 	if (is_exit_bad)
+// 		return (0);
+// 	return (1);
+// }

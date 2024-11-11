@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 00:59:46 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 12:12:05 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,6 +39,8 @@ void	check_system_fail(int status, t_tools *tool, bool inmain)
 	{
 		sig = WTERMSIG(status);
 		record_exit(sig, tool);
+		if (sig == SIGINT)
+			return ;
 		if (sig == SIGKILL)
 			return ;
 		else if (sig == SIGSEGV || sig == SIGBUS || sig == SIGFPE
@@ -102,6 +104,6 @@ int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
 	else if (fileordir == 1 && rcmd->fd == 0)
 		return (O_RDONLY);
 	else if (fileordir == 2 && rcmd->fd == 0)
-		return (O_RDONLY | __O_DIRECTORY);
+		return (O_RDONLY | O_DIRECTORY);
 	return (0);
 }

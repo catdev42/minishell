@@ -6,13 +6,12 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 00:18:49 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 04:31:39 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef PARSING_H
 # define PARSING_H
-
 
 /************************/
 /******** LINE.C ********/
@@ -31,7 +30,6 @@ int				copy_var(char *c_line, char *line, t_tools *tools);
 void			remove_useless_quotes(char *cline);
 int				remove_two(char *first, char *second);
 
-
 /************************/
 /******* INIT.C ********/
 /************************/
@@ -43,10 +41,11 @@ struct s_cmd	*makepipe(struct s_cmd *left, struct s_cmd *right);
 /******* PARSE.C ********/
 /************************/
 struct s_cmd	*parseline(char *cline, t_tools *tools);
+int				create_pipe_node(struct s_cmd *left, struct s_cmd *right,
+					t_tools *tools);
 struct s_cmd	*createpipe(struct s_cmd *left, struct s_cmd *right,
 					t_tools *tools);
-char			*peek(char *line, char *end, int token);
-/*static nullify*/
+
 /******parse_heredoc.c*****/
 void			here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools);
 int				createredir_here(char *delim, int mode, int fd, t_tools *tools);
@@ -62,9 +61,11 @@ int				createredir(char *filestart, int mode, int fd, t_tools *tools);
 struct s_cmd	*parseargv(char *start, char *end, t_tools *tools);
 
 /***** parse_utils.c *****/
-
+char			*peek(char *line, char *end, int token);
 int				infile_or_outfile(char *start);
 char			*get_token_end(char *namestart);
+void			remove_useless_quotes_final(char *cline, size_t linecapacity);
+void			nullify(char *cline, t_tools *tools);
 
 /************************/
 /******* utils.c ********/

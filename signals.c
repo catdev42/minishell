@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/09 23:05:27 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 05:03:29 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,26 +37,17 @@ Provides a new empty line*/
 void	handle_reprint_sig(int sig)
 {
 	if (sig == SIGINT)
-	{
 		new_line();
-		global_signal = SIGINT;
-	}
-	else if (sig == SIGTERM)
-		global_signal = SIGTERM;
-	else
-		global_signal = sig;
+	global_signal = sig;
 }
 
 /*for while in the rest of the program if something needs to be control C'd like a process killed*/
 void	handle_printn_sig(int sig)
 {
 	if (sig == SIGINT)
-	{
 		ft_putstr_fd("\n", 2);
-		global_signal = SIGINT;
-	}
-	else
-		global_signal = sig;
+	// ft_putstr_fd("I AM IN HANDLE_PRINTN_SIG", 2);
+	global_signal = sig;
 }
 
 // void	handle_printc_sig(int sig)

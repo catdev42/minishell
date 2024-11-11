@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/25 14:20:33 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/20 14:09:30 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 04:03:14 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,6 @@ char	*ft_itoa(int n)
 	str[len - 1] = num + 48;
 	return (str);
 }
-
 
 static size_t	ft_length_long(long int n)
 {

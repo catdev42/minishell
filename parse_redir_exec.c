@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_redir_exec.c                                 :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 18:51:37 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/11 04:26:58 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -63,7 +63,7 @@ struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools)
 				createredir(++start, append, fd_in_or_out, tools);
 				start += (get_token_end(start) - start);
 			}
-			if (!ret) // this only happens on the first finding of redir
+			if (!ret) 
 				ret = (struct s_cmd *)tools->lastredir;
 		}
 		start++;
@@ -129,14 +129,7 @@ struct s_cmd	*parseargv(char *start, char *end, t_tools *tools)
 		}
 		i++;
 	}
-	// if (!ecmd->argv[0])
-	// {
-	// 	free(ecmd);
-	// 	return (NULL);
-	// }
 	if (tools->lastredir)
 		tools->lastredir->cmd = (struct s_cmd *)ecmd;
 	return ((struct s_cmd *)ecmd);
 }
-
-/* parseexex() > (peek redir) > parse_redirs > parse_exec > connect things */
