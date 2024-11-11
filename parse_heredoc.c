@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   parse_heredoc.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:59:02 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 19:04:56 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,6 +92,7 @@ char	*make_heredoc_fork(char *delim, t_tools *tools)
 	{
 		ft_putstr_fd("\n", 1);
 		here_unlink(tools);
+		free(tempalloc_delim);
 		close(fd);
 		return (NULL);
 	}
@@ -121,7 +122,7 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 		if (!tools->cl || write(fd, tools->cl, ft_strlen(tools->cl)) == -1
 			|| write(fd, "\n", 1) == -1)
 		{
-			free_things(NULL, NULL, &alloc_delim, fd);
+			free_things(&tools->ln, &tools->cl, &alloc_delim, fd);
 			print_errno_exit(NULL, NULL, errno, tools);
 		}
 		free_things(&tools->ln, &tools->cl, NULL, -1);
