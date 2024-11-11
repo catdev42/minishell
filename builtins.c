@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 18:23:31 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 18:31:53 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -192,7 +192,6 @@ int	print_export(char **env)
 	}
 	return (0);
 }
-void	perform_export(char *eqs, t_execcmd *cmd, t_tools *tool, int i);
 
 int	export(t_execcmd *cmd, t_tools *tool)
 {
@@ -223,7 +222,7 @@ int	export(t_execcmd *cmd, t_tools *tool)
 	return (tool->exit_code);
 }
 
-static void	perform_export(char *eqs, t_execcmd *cmd, t_tools *tool, int i)
+void	perform_export(char *eqs, t_execcmd *cmd, t_tools *tool, int i)
 {
 	eqs[0] = 0;
 	repl_or_app_var(cmd->argv[i], &eqs[1], tool->env, tool);

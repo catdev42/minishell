@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 01:36:04 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 18:26:53 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,6 +71,7 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 	int	a;
 
 	a = 0;
+	record_exit(0, tool);
 	if (ft_strncmp(cmd->argv[0], ECHO, 5) == 0)
 		a = echo(cmd);
 	else if (ft_strncmp(cmd->argv[0], CD, 3) == 0)
