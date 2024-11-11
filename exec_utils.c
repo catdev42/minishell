@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 12:12:05 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 14:07:47 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	check_system_fail(int status, t_tools *tool, bool inmain)
 	else if (WIFSIGNALED(status))
 	{
 		sig = WTERMSIG(status);
-		record_exit(sig, tool);
+		record_exit(sig + 128, tool);
 		if (sig == SIGINT)
 			return ;
 		if (sig == SIGKILL)

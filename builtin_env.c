@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 01:55:34 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 13:35:20 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,7 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 		pid = fork();
 		if (pid == 0)
 		{
-			init_sa(tools->sa, SIG_DFL);
+			signal_init_sa(tools->sa, SIG_DFL);
 			i = 0;
 			forked_image_env(tools, ecmd, i, j);
 		}

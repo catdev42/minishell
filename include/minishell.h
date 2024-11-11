@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 01:36:04 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 13:41:08 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,9 +131,10 @@ void	new_line(void);
 /************************/
 /****** SIGNALS.C *******/
 /************************/
-void	init_sa(struct sigaction *sa, void (*handler)(int));
+void	signal_init_sa(struct sigaction *sa, void (*handler)(int));
 void	handle_reprint_sig(int sig);
 void	handle_printn_sig(int sig);
 void	handle_recordonly_sig(int sig);
+void	handle_justexit_sig(int sig);
 
 #endif

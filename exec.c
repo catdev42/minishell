@@ -26,13 +26,13 @@ int	running_msh(t_tools *tools)
 	if ((tools->tree->type == PIPE) || (tools->tree->type != PIPE
 			&& (builtin_check_walk(tools->tree) == 0)))
 	{
-		init_sa(tools->sa, handle_printn_sig);
+		signal_init_sa(tools->sa, handle_printn_sig);
 		pid = fork();
 		if (pid == -1)
 			print_errno_exit(NULL, NULL, 0, tools);
 		if (pid == 0)
 		{
-			init_sa(tools->sa, SIG_DFL);
+			signal_init_sa(tools->sa, SIG_DFL);
 			handle_node(tools->tree, tools);
 		}
 		waitpid(pid, &status, 0);
@@ -86,7 +86,7 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 		close(pipefd[0]);
 		dup2(pipefd[1], STDOUT_FILENO);
 		close(pipefd[1]);
-		handle_node(pcmd->left, tools); 
+		handle_node(pcmd->left, tools);
 	}
 	pid2 = fork();
 	if (pid2 == -1)
@@ -96,7 +96,7 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 		close(pipefd[1]);
 		dup2(pipefd[0], STDIN_FILENO);
 		close(pipefd[0]);
-		handle_node(pcmd->right, tools); 
+		handle_node(pcmd->right, tools);
 	}
 	close(pipefd[1]);
 	close(pipefd[0]);

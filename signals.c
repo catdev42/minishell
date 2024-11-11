@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 05:03:29 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 13:48:11 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@ void	new_line(void)
 	rl_redisplay();
 }
 // init_sa(tool->sa, handle_reprint)
-void	init_sa(struct sigaction *sa, void (*handler)(int))
+void	signal_init_sa(struct sigaction *sa, void (*handler)(int))
 {
 	sa->sa_handler = handler;
 	sigemptyset(&sa->sa_mask);
@@ -50,6 +50,17 @@ void	handle_printn_sig(int sig)
 	global_signal = sig;
 }
 
+/**DO NOTHING EXCEPT SET GLOBAL */
+void	handle_recordonly_sig(int sig)
+{
+	printf("I am in record only sig handler\n");
+	global_signal = sig;
+}
+void	handle_justexit_sig(int sig)
+{
+	exit(sig);
+}
+
 // void	handle_printc_sig(int sig)
 // {
 // 	if (sig == SIGINT)
@@ -60,18 +71,6 @@ void	handle_printn_sig(int sig)
 // }
 
 /*have to test*/
-
-/**DO NOTHING EXCEPT SET GLOBAL */
-void	handle_recordonly_sig(int sig)
-{
-	printf("I am in record only sig handler\n");
-	if (sig == SIGINT)
-	{
-		global_signal = SIGINT;
-	}
-	else
-		global_signal = sig;
-}
 
 /*
 // void	init_sa_default(struct sigaction *sa)

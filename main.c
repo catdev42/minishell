@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 04:41:32 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 14:22:59 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ int	main(int argc, char **argv, char **env)
 	ft_memset(&tools, 0, sizeof(t_tools));
 	record_exit(0, &tools);
 	tools.sa = &sa;
-	init_sa(tools.sa, handle_reprint_sig);
+	signal_init_sa(tools.sa, handle_reprint_sig);
 	here_init(tools.heredocs, &tools);
 	copy_env(&tools, env);
 	if (!tools.env || !tools.heredocs[0][0])
@@ -41,7 +41,7 @@ int	shell_loop(t_tools *tools)
 	fd[0] = dup(0);
 	while (1)
 	{
-		init_sa(tools->sa, handle_reprint_sig);
+		signal_init_sa(tools->sa, handle_reprint_sig);
 		dup2(fd[0], 0);
 		dup2(fd[1], 1);
 		here_unlink(tools);
@@ -50,9 +50,7 @@ int	shell_loop(t_tools *tools)
 			break ;
 		global_signal = 0;
 		tools->line = readline("minishell: ");
-		// if (peek(PIPE))
-		// 	fork()
-		init_sa(tools->sa, handle_printn_sig);
+		signal_init_sa(tools->sa, handle_printn_sig);
 		if (!tools->line || global_signal == SIGTERM)
 			ft_exit(NULL, tools);
 		if (global_signal)
@@ -65,16 +63,11 @@ int	shell_loop(t_tools *tools)
 		tools->cleanline = clean_line(tools->line, ft_strlen(tools->line),
 				tools);
 		tools->e_cline = tools->cleanline + ft_strlen(tools->cleanline);
-		// pointer + len is address of end
 		if (!tools->cleanline)
 			continue ;
-		// ft_putstr_fd(tools->cleanline, 1); //test cleanline
-		// ft_putstr_fd("  -- test of cleanline\n", 1);
+
 		if (!parseline(tools->cleanline, tools))
 			continue ;
-		// printf("length of cleanline: %li\n", ft_strlen(tools->cleanline));
-		// if (!ismini(tools->cleanline, tools))
-		// 	continue ;
 		if (tools->tree->type == EXEC && ((t_execcmd *)tools->tree)->argv[0]
 			&& !ft_strncmp(((t_execcmd *)tools->tree)->argv[0], "./minishell",
 				12))
@@ -82,7 +75,6 @@ int	shell_loop(t_tools *tools)
 			fork_new_minishell(tools);
 			continue ;
 		}
-		// walking(tools->tree); //test tree
 		running_msh(tools);
 	}
 	close(fd[1]);
@@ -91,6 +83,8 @@ int	shell_loop(t_tools *tools)
 	clear_history();
 	return (0);
 }
+		// walking(tools->tree); //test tree
+
 
 /*reference: heredoc execution*/
 /*should return 0 on some sort of failure, */
@@ -99,7 +93,7 @@ int	fork_new_minishell(t_tools *tools)
 	pid_t	pid;
 
 	pid = -1;
-	init_sa(tools->sa, SIG_IGN);
+	signal_init_sa(tools->sa, SIG_IGN);
 	pid = fork();
 	if (pid == -1)
 		error_exit_main(tools, 1);

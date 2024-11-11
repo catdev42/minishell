@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   file.c                                             :+:      :+:    :+:   */
+/*   parse_here_old.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 12:40:42 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 13:35:20 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,7 +40,7 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 	int		len;
 
 	end = get_token_end(delim);
-	filename = make_heredoc_file(delim, tools);
+	filename = make_heredoc_fork(delim, tools);
 	if (!filename)
 		return (0);
 	len = end - delim;
@@ -58,7 +58,7 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 }
 
 /*Gives user the cursor - must check*/
-char	*make_heredoc_file(char *delim, t_tools *tools)
+char	*make_heredoc_fork(char *delim, t_tools *tools)
 {
 	char	*end;
 	char	*tempalloc_delim;
@@ -71,13 +71,13 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 	fd = open(tools->heredocs[tools->hereindex++],
 			O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
-		error_exit( tools, 1); // exits the program and cleansfiles
+		error_exit(tools, 1); // exits the program and cleansfiles
 	tempalloc_delim = ft_substr(delim, 0, end - delim);
 	if (!tempalloc_delim)
-		error_exit( tools, 1); 
+		error_exit(tools, 1);
 	pid = fork();
 	if (pid == -1)
-		error_exit( tools, 1); 
+		error_exit(tools, 1);
 	if (pid == 0)
 		write_heredoc(fd, tempalloc_delim, tools); // put in fork!
 	waitpid(pid, &tools->exit_code, 0);
@@ -96,11 +96,11 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 	while (1)
 	{
 		line = NULL;
-		init_sa(tools->sa, handle_here_sig); // passing a function
+		signal_init_sa(tools->sa, handle_here_sig); // passing a function
 		line = readline("heredoc: ");
 		if (global_signal == SIGINT)
 			good_exit(tools);
-		init_sa(tools->sa, SIG_DFL); // passing a function
+		signal_init_sa(tools->sa, SIG_DFL); // passing a function
 		if (!line || ft_strncmp(line, alloc_delim, ft_strlen(alloc_delim)) == 0)
 		{
 			if (!line)
@@ -142,5 +142,3 @@ void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
 	}
 	return ;
 }
-
-
