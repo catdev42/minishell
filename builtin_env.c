@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 13:35:20 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:43:36 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,7 +74,7 @@ int	passchk(char *start, long int lim)
 	i = 0;
 	if (lim == 0 || ft_isdigit(start[i]))
 	{
-		print_error("export", "not a valid identifier", /* start */ NULL);
+		// print_error("export", "not a valid identifier", start);
 		return (0);
 	}
 	while (i < lim)
@@ -82,7 +82,7 @@ int	passchk(char *start, long int lim)
 		if (ft_isspace(start[i]) || isquote(start[i])
 			|| ft_strchr("*&|<>?{}()[]-+~°^§$#\%,.:;?!", start[i]))
 		{
-			print_error("export", "not a valid identifier", /* start */ NULL);
+			// print_error("export", "not a valid identifier", start);
 			return (0);
 		}
 		i++;

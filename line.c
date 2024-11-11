@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   line.c                                             :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:07:28 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 16:20:46 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/11 15:12:11 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,8 +20,8 @@ char	*clean_line(char *line, int linelen, t_tools *tools)
 
 	init_zero(&i, &j, &c_line, NULL);
 	tools->cl_capacity = linelen * 2;
-	tools->cleanline = safe_calloc(tools->cl_capacity + 2, 1, tools);
-	c_line = tools->cleanline;
+	tools->cl = safe_calloc(tools->cl_capacity + 2, 1, tools);
+	c_line = tools->cl;
 	while (line[i] && j < tools->cl_capacity)
 	{
 		// CHECK WHAT ALL THE COPY FUNCTIONS RETURN cause if copy
@@ -38,7 +38,7 @@ char	*clean_line(char *line, int linelen, t_tools *tools)
 			i = i + copy_var(&c_line[j], &line[i], tools);
 		else
 			c_line[j++] = line[i++];
-		c_line = tools->cleanline;
+		c_line = tools->cl;
 		j = ft_strlen(c_line);
 	}
 	// remove_useless_quotes(tools->cleanline);
@@ -77,7 +77,7 @@ int	copy_quotes(char *c_line, char *line, t_tools *tools)
 			&& line[i + 1] != ' ')
 		{
 			i = i + copy_var(&c_line[j], &line[i], tools);
-			c_line = tools->cleanline;
+			c_line = tools->cl;
 			while (c_line[j])
 				j++;
 		}

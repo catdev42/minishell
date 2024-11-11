@@ -6,14 +6,14 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:15:14 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/09 23:47:36 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:18:57 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
 // check the entire line for quotes with 0 returns if its not valid and 1 if it is
-int	valid_quotes(char *line)
+int	val_quts(char *line)
 {
 	int	i;
 
@@ -33,7 +33,7 @@ int	valid_quotes(char *line)
 
 /* 	CHECKS IF THE COMMAND LINE IS EMPTY
 	Returns 1 if there is anything except spaces in a line */
-int	valid_line(char *line)
+int	val_line(char *line)
 {
 	int	i;
 

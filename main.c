@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 14:22:59 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:21:41 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,8 @@ int	main(int argc, char **argv, char **env)
 		ft_putstr_fd("This program does not accept arguments\n", 2);
 	ft_memset(&tools, 0, sizeof(t_tools));
 	record_exit(0, &tools);
+	tools.fd[1] = dup(1);
+	tools.fd[0] = dup(0);
 	tools.sa = &sa;
 	signal_init_sa(tools.sa, handle_reprint_sig);
 	here_init(tools.heredocs, &tools);
@@ -30,61 +32,61 @@ int	main(int argc, char **argv, char **env)
 	if (!tools.env || !tools.heredocs[0][0])
 		(error_exit_main(&tools, 1));
 	shell_loop(&tools);
-	return (0);
-}
-
-int	shell_loop(t_tools *tools)
-{
-	int	fd[2];
-
-	fd[1] = dup(1);
-	fd[0] = dup(0);
-	while (1)
-	{
-		signal_init_sa(tools->sa, handle_reprint_sig);
-		dup2(fd[0], 0);
-		dup2(fd[1], 1);
-		here_unlink(tools);
-		reset_tools(tools);
-		if (global_signal == SIGTERM)
-			break ;
-		global_signal = 0;
-		tools->line = readline("minishell: ");
-		signal_init_sa(tools->sa, handle_printn_sig);
-		if (!tools->line || global_signal == SIGTERM)
-			ft_exit(NULL, tools);
-		if (global_signal)
-			record_exit(global_signal + 128, tools);
-		if (!valid_line(tools->line))
-			continue ;
-		add_history(tools->line);
-		if (!valid_quotes(tools->line) || !valid_redirects(tools->line))
-			continue ;
-		tools->cleanline = clean_line(tools->line, ft_strlen(tools->line),
-				tools);
-		tools->e_cline = tools->cleanline + ft_strlen(tools->cleanline);
-		if (!tools->cleanline)
-			continue ;
-
-		if (!parseline(tools->cleanline, tools))
-			continue ;
-		if (tools->tree->type == EXEC && ((t_execcmd *)tools->tree)->argv[0]
-			&& !ft_strncmp(((t_execcmd *)tools->tree)->argv[0], "./minishell",
-				12))
-		{
-			fork_new_minishell(tools);
-			continue ;
-		}
-		running_msh(tools);
-	}
-	close(fd[1]);
-	close(fd[0]);
-	clean_tools(tools);
+	here_unlink(&tools);
+	clean_tools(&tools);
 	clear_history();
 	return (0);
 }
-		// walking(tools->tree); //test tree
 
+static int				check_mini(t_tools *tools);
+
+int	shell_loop(t_tools *tool)
+{
+	while (1)
+	{
+		signal_init_sa(tool->sa, handle_reprint_sig);
+		dup2(tool->fd[0], 0);
+		dup2(tool->fd[1], 1);
+		here_unlink(tool);
+		reset_tools(tool);
+		global_signal = 0;
+		tool->ln = readline("minishell: ");
+		signal_init_sa(tool->sa, handle_printn_sig);
+		if (!tool->ln || global_signal == SIGTERM)
+			ft_exit(NULL, tool);
+		if (global_signal)
+			record_exit(global_signal + 128, tool);
+		if (val_line(tool->ln))
+			add_history(tool->ln);
+		if (!val_line(tool->ln) || !val_quts(tool->ln) || !val_red(tool->ln))
+			continue ;
+		tool->cl = clean_line(tool->ln, ft_strlen(tool->ln), tool);
+		tool->e_cline = tool->cl + ft_strlen(tool->cl);
+		if (!tool->cl || !parseline(tool->cl, tool) || check_mini(tool))
+			continue ;
+		running_msh(tool);
+	}
+	return (0);
+}
+
+static int	check_mini(t_tools *tools)
+{
+	t_execcmd	*ecmd;
+
+	if (tools->tree->type == EXEC)
+	{
+		ecmd = (t_execcmd *)tools->tree;
+		if ((ecmd->argv[0]) && ((!ft_strncmp(ecmd->argv[0], "./minishell", 12)
+					|| !ft_strncmp(ecmd->argv[0], "minishell", 10))))
+		{
+			fork_new_minishell(tools);
+			return (1);
+		}
+		return (0);
+	}
+	return (0);
+}
+// walking(tools->tree); //test tree
 
 /*reference: heredoc execution*/
 /*should return 0 on some sort of failure, */
@@ -114,12 +116,12 @@ int	fork_new_minishell(t_tools *tools)
 }
 
 // /*should this return */
-// int	ismini(char *cleanline, t_tools *tools)
+// int	ismini(char *cl, t_tools *tools)
 // {
 // 	int	is_exit_bad;
 
 // 	is_exit_bad = 0;
-// 	if (!ft_strncmp(cleanline, "minishell", 20) || !ft_strncmp(cleanline,
+// 	if (!ft_strncmp(cl, "minishell", 20) || !ft_strncmp(cl,
 // 			"./minishell", 20))
 // 		is_exit_bad = fork_new_minishell(tools);
 // 	// if (is_exit_good = )

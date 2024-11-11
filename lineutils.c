@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   lineutils.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 23:59:13 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 17:39:13 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/11 15:12:11 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ int	copy_var(char *c_line, char *line, t_tools *tools)
 	// char	*var_res_alloc;
 	// var_res_alloc = NULL;
 	var_alloc = NULL;
-	curr_cl_ind = c_line - tools->cleanline;
+	curr_cl_ind = c_line - tools->cl;
 	i = 1;
 	while (line[i] && !ft_isspace(line[i]) && !isquote(line[i])
 		&& !istoken(line[i]) && line[i] != '$')
@@ -46,10 +46,10 @@ int	copy_var(char *c_line, char *line, t_tools *tools)
 	// 	if (!var_res_alloc)
 	// 		return (i);
 	// 	if (tools->cl_capacity < ft_strlen(var_res_alloc)
-	// 		+ ft_strlen(tools->cleanline))
+	// 		+ ft_strlen(tools->cl))
 	// 	{
 	// 		extend_cleanline(tools, ft_strlen(var_result));
-	// 		c_line = &(tools->cleanline[curr_cl_ind]);
+	// 		c_line = &(tools->cl[curr_cl_ind]);
 	// 	}
 	// 	ft_strlcpy(c_line, var_res_alloc, tools->cl_capacity - curr_cl_ind);
 	// 	free(var_alloc);
@@ -67,10 +67,10 @@ int	copy_var(char *c_line, char *line, t_tools *tools)
 	if (!var_result)
 		return (i);
 	if (tools->cl_capacity < ft_strlen(var_result)
-		+ ft_strlen(tools->cleanline))
+		+ ft_strlen(tools->cl))
 	{
 		extend_cleanline(tools, ft_strlen(var_result));
-		c_line = &(tools->cleanline[curr_cl_ind]);
+		c_line = &(tools->cl[curr_cl_ind]);
 	}
 	ft_strlcpy(c_line, var_result, tools->cl_capacity - curr_cl_ind);
 	return (i);
@@ -82,12 +82,12 @@ static void	extend_cleanline(t_tools *tools, int add)
 	char	*tmpold;
 
 	new_cl_len = tools->cl_capacity + add;
-	tmpold = tools->cleanline;
-	tools->cleanline = ft_calloc(new_cl_len + 2, 1);
-	if (!tools->cleanline)
+	tmpold = tools->cl;
+	tools->cl = ft_calloc(new_cl_len + 2, 1);
+	if (!tools->cl)
 		error_exit_main(tools, 1);
 	tools->cl_capacity = new_cl_len;
-	ft_strlcpy(tools->cleanline, tmpold, tools->cl_capacity);
+	ft_strlcpy(tools->cl, tmpold, tools->cl_capacity);
 	free(tmpold);
 }
 

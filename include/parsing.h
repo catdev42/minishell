@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 13:35:05 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:19:04 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,7 +23,7 @@ char			*clean_line(char *line, int linelen, t_tools *tools);
 int				copy_spaces(char *c_line, char *line);
 
 /***** linesyntax.c *****/
-int				valid_redirects(char *line);
+int				val_red(char *line);
 
 /***** lineutils.c ******/
 int				copy_var(char *c_line, char *line, t_tools *tools);
@@ -70,9 +70,9 @@ void			nullify(char *cline, t_tools *tools);
 /************************/
 /******* utils.c ********/
 /************************/
-int				valid_quotes(char *line);
+int				val_quts(char *line);
 
-int				valid_line(char *line);
+int				val_line(char *line);
 int				istoken(char c);
 int				isquote(char c);
 int				isredir(char c);

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exit_fork.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 14:08:00 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 14:10:32 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/11 15:12:44 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	clean_tools(t_tools *tools)
 {
+	close(tools->fd[1]);
+	close(tools->fd[0]);
 	reset_tools(tools);
 	if (tools->exit_string)
 		free(tools->exit_string);

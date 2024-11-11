@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 14:31:43 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:20:17 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,27 +105,27 @@ char	*make_heredoc_fork(char *delim, t_tools *tools)
 void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 {
 	signal_init_sa(tools->sa, SIG_DFL);
-	free_things(&tools->cleanline, &tools->line, NULL, -1);
+	free_things(&tools->cl, &tools->ln, NULL, -1);
 	while (1)
 	{
-		tools->line = readline("heredoc: ");
-		if (!tools->line || ft_strncmp(tools->line, alloc_delim,
+		tools->ln = readline("heredoc: ");
+		if (!tools->ln || ft_strncmp(tools->ln, alloc_delim,
 				ft_strlen(alloc_delim)) == 0)
 		{
-			if (!tools->line)
+			if (!tools->ln)
 				print_error("warning", "here-doc delimited by EOF, wanted ",
 					alloc_delim);
 			break ;
 		}
-		tools->cleanline = clean_line_expand_only(tools->line,
-				ft_strlen(tools->line), tools);
-		if (!tools->cleanline || write(fd, tools->cleanline,
-				ft_strlen(tools->cleanline)) == -1 || write(fd, "\n", 1) == -1)
+		tools->cl = clean_line_expand_only(tools->ln, ft_strlen(tools->ln),
+				tools);
+		if (!tools->cl || write(fd, tools->cl, ft_strlen(tools->cl)) == -1
+			|| write(fd, "\n", 1) == -1)
 		{
 			free_things(NULL, NULL, &alloc_delim, fd);
 			print_errno_exit(NULL, NULL, errno, tools);
 		}
-		free_things(&tools->line, &tools->cleanline, NULL, -1);
+		free_things(&tools->ln, &tools->cl, NULL, -1);
 	}
 	free_things(NULL, NULL, &alloc_delim, fd);
 	good_exit(tools);
@@ -136,7 +136,7 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 // void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 // {
 // 	signal_init_sa(tools->sa, SIG_DFL);
-// 	free_things(&tools->cleanline, &tools->line, NULL, -1);
+// 	free_things(&tools->cl, &tools->line, NULL, -1);
 // 	while (1)
 // 	{
 // 		tools->line = readline("heredoc: ");
@@ -148,15 +148,15 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 // 					alloc_delim);
 // 			break ;
 // 		}
-// 		tools->cleanline = clean_line_expand_only(tools->line,
+// 		tools->cl = clean_line_expand_only(tools->line,
 // 				ft_strlen(tools->line), tools);
-// 		if (!tools->cleanline || write(fd, tools->cleanline,
-// 				ft_strlen(tools->cleanline)) == -1 || write(fd, "\n", 1) == -1)
+// 		if (!tools->cl || write(fd, tools->cl,
+// 				ft_strlen(tools->cl)) == -1 || write(fd, "\n", 1) == -1)
 // 		{
 // 			free_things(NULL, NULL, &alloc_delim, fd);
 // 			print_errno_exit(NULL, NULL, errno, tools);
 // 		}
-// 		free_things(&tools->line, &tools->cleanline, NULL, -1);
+// 		free_things(&tools->line, &tools->cl, NULL, -1);
 // 	}
 // 	free_things(NULL, NULL, &alloc_delim, fd);
 // 	good_exit(tools);
@@ -192,8 +192,8 @@ char	*clean_line_expand_only(char *line, int linelen, t_tools *tools)
 
 	init_zero(&i, &j, &c_line, NULL);
 	tools->cl_capacity = linelen * 2;
-	tools->cleanline = safe_calloc(tools->cl_capacity + 2, 1, tools);
-	c_line = tools->cleanline;
+	tools->cl = safe_calloc(tools->cl_capacity + 2, 1, tools);
+	c_line = tools->cl;
 	while (line[i] && j < tools->cl_capacity)
 	{
 		if (line[i] == '\'' || line[i] == '"')
@@ -203,7 +203,7 @@ char	*clean_line_expand_only(char *line, int linelen, t_tools *tools)
 		else
 			c_line[j++] = line[i++];
 		j = ft_strlen(c_line);
-		c_line = tools->cleanline;
+		c_line = tools->cl;
 	}
 	return (c_line);
 }

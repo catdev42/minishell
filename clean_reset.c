@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:22:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 19:49:41 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:20:17 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,19 +41,19 @@ void	reset_tools(t_tools *tools)
 {
 	if (tools->tree)
 		tree_free(tools->tree);
-	if (tools->line)
+	if (tools->ln)
 	{
-		ft_bzero(tools->line, tools->line_capacity);
-		free_things(&tools->line, NULL, NULL, -1);
+		ft_bzero(tools->ln, tools->line_capacity);
+		free_things(&tools->ln, NULL, NULL, -1);
 	}
-	tools->line = NULL;
-	if (tools->cleanline)
+	tools->ln = NULL;
+	if (tools->cl)
 	{
-		ft_bzero(tools->cleanline, tools->cl_capacity);
-		free_things(&tools->cleanline, NULL, NULL, -1);
+		ft_bzero(tools->cl, tools->cl_capacity);
+		free_things(&tools->cl, NULL, NULL, -1);
 	}
 	tools->tree = NULL;
-	tools->cleanline = NULL;
+	tools->cl = NULL;
 	tools->cmd_end = NULL;
 	tools->s = NULL;
 	tools->lastpipe = NULL;

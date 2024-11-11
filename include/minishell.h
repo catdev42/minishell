@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 13:41:08 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:12:11 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,7 @@ char	*get_var_value(char **env, char *var);
 /************************/
 /******* SHELLinSHELL.C ********/
 /************************/
-int		ismini(char *cleanline, t_tools *tools);
+int		ismini(char *cl, t_tools *tools);
 void	change_shlvl(t_tools *tool);
 void	exec_new_minishell(t_tools *tool, t_execcmd *ecmd);
 int		fork_new_minishell(t_tools *tools);

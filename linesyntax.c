@@ -1,12 +1,12 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   syntax.c                                           :+:      :+:    :+:   */
+/*   linesyntax.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 21:45:41 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/10 00:25:04 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:19:04 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,7 +17,7 @@ static int	check_first_pipe(char *line);
 static int	check_pipe_sytax(char *line, int i);
 static int	check_redir_syntax(char *line, int i);
 
-int	valid_redirects(char *line)
+int	val_red(char *line)
 {
 	int	i;
 

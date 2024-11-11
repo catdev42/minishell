@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:00:21 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 19:49:18 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:20:17 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,15 @@ typedef struct s_tools
 {
 	struct sigaction *sa; // its not an error
 
+	int						fd[2];
+
 	char					**env;
 	int						env_len;
 
-	char					*line;
+	char					*ln;
 	size_t					line_capacity;
 
-	char					*cleanline;
+	char					*cl;
 	char					*e_cline;
 	size_t					cl_capacity;
 

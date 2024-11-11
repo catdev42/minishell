@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 01:54:47 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:52:14 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -197,6 +197,7 @@ int	export(t_execcmd *cmd, t_tools *tool)
 {
 	int		i;
 	int		pass;
+	int		otherpass;
 	char	*eqs;
 
 	i = 0;
@@ -209,15 +210,17 @@ int	export(t_execcmd *cmd, t_tools *tool)
 	{
 		eqs = ft_strchr(cmd->argv[i], '=');
 		pass = passchk(cmd->argv[i], (long int)(eqs - &cmd->argv[i][0]));
-		if (eqs)
+		otherpass = passchk(cmd->argv[i], ft_strlen(cmd->argv[i]));
+		if (eqs && pass)
 		{
 			eqs[0] = 0;
-			if (pass)
-				repl_or_app_var(cmd->argv[i], &eqs[1], tool->env, tool);
+			repl_or_app_var(cmd->argv[i], &eqs[1], tool->env, tool);
 			eqs[0] = '=';
 		}
-		if ((!eqs && !passchk(cmd->argv[i], ft_strlen(cmd->argv[i]))) || !pass)
+		if ((!eqs && !otherpass) || !pass)
 			record_exit(1, tool);
+		if ((!pass && !otherpass) || (eqs && ft_strlen(cmd->argv[i]) == 1))
+			print_error("export", "not a valid identifier", NULL);
 	}
 	return (tool->exit_code);
 }

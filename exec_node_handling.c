@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exec_node_handling.c                               :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 19:13:00 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/11 15:34:39 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,13 +30,17 @@ int	other_execution_type(t_tools *tool, t_execcmd *ecmd)
 	{
 		if (file_dir_noexist(ecmd->argv[0], 0) == 2)
 			print_errno_exit(ecmd->argv[0], "Is a directory", 126, tool);
-		if (access(ecmd->argv[0], F_OK) == 0)
+		else if (access(ecmd->argv[0], F_OK) == 0)
 		{
 			if (access(ecmd->argv[0], X_OK) != 0)
 				print_errno_exit(NULL, NULL, 126, tool);
 			execute_execve(ecmd->argv[0], ecmd, tool);
 		}
-		print_errno_exit(ecmd->argv[0], "No such file or directory", 127, tool);
+		else 
+			exit_with_code(tool, 127);
+		// else
+		// 	print_errno_exit(ecmd->argv[0], "No such file or directory", 127,
+		// 		tool);
 	}
 	return (0);
 }
