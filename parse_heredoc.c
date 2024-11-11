@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 05:00:21 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 12:16:58 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -87,7 +87,7 @@ char	*make_heredoc_file(char *delim, t_tools *tools)
 	}
 	waitpid(pid, &tools->exit_code, 0);
 	check_system_fail(tools->exit_code, tools, 1);
-	write(2, "wtf", 3); // CHECK
+	write(2, "wtf - not in if statement", 3); // CHECK
 	if (global_signal == SIGINT)
 	{
 		write(2, "wtf", 3); 
