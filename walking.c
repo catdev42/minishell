@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/08 17:53:30 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 20:21:02 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:31:21 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -50,6 +50,7 @@ static void	print_cmd(t_execcmd *cmd)
 	print_tab(cmd->argv);
 	printf("ecmd: %p\n\n", cmd->argv);
 }
+
 static void	print_redir(t_redircmd *cmd)
 {
 	printf("REDIR cmd: %d\n", cmd->fd);

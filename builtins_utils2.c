@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 19:25:50 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 19:31:05 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:52:53 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 	int	a;
 
 	a = 0;
-	record_exit(0,tool);
+	record_exit(0, tool);
 	if (ft_strncmp(cmd->argv[0], ECHO, 5) == 0)
 		a = echo(cmd);
 	else if (ft_strncmp(cmd->argv[0], CD, 3) == 0)
@@ -58,4 +58,32 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 		a = ft_exit(cmd, tool);
 	record_exit(a, tool);
 	return (a);
+}
+
+int	run_pipeless_builtin_tree(t_cmd *cmd, t_tools *tool)
+{
+	t_execcmd	*ecmd;
+	t_redircmd	*rcmd;
+
+	if (cmd->type == REDIR)
+	{
+		rcmd = (t_redircmd *)cmd;
+		rcmd->mode = check_file_type(rcmd, rcmd->fd);
+		if (rcmd->mode == -1)
+		{
+			record_exit(1, tool);
+			return (0);
+		}
+		close(rcmd->fd);
+		rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
+		if (rcmd->fd == -1)
+			return (!record_exit(1, tool));
+		run_pipeless_builtin_tree(rcmd->cmd, tool);
+	}
+	if (cmd->type == EXEC)
+	{
+		ecmd = (t_execcmd *)cmd;
+		return (run_builtin(ecmd, tool));
+	}
+	return (0);
 }

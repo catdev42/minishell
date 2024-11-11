@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 20:23:19 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:19:30 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,13 +19,25 @@ void	new_line(void)
 	rl_replace_line("", 0);
 	rl_redisplay();
 }
-// init_sa(tool->sa, handle_reprint)
+
 void	signal_init_sa(struct sigaction *sa, void (*handler)(int))
 {
 	sa->sa_handler = handler;
 	sigemptyset(&sa->sa_mask);
 	sa->sa_flags = 0;
 	if (sigaction(SIGINT, sa, NULL) == -1)
+	{
+		perror("sigaction");
+		exit(1);
+	}
+}
+
+void	signal_init_sigquit(struct sigaction *sa)
+{
+	sa->sa_handler = SIG_IGN;
+	sigemptyset(&sa->sa_mask);
+	sa->sa_flags = 0;
+	if (sigaction(SIGQUIT, sa, NULL) == -1)
 	{
 		perror("sigaction");
 		exit(1);
@@ -41,7 +53,8 @@ void	handle_reprint_sig(int sig)
 	g_signal = sig;
 }
 
-/*for while in the rest of the program if something needs to be control C'd like a process killed*/
+/*for while in the rest of the program if something
+needs to be control C'd like a process killed*/
 void	handle_printn_sig(int sig)
 {
 	if (sig == SIGINT)

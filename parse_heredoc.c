@@ -6,16 +6,15 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 21:51:23 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:42:11 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-/*
-^C leave heredoc function and return to minishell
-Created the files and record the name while in main process and launch ONLY the heredoc readline in a separate process
-*/
+/* ^C leave heredoc function and return to minishell
+Create the files and record the name while in main process
+Launch ONLY the heredoc readline in a separate process */
 int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 {
 	char	*end;
@@ -137,28 +136,4 @@ void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
 		i++;
 	}
 	return ;
-}
-
-char	*clean_line_expand_only(char *line, int linelen, t_tools *tools)
-{
-	char	*c_line;
-	size_t	i;
-	size_t	j;
-
-	init_zero(&i, &j, &c_line, NULL);
-	tools->cl_capacity = linelen * 2;
-	tools->cl = safe_calloc(tools->cl_capacity + 2, 1, tools);
-	c_line = tools->cl;
-	while (line[i] && j < tools->cl_capacity)
-	{
-		if (line[i] == '\'' || line[i] == '"')
-			i = i + copy_quotes(&c_line[j], &line[i], tools);
-		else if (line[i] == '$' && line[i - 1] != '\\' && line[i + 1] != ' ')
-			i = i + copy_var(&c_line[j], &line[i], tools,1);
-		else
-			c_line[j++] = line[i++];
-		j = ft_strlen(c_line);
-		c_line = tools->cl;
-	}
-	return (c_line);
 }

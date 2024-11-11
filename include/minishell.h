@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 21:56:11 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:10:12 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,7 +56,6 @@ extern volatile sig_atomic_t	g_signal;
 
 /*TESTERS*/
 void							walking(struct s_cmd *cmd);
-
 
 /************************/
 /********* EXEC *********/
@@ -147,6 +146,7 @@ void							signal_init_sa(struct sigaction *sa,
 									void (*handler)(int));
 void							handle_reprint_sig(int sig);
 void							handle_printn_sig(int sig);
+void							signal_init_sigquit(struct sigaction *sa);
 // void	handle_recordonly_sig(int sig);
 // void	handle_justexit_sig(int sig);
 

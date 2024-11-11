@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 20:22:24 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:20:55 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,7 @@ int	main(int argc, char **argv, char **env)
 	tools.fd[0] = dup(0);
 	tools.sa = &sa;
 	signal_init_sa(tools.sa, handle_reprint_sig);
+	signal_init_sigquit(tools.sa);
 	here_init(tools.heredocs, &tools);
 	copy_env(&tools, env);
 	if (!tools.env || !tools.heredocs[0][0])
@@ -58,7 +59,7 @@ int	shell_loop(t_tools *tool)
 			add_history(tool->ln);
 		if (!val_line(tool->ln) || !val_quts(tool->ln) || !val_red(tool->ln))
 			continue ;
-		tool->cl = clean_line(tool->ln, ft_strlen(tool->ln), tool);
+		tool->cl = clean_line(tool->ln, ft_strlen(tool->ln), 1, tool);
 		tool->e_cline = tool->cl + ft_strlen(tool->cl);
 		if (!tool->cl || !parseline(tool->cl, tool) || check_mini(tool))
 			continue ;

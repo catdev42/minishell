@@ -6,13 +6,14 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:15:14 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 20:19:48 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:30:56 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-// check the entire line for quotes with 0 returns if its not valid and 1 if it is
+/*Check the entire line for quotes with
+returns 0 if its not valid and 1 if it is*/
 int	val_quts(char *line)
 {
 	int	i;
@@ -51,6 +52,7 @@ int	istoken(char c)
 {
 	return (c == '|' || c == '<' || c == '>');
 }
+
 int	isredir(char c)
 {
 	return (c == '<' || c == '>');

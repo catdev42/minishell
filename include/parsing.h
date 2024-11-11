@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 21:54:52 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:16:15 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ char			*make_actual_fork(pid_t pid, char *allo_delim, t_tools *tools,
 int				copy_quotes(char *c_line, char *line, t_tools *tools);
 int				copy_pipe(char *c_line, char *line, int current_line_index);
 int				copy_redirect(char *c_line, char *line, int current_line_index);
-char			*clean_line(char *line, int linelen, t_tools *tools);
+char			*clean_line(char *line, int linelen, size_t i, t_tools *tools);
 int				copy_spaces(char *c_line, char *line);
 int				val_red(char *line);
 // int				copy_var(char *c_line, char *line, t_tools *tools);

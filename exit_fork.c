@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 14:08:00 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:12:44 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:18:20 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -29,7 +29,6 @@ void	good_exit(t_tools *tools)
 {
 	clean_tools(tools);
 	exit(0);
-	// exit(tools->exit_code);
 }
 
 void	exit_with_code(t_tools *tools, int code)

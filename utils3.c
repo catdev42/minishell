@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 20:33:23 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 20:20:06 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:31:08 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -80,7 +80,6 @@ int	skip_quotes(char *line, int i)
 	}
 	return (i + j);
 }
-
 
 /* Returns the index of the last character of the token,
 	just like skip quote is index of the second quote */

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:22:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 18:43:32 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:38:49 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,18 @@ void	here_unlink(t_tools *tools)
 {
 	int	i;
 
-	char(*heredocs)[20];
-	heredocs = tools->heredocs;
 	i = 0;
 	while (i < MAXARGS)
 	{
-		if (access(heredocs[i], F_OK) == -1)
+		if (access(tools->heredocs[i], F_OK) == -1)
 		{
 			if (errno == ENOENT)
 				errno = 0;
 			else
-				print_error(heredocs[i], "permission", NULL);
+				print_error(tools->heredocs[i], "permission", NULL);
 		}
 		else
-			unlink(heredocs[i]);
+			unlink(tools->heredocs[i]);
 		i++;
 	}
 	return ;
@@ -86,17 +84,14 @@ void	free_things(char **s1, char **s2, char **s3, int fd)
 /* part of reset */
 void	tree_free(struct s_cmd *node)
 {
-	struct s_execcmd	*ecmd;
 	struct s_redircmd	*rcmd;
 	struct s_pipecmd	*pcmd;
 
-	ecmd = NULL;
 	pcmd = NULL;
 	rcmd = NULL;
 	if (node && node->type == EXEC)
 	{
-		ecmd = (struct s_execcmd *)node;
-		free(ecmd);
+		free((struct s_execcmd *)node);
 	}
 	else if (node && node->type == REDIR)
 	{
