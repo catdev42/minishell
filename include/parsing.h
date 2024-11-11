@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 16:08:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 19:35:04 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -53,6 +53,9 @@ char			*make_heredoc_fork(char *delim, t_tools *tools);
 void			write_heredoc(int fd, char *alloc_delim, t_tools *tools);
 char			*clean_line_expand_only(char *line, int linelen,
 					t_tools *tools);
+char			*make_actual_fork(pid_t pid, char *allo_delim, t_tools *tools,
+					int fd);
+;
 
 /***** parse_redir_exec.c ****/
 struct s_cmd	*parseexec(char *start, char *end_of_exec, t_tools *tools);

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:59:02 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 19:34:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,6 +61,7 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 	return (len);
 }
 
+
 /*Gives user the cursor - must check*/
 char	*make_heredoc_fork(char *delim, t_tools *tools)
 {
@@ -68,9 +69,9 @@ char	*make_heredoc_fork(char *delim, t_tools *tools)
 	char	*tempalloc_delim;
 	int		fd;
 	pid_t	pid;
-	int		status;
 
-	status = 0;
+	// int		status;
+	// status = 0;
 	pid = -1;
 	init_zero(NULL, NULL, &end, &tempalloc_delim);
 	end = get_token_end(delim);
@@ -81,23 +82,31 @@ char	*make_heredoc_fork(char *delim, t_tools *tools)
 	tempalloc_delim = ft_substr(delim, 0, end - delim);
 	if (!tempalloc_delim)
 		error_exit_main(tools, 1);
+	return (make_actual_fork(pid, tempalloc_delim, tools, fd));
+}
+char	*make_actual_fork(pid_t pid, char *allo_delim, t_tools *tools, int fd)
+{
+	int	status;
+
+	status = 0;
 	pid = fork();
 	if (pid == -1)
 		error_exit_main(tools, 1);
 	if (pid == 0)
-		write_heredoc(fd, tempalloc_delim, tools);
+		write_heredoc(fd, allo_delim, tools);
 	waitpid(pid, &status, 0);
 	check_system_fail(status, tools, 1);
 	if (g_signal == SIGINT || tools->exit_code == 2 || tools->exit_code == 130)
 	{
 		ft_putstr_fd("\n", 1);
 		here_unlink(tools);
+		free(allo_delim);
 		close(fd);
 		return (NULL);
 	}
 	record_exit(tools->exit_code, tools);
 	close(fd);
-	free(tempalloc_delim);
+	free(allo_delim);
 	return (tools->heredocs[tools->hereindex - 1]);
 }
 
