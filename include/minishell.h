@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:12:11 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:59:02 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,7 @@
 # include <sys/wait.h>
 # include <unistd.h>
 /**/
-extern volatile sig_atomic_t global_signal; // TODO
+extern volatile sig_atomic_t g_signal; // TODO
 
 # include "../libft/libft.h"
 # include "builtins.h"

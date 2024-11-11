@@ -6,13 +6,13 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:00:21 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:20:17 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:59:02 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
-extern volatile sig_atomic_t global_signal; // TODO
+extern volatile sig_atomic_t g_signal; // TODO
 
 # include "./minishell.h"
 

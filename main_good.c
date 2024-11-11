@@ -6,13 +6,13 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:20:17 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:59:02 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-volatile sig_atomic_t	global_signal = 0;
+volatile sig_atomic_t	g_signal = 0;
 
 int	main(int argc, char **argv, char **env)
 {
@@ -46,15 +46,15 @@ int	shell_loop(t_tools *tools)
 		dup2(fd[1], 1);
 		here_unlink(tools);
 		reset_tools(tools);
-		if (global_signal == SIGTERM)
+		if (g_signal == SIGTERM)
 			break ;
-		global_signal = 0;
+		g_signal = 0;
 		tools->ln = readline("minishell: ");
 		signal_init_sa(tools->sa, handle_printn_sig);
-		if (!tools->ln || global_signal == SIGTERM)
+		if (!tools->ln || g_signal == SIGTERM)
 			ft_exit(NULL, tools);
-		if (global_signal)
-			record_exit(global_signal + 128, tools);
+		if (g_signal)
+			record_exit(g_signal + 128, tools);
 		if (!val_line(tools->ln))
 			continue ;
 		add_history(tools->ln);

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:20:17 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:59:02 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,8 +88,7 @@ char	*make_heredoc_fork(char *delim, t_tools *tools)
 		write_heredoc(fd, tempalloc_delim, tools);
 	waitpid(pid, &status, 0);
 	check_system_fail(status, tools, 1);
-	if (global_signal == SIGINT || tools->exit_code == 2
-		|| tools->exit_code == 130)
+	if (g_signal == SIGINT || tools->exit_code == 2 || tools->exit_code == 130)
 	{
 		ft_putstr_fd("\n", 1);
 		here_unlink(tools);

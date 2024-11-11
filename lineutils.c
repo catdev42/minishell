@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 23:59:13 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:12:11 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 16:08:30 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,8 +23,6 @@ int	copy_var(char *c_line, char *line, t_tools *tools)
 	int		i;
 	int		curr_cl_ind;
 
-	// char	*var_res_alloc;
-	// var_res_alloc = NULL;
 	var_alloc = NULL;
 	curr_cl_ind = c_line - tools->cl;
 	i = 1;
@@ -39,23 +37,6 @@ int	copy_var(char *c_line, char *line, t_tools *tools)
 	var_alloc = ft_substr(line, 1, i - 1);
 	if (!var_alloc)
 		error_exit_main(tools, 1);
-	// if (i > 2 && !ft_strncmp(var_alloc, "?", 1))
-	// {
-	// 	var_res_alloc = ft_join_one(tools->exit_string, "",
-	// 			get_var_value(tools->env, &var_alloc[1]));
-	// 	if (!var_res_alloc)
-	// 		return (i);
-	// 	if (tools->cl_capacity < ft_strlen(var_res_alloc)
-	// 		+ ft_strlen(tools->cl))
-	// 	{
-	// 		extend_cleanline(tools, ft_strlen(var_result));
-	// 		c_line = &(tools->cl[curr_cl_ind]);
-	// 	}
-	// 	ft_strlcpy(c_line, var_res_alloc, tools->cl_capacity - curr_cl_ind);
-	// 	free(var_alloc);
-	// 	free(var_res_alloc);
-	// 	return (i);
-	// }
 	if (!ft_strncmp(var_alloc, "?", 1))
 	{
 		var_result = tools->exit_string;
@@ -89,33 +70,6 @@ static void	extend_cleanline(t_tools *tools, int add)
 	tools->cl_capacity = new_cl_len;
 	ft_strlcpy(tools->cl, tmpold, tools->cl_capacity);
 	free(tmpold);
-}
-
-void	remove_useless_quotes(char *cline)
-{
-	size_t	i;
-	char	quotechar;
-	char	*firstquote;
-	bool	removequotes;
-
-	i = 0;
-	while (cline[i])
-	{
-		firstquote = NULL;
-		quotechar = 0;
-		removequotes = 1;
-		if (isquote(cline[i]))
-		{
-			quotechar = cline[i];
-			firstquote = &cline[i];
-			while (cline[++i] && cline[i] != quotechar)
-				if (ft_isspace(cline[i]) || istoken(cline[i]))
-					removequotes = 0;
-			if (removequotes && cline[i] == quotechar)
-				i -= remove_two(firstquote, &cline[i]);
-		}
-		i++;
-	}
 }
 
 /*

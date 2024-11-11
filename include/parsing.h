@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:19:04 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 16:08:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ int				val_red(char *line);
 
 /***** lineutils.c ******/
 int				copy_var(char *c_line, char *line, t_tools *tools);
-void			remove_useless_quotes(char *cline);
+// void			remove_useless_quotes(char *cline);
 int				remove_two(char *first, char *second);
 
 /************************/

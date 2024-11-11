@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 13:48:11 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:59:02 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ void	handle_reprint_sig(int sig)
 {
 	if (sig == SIGINT)
 		new_line();
-	global_signal = sig;
+	g_signal = sig;
 }
 
 /*for while in the rest of the program if something needs to be control C'd like a process killed*/
@@ -47,14 +47,14 @@ void	handle_printn_sig(int sig)
 	if (sig == SIGINT)
 		ft_putstr_fd("\n", 2);
 	// ft_putstr_fd("I AM IN HANDLE_PRINTN_SIG", 2);
-	global_signal = sig;
+	g_signal = sig;
 }
 
 /**DO NOTHING EXCEPT SET GLOBAL */
 void	handle_recordonly_sig(int sig)
 {
 	printf("I am in record only sig handler\n");
-	global_signal = sig;
+	g_signal = sig;
 }
 void	handle_justexit_sig(int sig)
 {

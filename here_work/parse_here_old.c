@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 13:35:20 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:59:02 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -81,7 +81,7 @@ char	*make_heredoc_fork(char *delim, t_tools *tools)
 	if (pid == 0)
 		write_heredoc(fd, tempalloc_delim, tools); // put in fork!
 	waitpid(pid, &tools->exit_code, 0);
-	if (global_signal == SIGINT)
+	if (g_signal == SIGINT)
 		return (NULL);
 	check_system_fail(tools->exit_code, tools, 1); // we are in main
 	close(fd);
@@ -98,7 +98,7 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 		line = NULL;
 		signal_init_sa(tools->sa, handle_here_sig); // passing a function
 		line = readline("heredoc: ");
-		if (global_signal == SIGINT)
+		if (g_signal == SIGINT)
 			good_exit(tools);
 		signal_init_sa(tools->sa, SIG_DFL); // passing a function
 		if (!line || ft_strncmp(line, alloc_delim, ft_strlen(alloc_delim)) == 0)

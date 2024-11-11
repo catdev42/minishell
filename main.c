@@ -6,13 +6,14 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:21:41 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 15:59:02 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-volatile sig_atomic_t	global_signal = 0;
+volatile sig_atomic_t	g_signal = 0;
+static int				check_mini(t_tools *tools);
 
 int	main(int argc, char **argv, char **env)
 {
@@ -38,8 +39,6 @@ int	main(int argc, char **argv, char **env)
 	return (0);
 }
 
-static int				check_mini(t_tools *tools);
-
 int	shell_loop(t_tools *tool)
 {
 	while (1)
@@ -49,13 +48,13 @@ int	shell_loop(t_tools *tool)
 		dup2(tool->fd[1], 1);
 		here_unlink(tool);
 		reset_tools(tool);
-		global_signal = 0;
+		g_signal = 0;
 		tool->ln = readline("minishell: ");
 		signal_init_sa(tool->sa, handle_printn_sig);
-		if (!tool->ln || global_signal == SIGTERM)
+		if (!tool->ln || g_signal == SIGTERM)
 			ft_exit(NULL, tool);
-		if (global_signal)
-			record_exit(global_signal + 128, tool);
+		if (g_signal)
+			record_exit(g_signal + 128, tool);
 		if (val_line(tool->ln))
 			add_history(tool->ln);
 		if (!val_line(tool->ln) || !val_quts(tool->ln) || !val_red(tool->ln))
