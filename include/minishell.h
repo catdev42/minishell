@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:59:02 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 18:23:44 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,6 +99,8 @@ int		unset(t_execcmd *cmd, t_tools *tool);
 
 int		export(t_execcmd *cmd, t_tools *tool);
 int		repl_or_app_var(char *key, char *value, char **env, t_tools *tools);
+void	perform_export(char *eqs, t_execcmd *cmd, t_tools *tool, int i);
+
 
 int		append_var(char *key, char *value, char **env, t_tools *tools);
 
