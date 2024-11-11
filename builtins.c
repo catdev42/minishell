@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 01:43:31 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 01:45:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -219,7 +219,7 @@ int	export(t_execcmd *cmd, t_tools *tool)
 			if (!pass)
 				record_exit(1, tool);
 		}
-		if (!equalsign && !passchk(cmd->argv[i], ft_strlen(cmd->argv[i]))))
+		if (!equalsign && !passchk(cmd->argv[i], ft_strlen(cmd->argv[i])))
 			record_exit(1, tool);
 	}
 	return (tool->exit_code);
