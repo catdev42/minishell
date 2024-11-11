@@ -6,11 +6,50 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:09:25 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 01:36:04 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 20:22:54 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
+
+int	check_mini(t_tools *tools)
+{
+	t_execcmd	*ecmd;
+
+	if (tools->tree->type == EXEC)
+	{
+		ecmd = (t_execcmd *)tools->tree;
+		if ((ecmd->argv[0]) && ((!ft_strncmp(ecmd->argv[0], "./minishell", 12)
+					|| !ft_strncmp(ecmd->argv[0], "minishell", 10))))
+		{
+			fork_new_minishell(tools);
+			return (1);
+		}
+		return (0);
+	}
+	return (0);
+}
+
+int	fork_new_minishell(t_tools *tools)
+{
+	pid_t	pid;
+
+	pid = -1;
+	signal_init_sa(tools->sa, SIG_IGN);
+	pid = fork();
+	if (pid == -1)
+		error_exit_main(tools, 1);
+	if (pid == 0)
+	{
+		if (tools->tree->type == EXEC)
+			exec_new_minishell(tools, (t_execcmd *)tools->tree);
+		print_errno_exit(NULL, "This msh does not handle this", 1, tools);
+	}
+	waitpid(pid, &tools->exit_code, 0);
+	check_system_fail(tools->exit_code, tools, 1);
+	record_exit(tools->exit_code, tools);
+	return (tools->exit_code);
+}
 
 void	change_shlvl(t_tools *tool)
 {
@@ -22,8 +61,6 @@ void	change_shlvl(t_tools *tool)
 	repl_or_app_var("SHLVL", ft_itoa(shlvl), tool->env, tool);
 }
 
-// function still needs to be finished
-// myakoven Renaming to exec_new_minishell
 void	exec_new_minishell(t_tools *tool, t_execcmd *ecmd)
 {
 	if (get_matrix_len(ecmd->argv) > 1)

@@ -6,35 +6,16 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 19:34:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 21:51:23 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-// static void	free_things(char **s1, char **s2, char **s3, int fd);
-
-// ==250131== 40 bytes in 1 blocks are definitely lost in loss record 14 of 65
-// ==250131==    at 0x4848899: malloc (in
-// /usr/libexec/valgrind/vgpreload_memcheck-amd64-linux.so)
-// ==250131==    by 0x403AE3: makeredir (init.c:30)
-// ==250131==    by 0x405395: createredir_here (parse_heredoc.c:81)
-// ==250131==    by 0x4057F5: parse_redirs (parse_redir_exec.c:54)
-// ==250131==    by 0x4056A8: parseexec (parse_redir_exec.c:22)
-// ==250131==    by 0x405E5F: parseline (parse.c:52)
-// ==250131==    by 0x405102: shell_loop (main.c:72)
-// ==250131==    by 0x404F42: main (main.c:31)
-
-// rewrite nullify to use actual information
-
 /*
-if I press control c... I have to leave heredoc function and return to minishell
-i need to create the file and record the name while in main process and launch ONLY the heredoc readline in a separate process
+^C leave heredoc function and return to minishell
+Created the files and record the name while in main process and launch ONLY the heredoc readline in a separate process
 */
-
-// tools->lastredir;
-// launchreadlineloop
-// write what it sees into a file and turn it into a regular infile
 int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 {
 	char	*end;
@@ -61,7 +42,6 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 	return (len);
 }
 
-
 /*Gives user the cursor - must check*/
 char	*make_heredoc_fork(char *delim, t_tools *tools)
 {
@@ -70,8 +50,6 @@ char	*make_heredoc_fork(char *delim, t_tools *tools)
 	int		fd;
 	pid_t	pid;
 
-	// int		status;
-	// status = 0;
 	pid = -1;
 	init_zero(NULL, NULL, &end, &tempalloc_delim);
 	end = get_token_end(delim);
@@ -84,6 +62,7 @@ char	*make_heredoc_fork(char *delim, t_tools *tools)
 		error_exit_main(tools, 1);
 	return (make_actual_fork(pid, tempalloc_delim, tools, fd));
 }
+
 char	*make_actual_fork(pid_t pid, char *allo_delim, t_tools *tools, int fd)
 {
 	int	status;
@@ -137,39 +116,7 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 	}
 	free_things(NULL, NULL, &alloc_delim, fd);
 	good_exit(tools);
-	// exit_with_code(tools, 1);
 }
-
-// /*Gives user the cursor - must check*/
-// void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
-// {
-// 	signal_init_sa(tools->sa, SIG_DFL);
-// 	free_things(&tools->cl, &tools->line, NULL, -1);
-// 	while (1)
-// 	{
-// 		tools->line = readline("heredoc: ");
-// 		if (!tools->line || ft_strncmp(tools->line, alloc_delim,
-// 				ft_strlen(alloc_delim)) == 0)
-// 		{
-// 			if (!tools->line)
-// 				print_error("warning", "here-doc delimited by EOF, wanted ",
-// 					alloc_delim);
-// 			break ;
-// 		}
-// 		tools->cl = clean_line_expand_only(tools->line,
-// 				ft_strlen(tools->line), tools);
-// 		if (!tools->cl || write(fd, tools->cl,
-// 				ft_strlen(tools->cl)) == -1 || write(fd, "\n", 1) == -1)
-// 		{
-// 			free_things(NULL, NULL, &alloc_delim, fd);
-// 			print_errno_exit(NULL, NULL, errno, tools);
-// 		}
-// 		free_things(&tools->line, &tools->cl, NULL, -1);
-// 	}
-// 	free_things(NULL, NULL, &alloc_delim, fd);
-// 	good_exit(tools);
-// 	// exit_with_code(tools, 1);
-// }
 
 /* Initialize the heredoc names struct */
 void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
@@ -207,7 +154,7 @@ char	*clean_line_expand_only(char *line, int linelen, t_tools *tools)
 		if (line[i] == '\'' || line[i] == '"')
 			i = i + copy_quotes(&c_line[j], &line[i], tools);
 		else if (line[i] == '$' && line[i - 1] != '\\' && line[i + 1] != ' ')
-			i = i + copy_var(&c_line[j], &line[i], tools);
+			i = i + copy_var(&c_line[j], &line[i], tools,1);
 		else
 			c_line[j++] = line[i++];
 		j = ft_strlen(c_line);

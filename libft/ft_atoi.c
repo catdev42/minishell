@@ -6,12 +6,13 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/11/22 22:18:59 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 19:34:35 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 20:55:35 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "libft.h"
 
+/* Returns an int */
 int	ft_atoi(const char *nptr)
 {
 	int	num;

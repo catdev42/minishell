@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:07:28 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:12:11 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 21:51:16 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ char	*clean_line(char *line, int linelen, t_tools *tools)
 		else if (ft_isspace(line[i]))
 			i = i + copy_spaces(&c_line[j], &line[i]);
 		else if (line[i] == '$' && line[i - 1] != '\\' && line[i + 1] != ' ')
-			i = i + copy_var(&c_line[j], &line[i], tools);
+			i = i + copy_var(&c_line[j], &line[i], tools, 1);
 		else
 			c_line[j++] = line[i++];
 		c_line = tools->cl;
@@ -76,7 +76,7 @@ int	copy_quotes(char *c_line, char *line, t_tools *tools)
 		if (line[i] == '$' && quote_char == '\"' && line[i - 1] != '\\'
 			&& line[i + 1] != ' ')
 		{
-			i = i + copy_var(&c_line[j], &line[i], tools);
+			i = i + copy_var(&c_line[j], &line[i], tools, 1);
 			c_line = tools->cl;
 			while (c_line[j])
 				j++;
