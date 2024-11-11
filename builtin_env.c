@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 01:36:04 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 01:55:34 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,6 +23,7 @@ int	env(char **argv, char **env, t_execcmd *ecmd, t_tools *tools)
 	j = 0;
 	if (get_matrix_len(argv) == 1)
 		return (!print_tab(env));
+	record_exit(0, tools);
 	if (get_matrix_len(argv) > 1)
 	{
 		pid = fork();

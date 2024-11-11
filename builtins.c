@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 01:51:16 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 01:54:47 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -38,7 +38,7 @@ int	echo(t_execcmd *cmd)
 	}
 	if (cmp != 0)
 		ft_putstr_fd("\n", 1);
-	return (0); // exit success
+	return (0);
 }
 
 // int cd(char *path) {
@@ -58,7 +58,7 @@ int	cd(char **argv, char **env, t_tools *tools)
 	if (chdir(argv[1]) < 0)
 	{
 		print_error("cd", strerror(errno), NULL);
-		return (1); // error
+		return (1);
 	}
 	if (!repl_or_app_var("PWD", getcwd(buffer, MIDLEN), env, tools))
 		return (1);
@@ -82,7 +82,6 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 		if (j > -1)
 		{
 			temp = tools->env[j];
-			// j = found_var;
 			while (tools->env[j])
 			{
 				tools->env[j] = tools->env[j + 1];
