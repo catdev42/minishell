@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 01:45:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 01:51:16 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -198,7 +198,7 @@ int	export(t_execcmd *cmd, t_tools *tool)
 {
 	int		i;
 	int		pass;
-	char	*equalsign;
+	char	*eqs;
 
 	i = 0;
 	pass = 0;
@@ -208,18 +208,16 @@ int	export(t_execcmd *cmd, t_tools *tool)
 		return (print_export(tool->env));
 	while (cmd->argv[++i])
 	{
-		equalsign = ft_strchr(cmd->argv[i], '=');
-		pass = passchk(cmd->argv[i], (long int)(equalsign - &cmd->argv[i][0]));
-		if (equalsign)
+		eqs = ft_strchr(cmd->argv[i], '=');
+		pass = passchk(cmd->argv[i], (long int)(eqs - &cmd->argv[i][0]));
+		if (eqs)
 		{
-			equalsign[0] = 0;
+			eqs[0] = 0;
 			if (pass)
-				repl_or_app_var(cmd->argv[i], &equalsign[1], tool->env, tool);
-			equalsign[0] = '=';
-			if (!pass)
-				record_exit(1, tool);
+				repl_or_app_var(cmd->argv[i], &eqs[1], tool->env, tool);
+			eqs[0] = '=';
 		}
-		if (!equalsign && !passchk(cmd->argv[i], ft_strlen(cmd->argv[i])))
+		if ((!eqs && !passchk(cmd->argv[i], ft_strlen(cmd->argv[i]))) || !pass)
 			record_exit(1, tool);
 	}
 	return (tool->exit_code);
