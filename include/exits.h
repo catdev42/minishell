@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   exits.h                                            :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/10 14:11:31 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/11 00:15:49 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -36,5 +36,7 @@ int				print_error(const char *arg, const char *errline,
 void			here_unlink(t_tools *tools);
 void			reset_tools(t_tools *tools);
 void			tree_free(struct s_cmd *node);
+void			free_things(char **s1, char **s2, char **s3, int fd);
+
 
 #endif

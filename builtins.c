@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/10 17:19:00 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/11 01:43:31 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,37 +60,10 @@ int	cd(char **argv, char **env, t_tools *tools)
 		print_error("cd", strerror(errno), NULL);
 		return (1); // error
 	}
-	if (!replace_or_append_var("PWD", getcwd(buffer, MIDLEN), env, tools))
+	if (!repl_or_app_var("PWD", getcwd(buffer, MIDLEN), env, tools))
 		return (1);
 	free(buffer);
 	return (0);
-}
-
-// reallocation is dest not provided
-char	*ft_join_one(char const *s1, char const *delim, char const *s2)
-{
-	size_t	len;
-	size_t	i;
-	size_t	j;
-	char	*fullstr;
-
-	i = 0;
-	j = 0;
-	len = ft_strlen(s1) + ft_strlen(delim) + ft_strlen(s2);
-	fullstr = ft_calloc(len + 2, sizeof(char));
-	if (!fullstr)
-		return (NULL);
-	j = 0;
-	while (s1[j])
-		fullstr[i++] = s1[j++];
-	j = 0;
-	while (delim[j])
-		fullstr[i++] = delim[j++];
-	j = 0;
-	while (s2[j])
-		fullstr[i++] = s2[j++];
-	fullstr[i] = 0;
-	return (fullstr);
 }
 
 int	unset(t_execcmd *cmd, t_tools *tools)
@@ -99,7 +72,6 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 	int		j;
 	char	*temp;
 
-	//	int		found_var;
 	i = 1;
 	if (!cmd)
 		return (1);
@@ -122,6 +94,7 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 	}
 	return (0);
 }
+
 int	ft_strisnumeric(char *str)
 {
 	size_t	i;
@@ -167,43 +140,12 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 	exit(tool->exit_code);
 }
 
-// int	ft_exit(t_execcmd *cmd, t_tools *tool)
-// {
-// 	ft_putstr_fd("exit\n", 1);
-// 	if (cmd && get_matrix_len(cmd->argv) > 2)
-// 	{
-// 		print_error(NULL, "too many arguments", NULL);
-// 		record_exit(1, tool);
-// 	}
-// 	if (cmd)
-// 	{
-// 		if (get_matrix_len(cmd->argv) == 2)
-// 		{
-// 			if (ft_strisnumeric(cmd->argv[1]))
-// 				record_exit(ft_atoll(cmd->argv[1]), tool);
-// 			else if (!ft_strisnumeric(cmd->argv[1]))
-// 			{
-// 				record_exit(2, tool);
-// 				print_error("exit", "numeric argument required", cmd->argv[1]);
-// 			}
-// 			else
-// 				record_exit(0, tool);
-// 		}
-// 	}
-// 	if (!cmd)
-// 		record_exit(0, tool);
-// 	clean_tools(tool);
-// 	exit(tool->exit_code);
-// }
-
 int	pwd(void)
 {
 	char	*cwd;
 
 	cwd = NULL;
-	// if (get_matrix_len(cmd->argv) > 1)
-	// 	;
-	cwd = getcwd(NULL, 0); // should we check for malloc error
+	cwd = getcwd(NULL, 0);
 	if (!cwd)
 		return (1);
 	if (cwd != NULL)
@@ -258,33 +200,27 @@ int	export(t_execcmd *cmd, t_tools *tool)
 	int		pass;
 	char	*equalsign;
 
+	i = 0;
+	pass = 0;
 	if (!cmd || !cmd->argv[0])
 		return (1);
 	if (get_matrix_len(cmd->argv) == 1)
 		return (print_export(tool->env));
-	i = 1;
-	pass = 0;
-	record_exit(0, tool);
-	while (cmd->argv[i])
+	while (cmd->argv[++i])
 	{
 		equalsign = ft_strchr(cmd->argv[i], '=');
+		pass = passchk(cmd->argv[i], (long int)(equalsign - &cmd->argv[i][0]));
 		if (equalsign)
-			pass = passcheck(cmd->argv[i], (long int)(equalsign
-						- &cmd->argv[i][0]));
-		if (equalsign && pass != 0)
 		{
-			equalsign[0] = 0; // nullterm to key
-			replace_or_append_var(cmd->argv[i], &equalsign[1], tool->env, tool);
-			equalsign[0] = '='; // unnullterm
+			equalsign[0] = 0;
+			if (pass)
+				repl_or_app_var(cmd->argv[i], &equalsign[1], tool->env, tool);
+			equalsign[0] = '=';
+			if (!pass)
+				record_exit(1, tool);
 		}
-		else if ((equalsign && pass == 0) || (!equalsign
-				&& !passcheck(cmd->argv[i], ft_strlen(cmd->argv[i]))))
-		{
+		if (!equalsign && !passchk(cmd->argv[i], ft_strlen(cmd->argv[i]))))
 			record_exit(1, tool);
-			i++;
-			continue ;
-		}
-		i++;
 	}
 	return (tool->exit_code);
 }

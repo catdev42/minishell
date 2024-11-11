@@ -3,21 +3,19 @@
 /*                                                        :::      ::::::::   */
 /*   exec_utils.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/10 19:05:10 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/11 00:59:46 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
-/**
- * this needs to checkthe exit code, determine if its a fatal errno, and exit...
- * exit codes in forks carry errno back!
-
-	* in main status errno is caught and we need to determine to close the whole program or not
- */
+/*
+checks the exit code, determine if its a fatal errno, and exit
+in main status errno is caught and we need to determine to close the whole program or not
+*/
 void	check_system_fail(int status, t_tools *tool, bool inmain)
 {
 	int	sig;
@@ -36,15 +34,6 @@ void	check_system_fail(int status, t_tools *tool, bool inmain)
 			error_exit_main(tool, tool->exit_code);
 		else
 			record_exit(1, tool);
-		// else
-		// 	(!inmain) exit_with_code()
-		// else
-		// {
-		// 	record_exit(1, tool);
-		// 	if (inmain == 0)
-		// 		error_exit_main(tool, 1);
-		// 	return ;
-		// }
 	}
 	else if (WIFSIGNALED(status))
 	{
@@ -59,32 +48,23 @@ void	check_system_fail(int status, t_tools *tool, bool inmain)
 			error_exit_main(tool, sig + 128);
 		}
 	}
-	// record_exit(1, tool); // CHECK TODO
 	return ;
-	/*we dont exit unless the above, this is just an exra catcher for compiler*/
 }
 
 /*
-
-THIS IS MY  CALL OF check_file_type and FAILURE checker...
-	mode = check_file_type(start, fd_in_or_out, tools); // TODO !!!
-	if (mode == -1) //because 0 is returned for O_RDONLY
-		return (NULL); return out or exit fork
-You can do this in your code cause it should work for builtin in the main process...
+Checks if a path is a file or directory File: 1; Dir: 2; Neither: 0
+If we deal with an outfile, there is no problem if file is not found
 */
-/* Checks if a path is a file or directory File: 1; Dir: 2; Neither: 0*/
 int	file_dir_noexist(const char *path, int fd_in_or_out)
 {
 	struct stat	path_stat;
 
 	if (stat(path, &path_stat) != 0)
 	{
-		// if it is an outfile and path is not found, we return 1
-		// because a regular file will be created
 		if (fd_in_or_out == 1 && errno == ENOENT)
-			return (1); // not an error
+			return (1);
 		else
-		{ // an error
+		{
 			print_error(path, strerror(errno), NULL);
 			return (0);
 		}
@@ -97,11 +77,10 @@ int	file_dir_noexist(const char *path, int fd_in_or_out)
 		return (2);
 	else
 		print_error(path, "Is neither a file nor a directory", NULL);
-	return (0); // error
+	return (0);
 }
 
 /* Return the MODE necessary for OPEN() file or dir */
-
 int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
 {
 	int	fileordir;
@@ -111,41 +90,18 @@ int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
 	fileordir = file_dir_noexist(rcmd->file, fd_in_or_out);
 	if (fileordir == 0)
 		return (-1);
-	if (fileordir == 2 && rcmd->fd == 1) // directory, outfile
+	if (fileordir == 2 && rcmd->fd == 1)
 	{
 		print_error(rcmd->file, "is a directory", NULL);
-		return (-1); // myakoven oct 28, we cant redirect this: TODO
+		return (-1);
 	}
 	if (fileordir == 1 && rcmd->append && rcmd->fd == 1)
-		// reg file (not a directory), append, outfile
-		// I HAVE TO ADDRESS APPEND IN REDIR CREATION (myakoven)
 		return (O_WRONLY | O_CREAT | O_APPEND);
 	else if (fileordir == 1 && !rcmd->append && rcmd->fd == 1)
-		// reg file (not a directory), trund, outfile
 		return (O_WRONLY | O_CREAT | O_TRUNC);
 	else if (fileordir == 1 && rcmd->fd == 0)
-		// reverted this to 1... cause regular file
 		return (O_RDONLY);
 	else if (fileordir == 2 && rcmd->fd == 0)
-		// special condition for infile which is a directory
-		// return (O_RDONLY | __O_DIRECTORY);
-		return (O_RDONLY | O_DIRECTORY);
+		return (O_RDONLY | __O_DIRECTORY);
 	return (0);
 }
-
-/* from slack sde-silv (Shenya)
-while (i < env->procs)
-{
-waitpid(env->arr[i].pid, &status, 0);
-if	(WIFEXITED(status))
-	env->arr[i].status = WEXITSTATUS(status);
-else if	(WIFSIGNALED(status))
-{
-	sig = WTERMSIG(status);
-	env->arr[i].status = 128 + sig;
-}
-i ++;
-}
-handle_sig_numbers(sig, status, env, i);
-g_exit_status = env->arr[i - 1].status;
-*/
