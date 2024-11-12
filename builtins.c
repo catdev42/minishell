@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/12 20:32:19 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 21:13:49 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -40,8 +40,9 @@ int	echo(t_execcmd *cmd)
 		ft_putstr_fd("\n", 1);
 	return (0);
 }
+static char	*get_path(char **argv, char **env, char **path_alloc,
+				t_tools *tools);
 
-// int cd(char *path) {
 int	cd(char **argv, char **env, t_tools *tools)
 {
 	char	*buffer;
@@ -58,58 +59,39 @@ int	cd(char **argv, char **env, t_tools *tools)
 	}
 	if (!buffer)
 		error_exit_main(tools, errno);
-	if (argv[1] && strncmp(argv[1], "~", 1) == 0)
-	{
-		path = get_var_value(env, "HOME");
-		if (ft_strlen(argv[1]) > 1)
-		{
-			path_alloc = ft_join_one(get_var_value(env, "HOME"), "",
-					&argv[1][1]);
-			if (!path_alloc)
-				error_exit_main(tools, 1);
-			if (path_alloc)
-				path = path_alloc;
-		}
-	}
-	else
-		path = argv[1];
+	path = get_path(argv, env, &path_alloc, tools);
 	if (chdir(path) < 0)
 	{
 		print_error("cd", path, strerror(errno), NULL);
 		free_things(&path_alloc, NULL, NULL, 0);
 		return (1);
 	}
-	free_things(&path_alloc, NULL, NULL, 0);
 	if (!repl_or_app_var("PWD", getcwd(buffer, MIDLEN), env, tools))
 		return (1);
-	free(buffer);
+	free_things(&path_alloc, &buffer, NULL, 0);
 	return (0);
 }
 
-// // int cd(char *path) {
-// int	cd(char **argv, char **env, t_tools *tools)
-// {
-// 	char	*buffer;
+static char	*get_path(char **argv, char **env, char **path_alloc,
+		t_tools *tools)
+{
+	char	*path;
 
-// 	buffer = NULL;
-// 	buffer = safe_calloc(MIDLEN + 1, sizeof(char), tools);
-// 	if (get_matrix_len(argv) > 2)
-// 	{
-// 		print_error(argv[0], "too many arguments", NULL);
-// 		return (1);
-// 	}
-// 	if (!buffer)
-// 		error_exit_main(tools, errno);
-// 	if (chdir(argv[1]) < 0)
-// 	{
-// 		print_error("cd", strerror(errno), NULL);
-// 		return (1);
-// 	}
-// 	if (!repl_or_app_var("PWD", getcwd(buffer, MIDLEN), env, tools))
-// 		return (1);
-// 	free(buffer);
-// 	return (0);
-// }
+	if (argv[1] && strncmp(argv[1], "~", 1) == 0)
+	{
+		path = get_var_value(env, "HOME");
+		if (ft_strlen(argv[1]) > 1)
+		{
+			*path_alloc = ft_join_one(path, "", &argv[1][1]);
+			if (!*path_alloc)
+				error_exit_main(tools, 1);
+			path = *path_alloc;
+		}
+	}
+	else
+		path = argv[1];
+	return (path);
+}
 
 int	ft_strisnumeric(char *str)
 {
