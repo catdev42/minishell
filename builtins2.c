@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins2.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:12:00 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 18:37:05 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/12 20:28:10 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -90,7 +90,7 @@ int	export(t_execcmd *cmd, t_tools *tool)
 			res = export_check(cmd->argv[i], NULL, tool);
 		if (res == 0 || (eqs && ft_strlen(cmd->argv[i]) == 1))
 		{
-			print_error("export", "not a valid identifier", NULL);
+			print_error("export", NULL, "not a valid identifier", NULL);
 			tool->exit_code = 1;
 		}
 	}

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 17:21:39 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/12 20:32:19 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	echo(t_execcmd *cmd)
 	int	cmp;
 
 	if (!cmd)
-		return (1); 
+		return (1);
 	if (!cmd->argv[1])
 	{
 		ft_putstr_fd("\n", 1);
@@ -45,26 +45,71 @@ int	echo(t_execcmd *cmd)
 int	cd(char **argv, char **env, t_tools *tools)
 {
 	char	*buffer;
+	char	*path_alloc;
+	char	*path;
 
+	path_alloc = NULL;
 	buffer = NULL;
 	buffer = safe_calloc(MIDLEN + 1, sizeof(char), tools);
 	if (get_matrix_len(argv) > 2)
 	{
-		print_error(argv[0], "too many arguments", NULL);
+		print_error(argv[0], NULL, "too many arguments", NULL);
 		return (1);
 	}
 	if (!buffer)
 		error_exit_main(tools, errno);
-	if (chdir(argv[1]) < 0)
+	if (argv[1] && strncmp(argv[1], "~", 1) == 0)
 	{
-		print_error("cd", strerror(errno), NULL);
+		path = get_var_value(env, "HOME");
+		if (ft_strlen(argv[1]) > 1)
+		{
+			path_alloc = ft_join_one(get_var_value(env, "HOME"), "",
+					&argv[1][1]);
+			if (!path_alloc)
+				error_exit_main(tools, 1);
+			if (path_alloc)
+				path = path_alloc;
+		}
+	}
+	else
+		path = argv[1];
+	if (chdir(path) < 0)
+	{
+		print_error("cd", path, strerror(errno), NULL);
+		free_things(&path_alloc, NULL, NULL, 0);
 		return (1);
 	}
+	free_things(&path_alloc, NULL, NULL, 0);
 	if (!repl_or_app_var("PWD", getcwd(buffer, MIDLEN), env, tools))
 		return (1);
 	free(buffer);
 	return (0);
 }
+
+// // int cd(char *path) {
+// int	cd(char **argv, char **env, t_tools *tools)
+// {
+// 	char	*buffer;
+
+// 	buffer = NULL;
+// 	buffer = safe_calloc(MIDLEN + 1, sizeof(char), tools);
+// 	if (get_matrix_len(argv) > 2)
+// 	{
+// 		print_error(argv[0], "too many arguments", NULL);
+// 		return (1);
+// 	}
+// 	if (!buffer)
+// 		error_exit_main(tools, errno);
+// 	if (chdir(argv[1]) < 0)
+// 	{
+// 		print_error("cd", strerror(errno), NULL);
+// 		return (1);
+// 	}
+// 	if (!repl_or_app_var("PWD", getcwd(buffer, MIDLEN), env, tools))
+// 		return (1);
+// 	free(buffer);
+// 	return (0);
+// }
 
 int	ft_strisnumeric(char *str)
 {
@@ -89,7 +134,7 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 	{
 		if (get_matrix_len(cmd->argv) > 2)
 		{
-			print_error("exit", "too many arguments", NULL);
+			print_error("exit", NULL, "too many arguments", NULL);
 			record_exit(1, tool);
 		}
 		else if (get_matrix_len(cmd->argv) == 2)
@@ -98,7 +143,7 @@ int	ft_exit(t_execcmd *cmd, t_tools *tool)
 				record_exit(ft_atol(cmd->argv[1]), tool);
 			else
 			{
-				print_error("exit", "numeric argument required", NULL);
+				print_error("exit", NULL, "numeric argument required", NULL);
 				record_exit(2, tool);
 			}
 		}

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 14:08:00 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 22:36:22 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 20:30:50 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,7 +16,8 @@
 msh: (arg): (errline) `(errarg)'
 If input NULL at a specific position, that position is NOT printed
 This always returns zero so it can be plces incide an error return */
-int	print_error(const char *arg, const char *errline, const char *errarg)
+int	print_error(const char *arg, const char *arg2, const char *errline,
+		const char *errarg)
 {
 	ft_putstr_fd("msh: ", 2);
 	if (arg)
@@ -24,11 +25,16 @@ int	print_error(const char *arg, const char *errline, const char *errarg)
 		ft_putstr_fd(arg, 2);
 		ft_putstr_fd(": ", 2);
 	}
+	if (arg2 && arg2[0])
+	{
+		ft_putstr_fd(arg2, 2);
+		ft_putstr_fd(": ", 2);
+	}
 	if (errline)
 		ft_putstr_fd(errline, 2);
 	if (errarg)
 	{
-		ft_putstr_fd("`", 2);
+		ft_putstr_fd(" `", 2);
 		ft_putstr_fd(errarg, 2);
 		ft_putstr_fd("\'", 2);
 	}

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:09:25 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/12 16:44:59 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 20:24:15 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,11 +27,11 @@ void	exec_new_minishell(t_tools *tool, t_execcmd *ecmd)
 	if (get_matrix_len(ecmd->argv) > 1)
 		print_errno_exit(NULL, "too many arguments", 141, tool);
 	{
-		change_shlvl(tool);
 		if (execve("./minishell", ecmd->argv, tool->env) == -1)
 			print_errno_exit(NULL, NULL, 0, tool);
 	}
 }
+// change_shlvl(tool);
 
 int	check_mini(t_tools *tools)
 {

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:51:01 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 22:20:55 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 20:23:49 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,6 +30,7 @@ int	main(int argc, char **argv, char **env)
 	signal_init_sigquit(tools.sa);
 	here_init(tools.heredocs, &tools);
 	copy_env(&tools, env);
+	change_shlvl(&tools);
 	if (!tools.env || !tools.heredocs[0][0])
 		(error_exit_main(&tools, 1));
 	shell_loop(&tools);

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/12 19:06:53 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 20:29:27 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -131,7 +131,7 @@ struct s_cmd	*parseargv(char *start, char *end, t_tools *tools)
 			i = skip_token(start, i);
 		}
 		if (index == MAXARGS - 1)
-			print_error("argv", "too many arguments", NULL);
+			print_error("argv", NULL, "too many arguments", NULL);
 	}
 	if (tools->lastredir)
 		tools->lastredir->cmd = (struct s_cmd *)ecmd;

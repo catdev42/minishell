@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 21:45:41 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 21:17:31 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 20:29:20 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	val_red(char *line)
 	while (line[i])
 	{
 		if (!check_first_pipe(line))
-			return (print_error(NULL, UNEXP, "|"));
+			return (print_error(NULL, NULL,UNEXP, "|"));
 		if (line[i] == '\"' || line[i] == '\'')
 			i = skip_quotes(line, i) + 1;
 		if (line[i] && line[i] == '|')
@@ -59,9 +59,9 @@ static int	check_pipe_sytax(char *line, int i)
 		i++;
 	}
 	if (!hasalpha && line[i] == '|')
-		return (print_error(NULL, UNEXP, "|"));
+		return (print_error(NULL, NULL, UNEXP, "|"));
 	else if (!hasalpha && !line[i])
-		return (print_error(NULL, UNEXP, "newline"));
+		return (print_error(NULL, NULL, UNEXP, "newline"));
 	return (1);
 }
 
@@ -78,9 +78,9 @@ static int	check_redir_syntax(char *line, int i)
 		i++;
 	}
 	if (!hasalpha && istoken(line[i]))
-		return (print_error(NULL, UNEXP, (get_redir_error(line, i))));
+		return (print_error(NULL, NULL, UNEXP, (get_redir_error(line, i))));
 	else if (!line[i] && !hasalpha)
-		return (print_error(NULL, UNEXP, "newline"));
+		return (print_error(NULL, NULL, UNEXP, "newline"));
 	return (1);
 }
 
