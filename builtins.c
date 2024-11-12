@@ -6,12 +6,15 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/12 21:13:49 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 21:23:38 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
+static char	*get_path_cd(char **argv, char **env, char **path_alloc,
+				t_tools *tools);
+				
 int	echo(t_execcmd *cmd)
 {
 	int	i;
@@ -40,8 +43,6 @@ int	echo(t_execcmd *cmd)
 		ft_putstr_fd("\n", 1);
 	return (0);
 }
-static char	*get_path(char **argv, char **env, char **path_alloc,
-				t_tools *tools);
 
 int	cd(char **argv, char **env, t_tools *tools)
 {
@@ -59,7 +60,7 @@ int	cd(char **argv, char **env, t_tools *tools)
 	}
 	if (!buffer)
 		error_exit_main(tools, errno);
-	path = get_path(argv, env, &path_alloc, tools);
+	path = get_path_cd(argv, env, &path_alloc, tools);
 	if (chdir(path) < 0)
 	{
 		print_error("cd", path, strerror(errno), NULL);
@@ -72,7 +73,7 @@ int	cd(char **argv, char **env, t_tools *tools)
 	return (0);
 }
 
-static char	*get_path(char **argv, char **env, char **path_alloc,
+static char	*get_path_cd(char **argv, char **env, char **path_alloc,
 		t_tools *tools)
 {
 	char	*path;
@@ -91,22 +92,6 @@ static char	*get_path(char **argv, char **env, char **path_alloc,
 	else
 		path = argv[1];
 	return (path);
-}
-
-int	ft_strisnumeric(char *str)
-{
-	size_t	i;
-
-	i = 0;
-	while (str[i] && ft_isspace(str[i]))
-		i++;
-	if (str[i] == '-' || str[i] == '+')
-		i++;
-	while (str[i] && ft_isdigit(str[i]))
-		i++;
-	if (i < ft_strlen(str))
-		return (0);
-	return (1);
 }
 
 int	ft_exit(t_execcmd *cmd, t_tools *tool)

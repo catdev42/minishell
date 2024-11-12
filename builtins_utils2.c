@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 19:25:50 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 22:52:53 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 21:22:48 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -86,4 +86,20 @@ int	run_pipeless_builtin_tree(t_cmd *cmd, t_tools *tool)
 		return (run_builtin(ecmd, tool));
 	}
 	return (0);
+}
+
+int	ft_strisnumeric(char *str)
+{
+	size_t	i;
+
+	i = 0;
+	while (str[i] && ft_isspace(str[i]))
+		i++;
+	if (str[i] == '-' || str[i] == '+')
+		i++;
+	while (str[i] && ft_isdigit(str[i]))
+		i++;
+	if (i < ft_strlen(str))
+		return (0);
+	return (1);
 }
