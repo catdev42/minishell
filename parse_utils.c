@@ -6,11 +6,12 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 22:43:12 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 04:30:08 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
+
 
 int	infile_or_outfile(char *start)
 {
@@ -34,6 +35,34 @@ char	*get_token_end(char *namestart)
 		i++;
 	}
 	return (&namestart[i]);
+}
+
+
+char	*peek(char *line, char *end, int token)
+{
+	char	*tokenaddress;
+	int		i;
+
+	tokenaddress = 0;
+	i = 0;
+	while (line[i] && &line[i] < end)
+	{
+		if (isquote(line[i]))
+			i = skip_token(line, i);
+		if (istoken(line[i]))
+		{
+			if ((isredir(line[i]) && token == REDIR) || (line[i] == '|'
+					&& token == PIPE))
+			{
+				tokenaddress = &line[i];
+				break ;
+			}
+		}
+		else if (token == ALPHA && ft_isspace(line[i]) && !istoken(line[i + 1]))
+			return (&line[i + 1]);
+		++i;
+	}
+	return (tokenaddress);
 }
 
 void	nullify(char *cline, t_tools *tools)
@@ -77,28 +106,4 @@ void	remove_useless_quotes_final(char *cline, size_t linecapacity)
 		}
 		i++;
 	}
-}
-
-char	*clean_line_expand_only(char *line, int linelen, t_tools *tools)
-{
-	char	*c_line;
-	size_t	i;
-	size_t	j;
-
-	init_zero(&i, &j, &c_line, NULL);
-	tools->cl_capacity = linelen * 2;
-	tools->cl = safe_calloc(tools->cl_capacity + 2, 1, tools);
-	c_line = tools->cl;
-	while (line[i] && j < tools->cl_capacity)
-	{
-		if (line[i] == '\'' || line[i] == '"')
-			i = i + copy_quotes(&c_line[j], &line[i], tools);
-		else if (line[i] == '$' && line[i - 1] != '\\' && line[i + 1] != ' ')
-			i = i + copy_var(&c_line[j], &line[i], tools, 1);
-		else
-			c_line[j++] = line[i++];
-		j = ft_strlen(c_line);
-		c_line = tools->cl;
-	}
-	return (c_line);
 }

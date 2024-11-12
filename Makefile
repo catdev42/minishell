@@ -10,12 +10,13 @@ LIBFT = ./libft/libft.a
 
 HEADERS 	:= ./include
 OBJDIR		:= ./obj
-SRC     	:= builtin_env.c builtins_utils.c builtins.c builtins2.c builtins_utils2.c\
+SRC     	:= builtin_env.c builtins_utils.c builtins.c \
 				clean_reset.c env.c exec_node_handling.c exec_utils.c exec.c \
 					exit_fork.c exit_main.c init.c line.c linesyntax.c lineutils.c \
 						main.c parse_heredoc.c parse_redir_exec.c parse_utils.c parse.c \
 							shellinshell.c signals.c utils.c utils2.c utils3.c \
-								walking.c  
+								walking.c  #tester
+# exec_utils2.c  execredir.c
 OBJS     	:= $(addprefix $(OBJDIR)/,$(SRC:.c=.o))
 
 CC      	:= cc 
@@ -25,6 +26,7 @@ LDFLAGS 	:= -L/usr/local/opt/readline/lib -lreadline
 #------------------------------------------------#
 #   RECIPES                                      #
 #------------------------------------------------#
+# .SILENT:
 
 all: $(NAME)
 

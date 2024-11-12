@@ -6,29 +6,11 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:07:28 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 22:40:33 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/07 17:01:27 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
-
-static int	copy_env_helper(char **envp, char **env, int i)
-{
-	int	len;
-
-	len = MIDLEN;
-	if (ft_strlen(env[i]) >= MIDLEN)
-		len = ft_strlen(env[i]);
-	envp[i] = ft_calloc(len + 2, sizeof(char));
-	if (!envp[i])
-	{
-		ft_freetab(envp);
-		return (0);
-	}
-	if (!ft_strlcpy(envp[i], env[i], len))
-		return (0);
-	return (1);
-}
 
 int	copy_env(t_tools *tools, char **env)
 {
@@ -36,27 +18,44 @@ int	copy_env(t_tools *tools, char **env)
 	int		len_pointers;
 	int		i;
 	char	**oldenv;
+	int		len;
 
-	oldenv = NULL;
+	oldenv = NULL; // checker if this was a previously allocated array
 	if (tools->env == env)
 		oldenv = tools->env;
-	len_pointers = get_matrix_len(env);
+	i = 0;
+	len_pointers = 0;
+	while (env[len_pointers] != NULL)
+		len_pointers++;
 	envp = ft_calloc((len_pointers + MAXARGS + 1), sizeof(char *));
 	if (!envp)
 		return (0);
 	tools->env_len = len_pointers + MAXARGS;
-	i = 0;
 	while (i < len_pointers && env[i])
 	{
-		if (!copy_env_helper(envp, env, i))
-			return (0);
+		len = MIDLEN;
+		if (ft_strlen(env[i]) >= MIDLEN)
+			len = ft_strlen(env[i]);
+		envp[i] = ft_calloc(len + 2, sizeof(char));
+		if (!envp[i])
+		{
+			ft_freetab(envp);
+			return (0); // fail
+			/*changed to envp,
+				we must delete currently allocated on error*/
+		}
+		if (!ft_strlcpy(envp[i], env[i], len))
+			return (0); // fail
 		i++;
 	}
 	if (oldenv)
 		ft_freetab(oldenv);
 	tools->env = envp;
-	return (1);
+	return (1); // success
 }
+
+// if (i == tools->env_len - 1)
+// 	copy_env(tools, env)
 
 /* Return the pointer to the variable value or NULL if not found */
 char	*get_var_value(char **env, char *var)

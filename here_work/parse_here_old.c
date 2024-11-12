@@ -1,7 +1,7 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   parse_heredoc.c                                    :+:      :+:    :+:   */
+/*   parse_here_old.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
@@ -11,8 +11,6 @@
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
-
-// static void	free_things(char **s1, char **s2, char **s3, int fd);
 
 // ==250131== 40 bytes in 1 blocks are definitely lost in loss record 14 of 65
 // ==250131==    at 0x4848899: malloc (in
@@ -42,7 +40,6 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 	int		len;
 
 	end = get_token_end(delim);
-	signal_init_sa(tools->sa, SIG_IGN);
 	filename = make_heredoc_fork(delim, tools);
 	if (!filename)
 		return (0);
@@ -56,8 +53,7 @@ int	createredir_here(char *delim, int append, int fd, t_tools *tools)
 		tools->lastredir = (struct s_redircmd *)makeredir(filename, end, append,
 				fd);
 	if (!tools->lastredir)
-		error_exit_main(tools, 1);
-	signal_init_sa(tools->sa, handle_printn_sig);
+		error_exit(tools, 1);
 	return (len);
 }
 
@@ -68,99 +64,63 @@ char	*make_heredoc_fork(char *delim, t_tools *tools)
 	char	*tempalloc_delim;
 	int		fd;
 	pid_t	pid;
-	int		status;
 
-	status = 0;
 	pid = -1;
 	init_zero(NULL, NULL, &end, &tempalloc_delim);
 	end = get_token_end(delim);
 	fd = open(tools->heredocs[tools->hereindex++],
 			O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (fd == -1)
-		error_exit_main(tools, 1);
+		error_exit(tools, 1); // exits the program and cleansfiles
 	tempalloc_delim = ft_substr(delim, 0, end - delim);
 	if (!tempalloc_delim)
-		error_exit_main(tools, 1);
+		error_exit(tools, 1);
 	pid = fork();
 	if (pid == -1)
-		error_exit_main(tools, 1);
+		error_exit(tools, 1);
 	if (pid == 0)
-		write_heredoc(fd, tempalloc_delim, tools);
-	waitpid(pid, &status, 0);
-	check_system_fail(status, tools, 1);
-	if (g_signal == SIGINT || tools->exit_code == 2 || tools->exit_code == 130)
-	{
-		ft_putstr_fd("\n", 1);
-		here_unlink(tools);
-		close(fd);
+		write_heredoc(fd, tempalloc_delim, tools); // put in fork!
+	waitpid(pid, &tools->exit_code, 0);
+	if (g_signal == SIGINT)
 		return (NULL);
-	}
-	record_exit(tools->exit_code, tools);
+	check_system_fail(tools->exit_code, tools, 1); // we are in main
 	close(fd);
-	free(tempalloc_delim);
 	return (tools->heredocs[tools->hereindex - 1]);
 }
 
+/*Gives user the cursor - must check*/
 void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 {
-	signal_init_sa(tools->sa, SIG_DFL);
-	free_things(&tools->cl, &tools->ln, NULL, -1);
+	char	*line;
+
 	while (1)
 	{
-		tools->ln = readline("heredoc: ");
-		if (!tools->ln || ft_strncmp(tools->ln, alloc_delim,
-				ft_strlen(alloc_delim)) == 0)
+		line = NULL;
+		signal_init_sa(tools->sa, handle_here_sig); // passing a function
+		line = readline("heredoc: ");
+		if (g_signal == SIGINT)
+			good_exit(tools);
+		signal_init_sa(tools->sa, SIG_DFL); // passing a function
+		if (!line || ft_strncmp(line, alloc_delim, ft_strlen(alloc_delim)) == 0)
 		{
-			if (!tools->ln)
+			if (!line)
 				print_error("warning", "here-doc delimited by EOF, wanted ",
 					alloc_delim);
 			break ;
 		}
-		tools->cl = clean_line_expand_only(tools->ln, ft_strlen(tools->ln),
-				tools);
-		if (!tools->cl || write(fd, tools->cl, ft_strlen(tools->cl)) == -1
-			|| write(fd, "\n", 1) == -1)
+		if (write(fd, line, ft_strlen(line)) == -1 || write(fd, "\n", 1) == -1)
 		{
-			free_things(NULL, NULL, &alloc_delim, fd);
-			print_errno_exit(NULL, NULL, errno, tools);
+			free(line);
+			free(alloc_delim);
+			print_errno_exit(NULL, NULL, errno, tools); // we are in fork
 		}
-		free_things(&tools->ln, &tools->cl, NULL, -1);
+		free(line);
 	}
-	free_things(NULL, NULL, &alloc_delim, fd);
-	good_exit(tools);
-	// exit_with_code(tools, 1);
+	free(line);
+	free(alloc_delim);
+	close(fd);
+	good_exit(tools); // exits for 0 for success while cleaning
 }
-
-// /*Gives user the cursor - must check*/
-// void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
-// {
-// 	signal_init_sa(tools->sa, SIG_DFL);
-// 	free_things(&tools->cl, &tools->line, NULL, -1);
-// 	while (1)
-// 	{
-// 		tools->line = readline("heredoc: ");
-// 		if (!tools->line || ft_strncmp(tools->line, alloc_delim,
-// 				ft_strlen(alloc_delim)) == 0)
-// 		{
-// 			if (!tools->line)
-// 				print_error("warning", "here-doc delimited by EOF, wanted ",
-// 					alloc_delim);
-// 			break ;
-// 		}
-// 		tools->cl = clean_line_expand_only(tools->line,
-// 				ft_strlen(tools->line), tools);
-// 		if (!tools->cl || write(fd, tools->cl,
-// 				ft_strlen(tools->cl)) == -1 || write(fd, "\n", 1) == -1)
-// 		{
-// 			free_things(NULL, NULL, &alloc_delim, fd);
-// 			print_errno_exit(NULL, NULL, errno, tools);
-// 		}
-// 		free_things(&tools->line, &tools->cl, NULL, -1);
-// 	}
-// 	free_things(NULL, NULL, &alloc_delim, fd);
-// 	good_exit(tools);
-// 	// exit_with_code(tools, 1);
-// }
 
 /* Initialize the heredoc names struct */
 void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
@@ -174,35 +134,11 @@ void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
 		tempalloc = NULL;
 		tempalloc = ft_itoa(i);
 		if (!tempalloc)
-			error_exit_main(tools, errno);
+			error_exit(tools, errno);
 		ft_strlcpy(heredocs[i], "heredoc", MAXARGS);
 		ft_strlcat(heredocs[i], tempalloc, MAXARGS);
 		free(tempalloc);
 		i++;
 	}
 	return ;
-}
-
-char	*clean_line_expand_only(char *line, int linelen, t_tools *tools)
-{
-	char	*c_line;
-	size_t	i;
-	size_t	j;
-
-	init_zero(&i, &j, &c_line, NULL);
-	tools->cl_capacity = linelen * 2;
-	tools->cl = safe_calloc(tools->cl_capacity + 2, 1, tools);
-	c_line = tools->cl;
-	while (line[i] && j < tools->cl_capacity)
-	{
-		if (line[i] == '\'' || line[i] == '"')
-			i = i + copy_quotes(&c_line[j], &line[i], tools);
-		else if (line[i] == '$' && line[i - 1] != '\\' && line[i + 1] != ' ')
-			i = i + copy_var(&c_line[j], &line[i], tools);
-		else
-			c_line[j++] = line[i++];
-		j = ft_strlen(c_line);
-		c_line = tools->cl;
-	}
-	return (c_line);
 }

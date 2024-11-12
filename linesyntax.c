@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 21:45:41 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 21:17:31 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 16:14:50 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -92,7 +92,7 @@ static char	*get_redir_error(char *line, int i)
 	j = 0;
 	while (istoken(line[i + j]) && j < 2)
 		j++;
-	if (istoken(line[i] == '|'))
+	if (istoken(line[i + j] == '|'))
 		j = 1;
 	if (istoken(line[i]) != istoken(line[i + 1]))
 		j = 1;

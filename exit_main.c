@@ -3,19 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   exit_main.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 14:08:00 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 22:36:22 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/10 12:57:02 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
 /* FOR MAIN PROCESS
+Input NULL or what to print in the 3 prositions:
 msh: (arg): (errline) `(errarg)'
-If input NULL at a specific position, that position is NOT printed
-This always returns zero so it can be plces incide an error return */
+If NULL at a specific position, that position is NOT printed
+*/
 int	print_error(const char *arg, const char *errline, const char *errarg)
 {
 	ft_putstr_fd("msh: ", 2);
@@ -33,15 +34,15 @@ int	print_error(const char *arg, const char *errline, const char *errarg)
 		ft_putstr_fd("\'", 2);
 	}
 	ft_putstr_fd("\n", 2);
-	return (0);
+	return (0); // return !
 }
 
 // TODO should put malloc errors etc
 void	good_exit_main(t_tools *tools)
 {
 	clean_tools(tools);
-	here_unlink(tools);
-	ft_memset(tools->heredocs, 0, sizeof(tools->heredocs));
+	here_unlink(tools); // clean files
+	ft_memset(tools->heredocs, 0, sizeof(tools->heredocs)); //set to 0
 	clear_history();
 }
 
@@ -56,7 +57,7 @@ NO PRINTING: use print_errno_exit */
 void	error_exit_main(t_tools *tools, int error)
 {
 	clean_tools(tools);
-	here_unlink(tools);
+	here_unlink(tools); // clean files
 	clear_history();
 	if (error == -1 || error == 0)
 		exit(errno);

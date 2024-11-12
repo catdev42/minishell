@@ -12,11 +12,9 @@
 
 #include "./include/minishell.h"
 
-// static void	fork_to_write(int pipefd[2], t_pipecmd *pcmd, t_tools *tools);
-// static void	fork_to_read(int pipefd[2], t_pipecmd *pcmd, t_tools *tools);
-
 /*forks if there is a pipe or a non builtin command else it
 executes without forking*/
+
 int	running_msh(t_tools *tools)
 {
 	pid_t	pid;
@@ -109,18 +107,49 @@ void	run_pipe(t_pipecmd *pcmd, t_tools *tools)
 	exit_with_code(tools, tools->exit_code);
 }
 
-// static void	fork_to_write(int pipefd[2], t_pipecmd *pcmd, t_tools *tools)
-// {
-// 	close(pipefd[0]);
-// 	dup2(pipefd[1], STDOUT_FILENO);
-// 	close(pipefd[1]);
-// 	handle_node(pcmd->left, tools);
-// }
+/*gets mode: check_file_type prints error on error, if fail, exit 1*/
+int	run_redir(t_redircmd *rcmd, t_tools *tool)
+{
+	rcmd->mode = check_file_type(rcmd, rcmd->fd);
+	if (rcmd->mode == -1)
+		exit_with_code(tool, 1);
+	close(rcmd->fd);
+	rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
+	if (rcmd->fd == -1)
+	{
+		print_errno_exit(NULL, strerror(errno), 0, tool);
+	}
+	handle_node(rcmd->cmd, tool);
+	return (1);
+}
 
-// static void	fork_to_read(int pipefd[2], t_pipecmd *pcmd, t_tools *tools)
-// {
-// 	close(pipefd[1]);
-// 	dup2(pipefd[0], STDIN_FILENO);
-// 	close(pipefd[0]);
-// 	handle_node(pcmd->right, tools);
-// }
+int	run_pipeless_builtin_tree(t_cmd *cmd, t_tools *tool)
+{
+	t_execcmd	*ecmd;
+	t_redircmd	*rcmd;
+
+	if (cmd->type == REDIR)
+	{
+		rcmd = (t_redircmd *)cmd;
+		rcmd->mode = check_file_type(rcmd, rcmd->fd);
+		if (rcmd->mode == -1)
+		{
+			record_exit(1, tool);
+			return (0);
+		}
+		close(rcmd->fd);
+		rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
+		if (rcmd->fd == -1)
+		{
+			record_exit(1, tool);
+			return (0);
+		}
+		run_pipeless_builtin_tree(rcmd->cmd, tool);
+	}
+	if (cmd->type == EXEC)
+	{
+		ecmd = (t_execcmd *)cmd;
+		return (run_builtin(ecmd, tool));
+	}
+	return (0);
+}
