@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 22:16:15 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 19:03:20 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,7 @@ struct s_cmd	*createpipe(struct s_cmd *left, struct s_cmd *right,
 /************************/
 struct s_cmd	*parseexec(char *start, char *end_of_exec, t_tools *tools);
 struct s_cmd	*parse_redirs(char *start, char *end_of_exec, t_tools *tools);
-int				actually_parse_redir(int fd_in_or_out, char *start,
+int				actually_parse_redir(int fd_in_or_out, char **start,
 					t_tools *tools, bool append);
 int				createredir(char *filestart, int mode, int fd, t_tools *tools);
 struct s_cmd	*parseargv(char *start, char *end, t_tools *tools);
