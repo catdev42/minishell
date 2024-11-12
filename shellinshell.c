@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:09:25 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/12 16:21:22 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:44:59 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,6 @@ void	change_shlvl(t_tools *tool)
 	repl_or_app_var("SHLVL", ft_itoa(shlvl), tool->env, tool);
 }
 
-// function still needs to be finished
-// myakoven Renaming to exec_new_minishell
 void	exec_new_minishell(t_tools *tool, t_execcmd *ecmd)
 {
 	if (get_matrix_len(ecmd->argv) > 1)
@@ -52,7 +50,6 @@ int	check_mini(t_tools *tools)
 	}
 	return (0);
 }
-// walking(tools->tree); //test tree
 
 /*reference: heredoc execution*/
 /*should return 0 on some sort of failure, */
@@ -67,16 +64,13 @@ int	fork_new_minishell(t_tools *tools)
 		error_exit_main(tools, 1);
 	if (pid == 0)
 	{
-		// init_sa(tools->sa, handle_reprint_sig);
 		if (tools->tree->type == EXEC)
 			exec_new_minishell(tools, (t_execcmd *)tools->tree);
 		printf("Am i still in this child process?\n");
 		print_errno_exit(NULL, "This msh does not handle this", 1, tools);
 	}
 	waitpid(pid, &tools->exit_code, 0);
-	// printf("I exited child now");
 	check_system_fail(tools->exit_code, tools, 1);
-	// we are in main and mini doesnt get closed by sigint
 	record_exit(tools->exit_code, tools);
 	return (tools->exit_code);
 }
