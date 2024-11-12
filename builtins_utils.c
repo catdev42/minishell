@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   builtins_utils.c                                   :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
+/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 20:25:45 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 16:36:07 by spitul           ###   ########.fr       */
+/*   Updated: 2024/11/12 16:44:09 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "./include/minishell.h"
+#include "./include/minishell.h" 
 
 /*checks if here is a builtin command in a pipefree tree*/
 int	builtin_check_walk(t_cmd *cmd)
