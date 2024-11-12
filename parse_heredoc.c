@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/12 16:37:49 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 19:05:56 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -117,7 +117,8 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 /*
 // tools->cl = clean_line_expand_only(tools->ln, ft_strlen(tools->ln),
 // 		tools);
-//! tools->cl ||*/
+//! tools->cl ||
+*/
 
 /* Initialize the heredoc names struct */
 void	here_init(char heredocs[MAXARGS][MAXARGS], t_tools *tools)
