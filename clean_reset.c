@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 19:22:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 20:50:03 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 20:28:17 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,18 @@ void	here_unlink(t_tools *tools)
 {
 	int	i;
 
-	char(*heredocs)[20];
-	heredocs = tools->heredocs;
 	i = 0;
 	while (i < MAXARGS)
 	{
-		if (access(heredocs[i], F_OK) == -1)
+		if (access(tools->heredocs[i], F_OK) == -1)
 		{
 			if (errno == ENOENT)
 				errno = 0;
 			else
-				print_error(heredocs[i], "permission", NULL);
+				print_error(tools->heredocs[i], NULL, "permission", NULL);
 		}
 		else
-			unlink(heredocs[i]);
+			unlink(tools->heredocs[i]);
 		i++;
 	}
 	return ;
@@ -39,21 +37,21 @@ void	here_unlink(t_tools *tools)
 /* RESET TOOLS: leave env var and exit_string */
 void	reset_tools(t_tools *tools)
 {
-	if (tools->line)
-	{
-		ft_bzero(tools->line, tools->line_capacity);
-		free_things(&tools->line, NULL, NULL, -1);
-	}
-	tools->line = NULL;
-	if (tools->cleanline)
-	{
-		ft_bzero(tools->cleanline, tools->cl_capacity);
-		free_things(&tools->cleanline, NULL, NULL, -1);
-	}
 	if (tools->tree)
 		tree_free(tools->tree);
+	if (tools->ln)
+	{
+		ft_bzero(tools->ln, tools->line_capacity);
+		free_things(&tools->ln, NULL, NULL, -1);
+	}
+	tools->ln = NULL;
+	if (tools->cl)
+	{
+		ft_bzero(tools->cl, tools->cl_capacity);
+		free_things(&tools->cl, NULL, NULL, -1);
+	}
 	tools->tree = NULL;
-	tools->cleanline = NULL;
+	tools->cl = NULL;
 	tools->cmd_end = NULL;
 	tools->s = NULL;
 	tools->lastpipe = NULL;
@@ -86,28 +84,27 @@ void	free_things(char **s1, char **s2, char **s3, int fd)
 /* part of reset */
 void	tree_free(struct s_cmd *node)
 {
-	struct s_execcmd	*ecmd;
 	struct s_redircmd	*rcmd;
 	struct s_pipecmd	*pcmd;
 
-	ecmd = NULL;
 	pcmd = NULL;
 	rcmd = NULL;
 	if (node && node->type == EXEC)
 	{
-		ecmd = (struct s_execcmd *)node;
-		free(ecmd);
+		free((struct s_execcmd *)node);
 	}
 	else if (node && node->type == REDIR)
 	{
 		rcmd = (struct s_redircmd *)node;
 		tree_free(rcmd->cmd);
+		free(rcmd);
 	}
 	else if (node && node->type == PIPE)
 	{
 		pcmd = (struct s_pipecmd *)node;
 		tree_free(pcmd->left);
 		tree_free(pcmd->right);
+		free(pcmd);
 	}
 	return ;
 }

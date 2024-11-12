@@ -6,12 +6,11 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:43:12 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
-
 
 int	infile_or_outfile(char *start)
 {
@@ -21,33 +20,6 @@ int	infile_or_outfile(char *start)
 		return (1);
 	return (-1);
 }
-
-
-// /* Allocates a filename/path. MUST BE FREED */
-// char	*get_redir_path(char *redir, t_tools *tools)
-// {
-// 	int		i;
-// 	char	*filename;
-// 	int		start;
-
-// 	i = 0;
-// 	while (redir[i] && isredir(redir[i]))
-// 	{
-// 		i++;
-// 	}
-// 	start = i;
-// 	while (redir[i] && !ft_isspace(redir[i]))
-// 	{
-// 		if (isquote(redir[i]))
-// 			i = skip_quotes(redir, i);
-// 		i++;
-// 	}
-// 	filename = ft_substr(redir, start, i - start);
-// 	if (!filename)
-// 		error_exit_main(tools, 1);
-// 	strip_quotes_final(filename);
-// 	return (filename);
-// }
 
 /* Gets pointer to the space after the token */
 char	*get_token_end(char *namestart)
@@ -64,60 +36,69 @@ char	*get_token_end(char *namestart)
 	return (&namestart[i]);
 }
 
-
-// /* Checks if a path is a file or directory File: 1; Dir: 2; Neither: 0*/
-// int	file_dir_noexist(const char *path, int fd_in_or_out)
-// {
-// 	struct stat	path_stat;
-
-// 	if (stat(path, &path_stat) != 0)
-// 	{
-// 		if (errno == ENOENT && fd_in_or_out == 1)
-// 			return (1);
-// 		/* this should be checked only with infiles*/
-// 		print_error(path, strerror(errno), NULL);
-// 		return (0);
-// 	}
-// 	if (S_ISREG(path_stat.st_mode))
-// 	{
-// 		return (1);
-// 	}
-// 	else if (S_ISDIR(path_stat.st_mode))
-// 		return (2);
-// 	else
-// 		print_error(path, "Is neither a file nor a directory", NULL);
-// 	return (0);
-// }
-
-
-/* Return the MODE necessary for OPEN() file or dir */
-/*
-int	check_file_type(char *start, int fd_in_or_out, t_tools *tools)
+void	nullify(char *cline, t_tools *tools)
 {
-	char	*filepath;
-	int		fileordir;
+	int	i;
 
-	if (!start || fd_in_or_out < 0)
-		return (0);
-	filepath = get_redir_path(start, tools);
-	fileordir = file_dir_noexist(filepath, fd_in_or_out);
-	if (fileordir == 0)
+	i = 0;
+	while (&cline[i] < tools->e_cline)
 	{
-		return (-1);
+		if (ft_isspace(cline[i]))
+			cline[i] = 0;
+		else
+			i = skip_token(cline, i);
+		i++;
 	}
-	if (start[0] == '>' && fileordir == 2)
-		print_error(filepath, "Is a directory", NULL);
-	free(filepath);
-	if (fileordir == 1 && start[0] == '>' && start[1] == '>')
-		return (O_WRONLY | O_CREAT | O_APPEND);
-	else if (fileordir == 1 && start[0] == '>')
-		return (O_WRONLY | O_CREAT | O_TRUNC);
-	else if (fileordir == 1 && start[0] == '<')
-		return (O_RDONLY);
-	else if (fileordir == 2 && start[0] == '<')
-		return (O_RDONLY | __O_DIRECTORY);
-	return (0);
-	// else if (start[0] == '<' &&start[1] == '<')
-	// 		; //HEREDOC?
 }
-*/
+
+/* Provide the line and its capacity */
+void	remove_useless_quotes_final(char *cline, size_t linecapacity)
+{
+	size_t	i;
+	char	quotechar;
+	char	*firstquote;
+
+	i = 0;
+	while (i < linecapacity)
+	{
+		firstquote = NULL;
+		quotechar = 0;
+		if (isquote(cline[i]))
+		{
+			quotechar = cline[i];
+			firstquote = &cline[i];
+			i++;
+			while (cline[i] && cline[i] != quotechar)
+			{
+				i++;
+			}
+			if (cline[i] && cline[i] == quotechar)
+				i -= remove_two(firstquote, &cline[i]);
+		}
+		i++;
+	}
+}
+
+char	*clean_line_expand_only(char *line, int linelen, t_tools *tools)
+{
+	char	*c_line;
+	size_t	i;
+	size_t	j;
+
+	init_zero(&i, &j, &c_line, NULL);
+	tools->cl_capacity = linelen * 2;
+	tools->cl = safe_calloc(tools->cl_capacity + 2, 1, tools);
+	c_line = tools->cl;
+	while (line[i] && j < tools->cl_capacity)
+	{
+		if (line[i] == '\'' || line[i] == '"')
+			i = i + copy_quotes(&c_line[j], &line[i], tools);
+		else if (line[i] == '$' && line[i - 1] != '\\' && line[i + 1] != ' ')
+			i = i + copy_var(&c_line[j], &line[i], tools, 1);
+		else
+			c_line[j++] = line[i++];
+		j = ft_strlen(c_line);
+		c_line = tools->cl;
+	}
+	return (c_line);
+}

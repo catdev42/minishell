@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/09 17:15:14 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:01:54 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 16:02:15 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -23,18 +23,15 @@ char	*safe_calloc(size_t nmemb, size_t size, t_tools *tools)
 	if (tools && !str)
 	{
 		clean_tools(tools);
-		error_exit_main(tools, 1);
+		error_exit_main(tools, errno);
 	}
-	// cant do this cause have to free things possibly in calling function
-	// then use normal ft_calloc in those instances
-	// return (NULL);
 	return (str);
 }
 
 /* exits the program if exiting*/
 int	record_exit(int exit_num, t_tools *tools)
 {
-	global_signal = 0;
+	g_signal = 0;
 	tools->exit_code = exit_num;
 	if (tools->exit_string)
 	{
@@ -46,30 +43,6 @@ int	record_exit(int exit_num, t_tools *tools)
 		error_exit_main(tools, errno);
 	return (exit_num);
 }
-
-// void	strip_quotes_final(char *start)
-// {
-// 	int		i;
-// 	char	quotechar;
-// 	char	*firstquote;
-
-// 	firstquote = 0;
-// 	i = 0;
-// 	quotechar = 0;
-// 	while (start[i])
-// 	{
-// 		quotechar = 0;
-// 		if (isquote(start[i]))
-// 		{
-// 			quotechar = start[i];
-// 			firstquote = &start[i];
-// 			i = skip_quotes(start, i);
-// 			if (start[i] && start[i] == quotechar)
-// 				i = i - remove_two(firstquote, &start[i]);
-// 		}
-// 		i++;
-// 	}
-// }
 
 /*
 Can initialize 2 ints and 2 string pointers
@@ -86,4 +59,31 @@ void	init_zero(size_t *i, size_t *j, char **str1, char **str2)
 		*str1 = NULL;
 	if (str2)
 		*str2 = NULL;
+}
+
+// reallocation: dest not provided
+char	*ft_join_one(char const *s1, char const *delim, char const *s2)
+{
+	size_t	len;
+	size_t	i;
+	size_t	j;
+	char	*fullstr;
+
+	i = 0;
+	j = 0;
+	len = ft_strlen(s1) + ft_strlen(delim) + ft_strlen(s2);
+	fullstr = ft_calloc(len + 2, sizeof(char));
+	if (!fullstr)
+		return (NULL);
+	j = 0;
+	while (s1[j])
+		fullstr[i++] = s1[j++];
+	j = 0;
+	while (delim[j])
+		fullstr[i++] = delim[j++];
+	j = 0;
+	while (s2[j])
+		fullstr[i++] = s2[j++];
+	fullstr[i] = 0;
+	return (fullstr);
 }

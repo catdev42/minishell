@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/28 14:08:00 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 14:11:38 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 22:18:20 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,6 +14,8 @@
 
 void	clean_tools(t_tools *tools)
 {
+	close(tools->fd[1]);
+	close(tools->fd[0]);
 	reset_tools(tools);
 	if (tools->exit_string)
 		free(tools->exit_string);
@@ -27,6 +29,12 @@ void	good_exit(t_tools *tools)
 {
 	clean_tools(tools);
 	exit(0);
+}
+
+void	exit_with_code(t_tools *tools, int code)
+{
+	clean_tools(tools);
+	exit(code);
 }
 
 // should only delete heredoc files if exiting the main process....
@@ -51,5 +59,3 @@ int	print_errno_exit(const char *arg, const char *errline, int custom_fail,
 	else
 		exit(errno);
 }
-
-

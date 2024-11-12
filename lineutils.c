@@ -6,49 +6,62 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/26 23:59:13 by myakoven          #+#    #+#             */
-/*   Updated: 2024/10/28 19:09:59 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 21:56:56 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
 static void	extend_cleanline(t_tools *tools, int add);
+static int	check_cleanline_capacity(t_tools *tools, char *var_result);
+static int	write_dollar(char *c_line);
 
 /* EXPANDS: Returns len of variable in line (including the $ or not?) */
 /* This is an insanely confusing function - rewrite? */
-int	copy_var(char *c_line, char *line, t_tools *tools)
+
+int	copy_var(char *c_line, char *line, t_tools *tools, int i)
 {
-	char	*var;
+	char	*var_alloc;
 	char	*var_result;
-	int		i;
 	int		curr_cl_ind;
 
-	var = NULL;
-	curr_cl_ind = c_line - tools->cleanline;
-	i = 1;
-	while (line[i] && !ft_isspace(line[i]) && !isquote(line[i])
-		&& !istoken(line[i]) && line[i] != '$')
-		i++; // while the char has no special meaning
+	var_alloc = NULL;
+	curr_cl_ind = c_line - tools->cl;
+	while (line[i] && !ft_isspace(line[i]) && !ft_strchr("'\"<|>$", line[i]))
+		i++;
 	if (i == 1)
-		return (i);
-	var = ft_substr(line, 1, i - 1);
-	if (!var)
+		return (write_dollar(c_line));
+	var_alloc = ft_substr(line, 1, i - 1);
+	if (!var_alloc)
 		error_exit_main(tools, 1);
-	if (!ft_strncmp(var, "?", 2))
+	if (!ft_strncmp(var_alloc, "?", 1))
 		var_result = tools->exit_string;
 	else
-		var_result = get_var_value(tools->env, var);
-	free(var);
-	if (!var_result)
-		return (i);
-	if (tools->cl_capacity < ft_strlen(var_result)
-		+ ft_strlen(tools->cleanline))
+		var_result = get_var_value(tools->env, var_alloc);
+	if (var_result == tools->exit_string)
+		i = 2;
+	free(var_alloc);
+	if (var_result && !check_cleanline_capacity(tools, var_result))
+		c_line = &(tools->cl[curr_cl_ind]);
+	if (var_result)
+		ft_strlcpy(c_line, var_result, tools->cl_capacity - curr_cl_ind);
+	return (i);
+}
+
+static int	write_dollar(char *c_line)
+{
+	c_line[0] = '$';
+	return (1);
+}
+
+static int	check_cleanline_capacity(t_tools *tools, char *var_result)
+{
+	if (tools->cl_capacity < ft_strlen(var_result) + ft_strlen(tools->cl))
 	{
 		extend_cleanline(tools, ft_strlen(var_result));
-		c_line = &(tools->cleanline[curr_cl_ind]);
+		return (0);
 	}
-	ft_strlcpy(c_line, var_result, tools->cl_capacity - curr_cl_ind);
-	return (i);
+	return (1);
 }
 
 static void	extend_cleanline(t_tools *tools, int add)
@@ -57,40 +70,13 @@ static void	extend_cleanline(t_tools *tools, int add)
 	char	*tmpold;
 
 	new_cl_len = tools->cl_capacity + add;
-	tmpold = tools->cleanline;
-	tools->cleanline = ft_calloc(new_cl_len + 2, 1);
-	if (!tools->cleanline)
+	tmpold = tools->cl;
+	tools->cl = ft_calloc(new_cl_len + 2, 1);
+	if (!tools->cl)
 		error_exit_main(tools, 1);
 	tools->cl_capacity = new_cl_len;
-	ft_strlcpy(tools->cleanline, tmpold, tools->cl_capacity);
+	ft_strlcpy(tools->cl, tmpold, tools->cl_capacity);
 	free(tmpold);
-}
-
-void	remove_useless_quotes(char *cline)
-{
-	size_t	i;
-	char	quotechar;
-	char	*firstquote;
-	bool	removequotes;
-
-	i = 0;
-	while (cline[i])
-	{
-		firstquote = NULL;
-		quotechar = 0;
-		removequotes = 1;
-		if (isquote(cline[i]))
-		{
-			quotechar = cline[i];
-			firstquote = &cline[i];
-			while (cline[++i] && cline[i] != quotechar)
-				if (ft_isspace(cline[i]) || istoken(cline[i]))
-					removequotes = 0;
-			if (removequotes && cline[i] == quotechar)
-				i -= remove_two(firstquote, &cline[i]);
-		}
-		i++;
-	}
 }
 
 /*
@@ -103,10 +89,8 @@ int	remove_two(char *first, char *second)
 	int	i;
 
 	i = 0;
-	// printf("im in remove 2\n");
 	if (second)
 	{
-		// printf(" %p - nothing???", second);
 		ft_memmove(second, second + 1, ft_strlen(second + 1) + 1);
 		i++;
 	}
