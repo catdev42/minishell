@@ -6,68 +6,11 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 17:12:00 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/12 20:28:10 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 21:33:44 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
-
-void	put_var(char *key, char *value)
-{
-	ft_putstr_fd("declare -x ", 1);
-	ft_putstr_fd(key, 1);
-	ft_putstr_fd("=", 1);
-	ft_putstr_fd("\"", 1);
-	ft_putstr_fd(value, 1);
-	ft_putstr_fd("\"\n", 1);
-}
-
-int	print_export(char **env)
-{
-	int		i;
-	char	*equalsign;
-
-	if (!env)
-		return (1);
-	i = 0;
-	while (env[i])
-	{
-		if (env[i][0] == '_')
-		{
-			i++;
-			continue ;
-		}
-		equalsign = ft_strchr(env[i], '=');
-		equalsign[0] = 0;
-		put_var(env[i], &equalsign[1]);
-		equalsign[0] = '=';
-		i++;
-	}
-	return (0);
-}
-
-static int	export_check(char *arg, char *eqs, t_tools *tool)
-{
-	int	pass;
-
-	if (eqs)
-	{
-		pass = passchk(arg, (long int)(eqs - &arg[0]));
-		if (pass)
-		{
-			eqs[0] = 0;
-			repl_or_app_var(arg, &eqs[1], tool->env, tool);
-			eqs[0] = '=';
-			return (1);
-		}
-		return (0);
-	}
-	else
-	{
-		pass = passchk(arg, ft_strlen(arg));
-		return (pass);
-	}
-}
 
 int	export(t_execcmd *cmd, t_tools *tool)
 {
@@ -124,3 +67,62 @@ int	unset(t_execcmd *cmd, t_tools *tools)
 	}
 	return (0);
 }
+
+int	print_export(char **env)
+{
+	int		i;
+	char	*equalsign;
+
+	if (!env)
+		return (1);
+	i = 0;
+	while (env[i])
+	{
+		if (env[i][0] == '_')
+		{
+			i++;
+			continue ;
+		}
+		equalsign = ft_strchr(env[i], '=');
+		equalsign[0] = 0;
+		put_var(env[i], &equalsign[1]);
+		equalsign[0] = '=';
+		i++;
+	}
+	return (0);
+}
+
+void	put_var(char *key, char *value)
+{
+	ft_putstr_fd("declare -x ", 1);
+	ft_putstr_fd(key, 1);
+	ft_putstr_fd("=", 1);
+	ft_putstr_fd("\"", 1);
+	ft_putstr_fd(value, 1);
+	ft_putstr_fd("\"\n", 1);
+}
+
+int	export_check(char *arg, char *eqs, t_tools *tool)
+{
+	int	pass;
+
+	if (eqs)
+	{
+		pass = passchk(arg, (long int)(eqs - &arg[0]));
+		if (pass)
+		{
+			eqs[0] = 0;
+			repl_or_app_var(arg, &eqs[1], tool->env, tool);
+			eqs[0] = '=';
+			return (1);
+		}
+		return (0);
+	}
+	else
+	{
+		pass = passchk(arg, ft_strlen(arg));
+		return (pass);
+	}
+}
+
+

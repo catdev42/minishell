@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 22:10:12 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 21:45:01 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,6 +69,7 @@ int								run_pipeless_builtin_tree(t_cmd *cmd,
 int								run_redir(t_redircmd *rcmd, t_tools *tool);
 void							run_pipe(t_pipecmd *pcmd, t_tools *tools);
 
+int								builtin_check_walk(t_cmd *cmd);
 int								is_builtin(char *s);
 int								run_builtin(t_execcmd *cmd, t_tools *tool);
 
@@ -89,8 +90,6 @@ void							check_system_fail(int status, t_tools *tools,
 /************************/
 /******* BUILTINS.c ****/
 /************************/
-int								builtin_check_walk(t_cmd *cmd);
-
 int								pwd(void);
 
 int								env(char **argv, char **env, t_execcmd *ecmd,
@@ -104,10 +103,14 @@ int								ft_exit(t_execcmd *cmd, t_tools *tool);
 int								unset(t_execcmd *cmd, t_tools *tool);
 
 int								export(t_execcmd *cmd, t_tools *tool);
+int								print_export(char **env);
 int								repl_or_app_var(char *key, char *value,
 									char **env, t_tools *tools);
-void							perform_export(char *eqs, t_execcmd *cmd,
-									t_tools *tool, int i);
+int								export_check(char *arg, char *eqs,
+									t_tools *tool);
+void							put_var(char *key, char *value);
+
+int								ft_strisnumeric(char *str);
 
 int								append_var(char *key, char *value, char **env,
 									t_tools *tools);
