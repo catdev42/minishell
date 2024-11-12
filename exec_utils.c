@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 22:59:56 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 04:12:59 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -122,6 +122,6 @@ int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
 	else if (fileordir == 1 && rcmd->fd == 0)
 		return (O_RDONLY);
 	else if (fileordir == 2 && rcmd->fd == 0)
-		return (O_RDONLY | __O_DIRECTORY);
+		return (O_RDONLY | O_DIRECTORY);
 	return (0);
 }

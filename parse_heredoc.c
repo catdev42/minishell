@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 22:42:11 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 04:18:12 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -103,10 +103,10 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 					alloc_delim);
 			break ;
 		}
-		tools->cl = clean_line_expand_only(tools->ln, ft_strlen(tools->ln),
-				tools);
-		if (!tools->cl || write(fd, tools->cl, ft_strlen(tools->cl)) == -1
-			|| write(fd, "\n", 1) == -1)
+		// tools->cl = clean_line_expand_only(tools->ln, ft_strlen(tools->ln),
+		// 		tools);
+		if (write(fd, tools->ln, ft_strlen(tools->ln)) == -1 || write(fd, "\n",
+				1) == -1) //! tools->cl ||
 		{
 			free_things(NULL, NULL, &alloc_delim, fd);
 			print_errno_exit(NULL, NULL, errno, tools);
