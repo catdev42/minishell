@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/12 20:28:33 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 22:00:24 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -69,7 +69,7 @@ int	file_dir_noexist(const char *path, int fd_in_or_out)
 	else if (S_ISDIR(path_stat.st_mode))
 		return (2);
 	else
-		print_error(path, NULL,"Is neither a file nor a directory", NULL);
+		print_error(path, NULL, "Is neither a file nor a directory", NULL);
 	return (0);
 }
 
@@ -112,7 +112,7 @@ int	check_file_type(t_redircmd *rcmd, int fd_in_or_out)
 		return (-1);
 	if (fileordir == 2 && rcmd->fd == 1)
 	{
-		print_error(rcmd->file,NULL, "is a directory", NULL);
+		print_error(rcmd->file, NULL, "is a directory", NULL);
 		return (-1);
 	}
 	if (fileordir == 1 && rcmd->append && rcmd->fd == 1)

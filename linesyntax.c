@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/01 21:45:41 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/12 20:29:20 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 21:48:04 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ int	val_red(char *line)
 	while (line[i])
 	{
 		if (!check_first_pipe(line))
-			return (print_error(NULL, NULL,UNEXP, "|"));
+			return (print_error(NULL, NULL, UNEXP, "|"));
 		if (line[i] == '\"' || line[i] == '\'')
 			i = skip_quotes(line, i) + 1;
 		if (line[i] && line[i] == '|')

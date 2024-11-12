@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/12 21:45:01 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 22:01:21 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,8 +39,9 @@ extern volatile sig_atomic_t	g_signal;
 
 # define MIDLEN 256
 
-# define UNEXP "syntax error near unexpected token "
-# define UNCLOSED "unclosed quotes "
+# define UNEXP "syntax error near unexpected token"
+# define UNCLOSED "unclosed quotes"
+# define HEREPRINT "here-doc delimited by EOF, wanted"
 # define ECHO "echo"
 # define CD "cd"
 # define PWD "pwd"

@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/06 19:16:34 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/12 20:29:24 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 21:57:09 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -99,8 +99,7 @@ void	write_heredoc(int fd, char *alloc_delim, t_tools *tools)
 				ft_strlen(alloc_delim)) == 0)
 		{
 			if (!tools->ln)
-				print_error("warning", NULL, "here-doc delimited by EOF, wanted ",
-					alloc_delim);
+				print_error("warning", NULL, HEREPRINT, alloc_delim);
 			break ;
 		}
 		if (write(fd, tools->ln, ft_strlen(tools->ln)) == -1 || write(fd, "\n",
