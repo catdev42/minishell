@@ -6,94 +6,71 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/13 20:00:21 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:59:02 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 20:29:20 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef STRUCTS_H
 # define STRUCTS_H
-extern volatile sig_atomic_t g_signal; // TODO
-
 # include "./minishell.h"
 
 # define MAXARGS 20
-/* Type of node */
 # define EXEC 1
 # define REDIR 2
 # define PIPE 3
 # define ALPHA 4
 
-struct						s_cmd
+typedef struct s_cmd
 {
 	int						type;
-};
+}							t_cmd;
 
-struct						s_execcmd
+typedef struct s_execcmd
 {
 	int						type;
 	char					*argv[MAXARGS];
 	char					*eargv[MAXARGS];
-};
+}							t_execcmd;
 
-struct						s_redircmd
+typedef struct s_redircmd
 {
 	int						type;
-	// bool					isheredoc;
 	bool					append;
-	// 0xt thing redir or exec
 	struct s_cmd			*cmd;
-	// pointer to filename
 	char					*file;
-	// pointer to end of the file name for nullify
 	char					*efile;
-	// 0 for read, 1 for write and truncate, 2 for append?
 	int						mode;
-	// fd of the opened file?
 	int						fd;
-};
+}							t_redircmd;
 
-struct						s_pipecmd
+typedef struct s_pipecmd
 {
 	int						type;
-	// execute first
 	struct s_cmd			*left;
-	// pipe into - this can also become the next pipe's left side
 	struct s_cmd			*right;
-};
-
-typedef struct s_execcmd	t_execcmd;
-typedef struct s_pipecmd	t_pipecmd;
-typedef struct s_redircmd	t_redircmd;
-typedef struct s_cmd		t_cmd;
+}							t_pipecmd;
 
 typedef struct s_tools
 {
-	struct sigaction *sa; // its not an error
-
+	struct sigaction		*sa;
 	int						fd[2];
-
 	char					**env;
 	int						env_len;
-
 	char					*ln;
 	size_t					line_capacity;
-
 	char					*cl;
 	char					*e_cline;
 	size_t					cl_capacity;
-
 	int						exit_code;
 	char					*exit_string;
-
 	struct s_cmd			*tree;
 
-	/* Temporary */
 	char					*s;
 	char					*cmd_end;
 	char					heredocs[MAXARGS][MAXARGS];
 	int						hereindex;
-	struct s_pipecmd *lastpipe;   // just set to null
-	struct s_redircmd *lastredir; // just set to null
+	struct s_pipecmd		*lastpipe;
+	struct s_redircmd		*lastredir;
 }							t_tools;
 
 #endif

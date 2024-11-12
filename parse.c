@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/09/27 00:42:37 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 15:12:11 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:36:55 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -59,7 +59,8 @@ int	create_pipe_node(struct s_cmd *left, struct s_cmd *right, t_tools *tools)
 	return (1);
 }
 
-/* Helper for parseline and pipe creation: determines where to attach the pipe */
+/* Helper for parseline and pipe creation:
+determines where to attach the pipe */
 struct s_cmd	*createpipe(struct s_cmd *left, struct s_cmd *right,
 		t_tools *tools)
 {
@@ -78,4 +79,31 @@ struct s_cmd	*createpipe(struct s_cmd *left, struct s_cmd *right,
 	if (!tools->tree)
 		tools->tree = (struct s_cmd *)tools->lastpipe;
 	return ((struct s_cmd *)tools->lastpipe);
+}
+
+char	*peek(char *line, char *end, int token)
+{
+	char	*tokenaddress;
+	int		i;
+
+	tokenaddress = 0;
+	i = 0;
+	while (line[i] && &line[i] < end)
+	{
+		if (isquote(line[i]))
+			i = skip_token(line, i);
+		if (istoken(line[i]))
+		{
+			if ((isredir(line[i]) && token == REDIR) || (line[i] == '|'
+					&& token == PIPE))
+			{
+				tokenaddress = &line[i];
+				break ;
+			}
+		}
+		else if (token == ALPHA && ft_isspace(line[i]) && !istoken(line[i + 1]))
+			return (&line[i + 1]);
+		++i;
+	}
+	return (tokenaddress);
 }

@@ -6,15 +6,15 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/13 10:01:36 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/11 14:07:47 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 04:12:59 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "./include/minishell.h"
 
 /*
-checks the exit code, determine if its a fatal errno, and exit
-in main status errno is caught and we need to determine to close the whole program or not
+Checks the exit code, determine if its a fatal errno, and exits.
+In main status is caught and we need to determine if to close the whole program
 */
 void	check_system_fail(int status, t_tools *tool, bool inmain)
 {
@@ -24,31 +24,22 @@ void	check_system_fail(int status, t_tools *tool, bool inmain)
 	{
 		sig = WEXITSTATUS(status);
 		record_exit(sig, tool);
-		if (sig == 0 || sig == 2 || sig == 126 || sig == 127)
-			return ;
 		if (inmain && sig == 142)
 			error_exit_main(tool, 1);
 		else if (sig == SYSTEMFAIL || sig == ENOMEM || sig == EPIPE
 			|| sig == EMFILE || sig == EBADF || sig == EFAULT || sig == ENOSPC
 			|| sig == EIO || sig == ENODEV)
 			error_exit_main(tool, tool->exit_code);
-		else
+		else if (sig != 0 && sig != 2 && sig != 126 && sig != 127)
 			record_exit(1, tool);
 	}
 	else if (WIFSIGNALED(status))
 	{
 		sig = WTERMSIG(status);
 		record_exit(sig + 128, tool);
-		if (sig == SIGINT)
-			return ;
-		if (sig == SIGKILL)
-			return ;
-		else if (sig == SIGSEGV || sig == SIGBUS || sig == SIGFPE
-			|| sig == SIGILL || sig == SIGABRT || sig == SIGSYS)
-		{
-			record_exit(sig + 128, tool);
-			error_exit_main(tool, sig + 128);
-		}
+		if (sig == SIGSEGV || sig == SIGBUS || sig == SIGFPE || sig == SIGILL
+			|| sig == SIGABRT || sig == SIGSYS)
+			error_exit_main(tool, record_exit(sig + 128, tool));
 	}
 	return ;
 }
@@ -80,6 +71,33 @@ int	file_dir_noexist(const char *path, int fd_in_or_out)
 	else
 		print_error(path, "Is neither a file nor a directory", NULL);
 	return (0);
+}
+
+char	*check_cmd_path(char *path, t_execcmd *cmd, t_tools *tools)
+{
+	char	*cmdpath;
+	char	*temp;
+
+	cmdpath = NULL;
+	temp = NULL;
+	temp = ft_strjoin(path, "/");
+	if (!temp)
+		print_errno_exit(NULL, NULL, 0, tools);
+	cmdpath = ft_strjoin(temp, cmd->argv[0]);
+	free(temp);
+	if (!cmdpath)
+		print_errno_exit(NULL, NULL, 0, tools);
+	if (access(cmdpath, F_OK) == 0)
+	{
+		if (access(cmdpath, X_OK) != 0)
+		{
+			free(cmdpath);
+			print_errno_exit(NULL, NULL, 0, tools);
+		}
+		return (cmdpath);
+	}
+	free(cmdpath);
+	return (NULL);
 }
 
 /* Return the MODE necessary for OPEN() file or dir */

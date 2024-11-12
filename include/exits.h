@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/07 20:12:04 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 00:15:49 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/12 16:02:35 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,5 @@ void			here_unlink(t_tools *tools);
 void			reset_tools(t_tools *tools);
 void			tree_free(struct s_cmd *node);
 void			free_things(char **s1, char **s2, char **s3, int fd);
-
 
 #endif

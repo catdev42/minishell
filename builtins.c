@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   builtins.c                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
+/*   By: spitul <spitul@student.42berlin.de >       +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/12 04:37:14 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/11 17:21:39 by spitul           ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ int	echo(t_execcmd *cmd)
 	int	cmp;
 
 	if (!cmd)
-		return (1); // exit fail
+		return (1); 
 	if (!cmd->argv[1])
 	{
 		ft_putstr_fd("\n", 1);
@@ -63,34 +63,6 @@ int	cd(char **argv, char **env, t_tools *tools)
 	if (!repl_or_app_var("PWD", getcwd(buffer, MIDLEN), env, tools))
 		return (1);
 	free(buffer);
-	return (0);
-}
-
-int	unset(t_execcmd *cmd, t_tools *tools)
-{
-	int		i;
-	int		j;
-	char	*temp;
-
-	i = 1;
-	if (!cmd)
-		return (1);
-	while (cmd->argv[i])
-	{
-		j = -2;
-		j = get_var_i(tools->env, cmd->argv[i]);
-		if (j > -1)
-		{
-			temp = tools->env[j];
-			while (tools->env[j])
-			{
-				tools->env[j] = tools->env[j + 1];
-				j++;
-			}
-			free(temp);
-		}
-		i++;
-	}
 	return (0);
 }
 
@@ -157,75 +129,4 @@ int	pwd(void)
 	else
 		perror("pwd: error retrieving current directory:");
 	return (1);
-}
-
-void	put_var(char *key, char *value)
-{
-	ft_putstr_fd("declare -x ", 1);
-	ft_putstr_fd(key, 1);
-	ft_putstr_fd("=", 1);
-	ft_putstr_fd("\"", 1);
-	ft_putstr_fd(value, 1);
-	ft_putstr_fd("\"\n", 1);
-}
-
-int	print_export(char **env)
-{
-	int		i;
-	char	*equalsign;
-
-	if (!env)
-		return (1);
-	i = 0;
-	while (env[i])
-	{
-		if (env[i][0] == '_')
-		{
-			i++;
-			continue ;
-		}
-		equalsign = ft_strchr(env[i], '=');
-		equalsign[0] = 0;
-		put_var(env[i], &equalsign[1]);
-		equalsign[0] = '=';
-		i++;
-	}
-	return (0);
-}
-void	perform_export(char *eqs, t_execcmd *cmd, t_tools *tool, int i);
-
-int	export(t_execcmd *cmd, t_tools *tool)
-{
-	int		i;
-	int		pass;
-	int		otherpass;
-	char	*eqs;
-
-	i = 0;
-	pass = 0;
-	if (!cmd || !cmd->argv[0])
-		return (1);
-	if (get_matrix_len(cmd->argv) == 1)
-		return (print_export(tool->env));
-	while (cmd->argv[++i])
-	{
-		eqs = ft_strchr(cmd->argv[i], '=');
-		pass = passchk(cmd->argv[i], (long int)(eqs - &cmd->argv[i][0]));
-		otherpass = passchk(cmd->argv[i], ft_strlen(cmd->argv[i]));
-		if (eqs && pass)
-			perform_export(eqs, cmd, tool, i);
-		if ((!eqs && !otherpass) || !pass)
-			record_exit(1, tool);
-		if ((!eqs && !pass) || (eqs && !otherpass) || (eqs
-				&& ft_strlen(cmd->argv[i]) == 1))
-			print_error("export", "not a valid identifier", NULL);
-	}
-	return (tool->exit_code);
-}
-
-void	perform_export(char *eqs, t_execcmd *cmd, t_tools *tool, int i)
-{
-	eqs[0] = 0;
-	repl_or_app_var(cmd->argv[i], &eqs[1], tool->env, tool);
-	eqs[0] = '=';
 }
