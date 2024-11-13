@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/10/18 23:23:17 by myakoven          #+#    #+#             */
-/*   Updated: 2024/11/11 23:01:24 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/13 15:06:30 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -105,7 +105,7 @@ int	run_redir(t_redircmd *rcmd, t_tools *tool)
 	rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
 	if (rcmd->fd == -1)
 	{
-		print_errno_exit(NULL, strerror(errno), 0, tool);
+		print_errno_exit(rcmd->file, strerror(errno), 0, tool);
 	}
 	handle_node(rcmd->cmd, tool);
 	return (1);

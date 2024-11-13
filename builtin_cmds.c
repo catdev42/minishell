@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/07/14 14:13:16 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/12 21:46:04 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/13 15:46:01 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -54,10 +54,7 @@ int	cd(char **argv, char **env, t_tools *tools)
 	buffer = NULL;
 	buffer = safe_calloc(MIDLEN + 1, sizeof(char), tools);
 	if (get_matrix_len(argv) > 2)
-	{
-		print_error(argv[0], NULL, "too many arguments", NULL);
-		return (1);
-	}
+		return (!print_error(argv[0], NULL, "too many arguments", NULL));
 	if (!buffer)
 		error_exit_main(tools, errno);
 	path = get_path_cd(argv, env, &path_alloc, tools);
@@ -67,7 +64,8 @@ int	cd(char **argv, char **env, t_tools *tools)
 		free_things(&path_alloc, NULL, NULL, 0);
 		return (1);
 	}
-	if (!repl_or_app_var("PWD", getcwd(buffer, MIDLEN), env, tools))
+	if (!repl_or_app_var("OLDPWD", get_var_value(env, "PWD"), env, tools)
+		|| !repl_or_app_var("PWD", getcwd(buffer, MIDLEN), env, tools))
 		return (1);
 	free_things(&path_alloc, &buffer, NULL, 0);
 	return (0);

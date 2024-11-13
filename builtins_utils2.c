@@ -6,7 +6,7 @@
 /*   By: myakoven <myakoven@student.42berlin.de>    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/11/11 19:25:50 by spitul            #+#    #+#             */
-/*   Updated: 2024/11/12 21:22:48 by myakoven         ###   ########.fr       */
+/*   Updated: 2024/11/13 15:41:42 by myakoven         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -62,7 +62,6 @@ int	run_builtin(t_execcmd *cmd, t_tools *tool)
 
 int	run_pipeless_builtin_tree(t_cmd *cmd, t_tools *tool)
 {
-	t_execcmd	*ecmd;
 	t_redircmd	*rcmd;
 
 	if (cmd->type == REDIR)
@@ -77,14 +76,14 @@ int	run_pipeless_builtin_tree(t_cmd *cmd, t_tools *tool)
 		close(rcmd->fd);
 		rcmd->fd = open(rcmd->file, rcmd->mode, 0644);
 		if (rcmd->fd == -1)
+		{
+			print_error(rcmd->file, NULL, strerror(errno), NULL);
 			return (!record_exit(1, tool));
+		}
 		run_pipeless_builtin_tree(rcmd->cmd, tool);
 	}
 	if (cmd->type == EXEC)
-	{
-		ecmd = (t_execcmd *)cmd;
-		return (run_builtin(ecmd, tool));
-	}
+		return (run_builtin((t_execcmd *)cmd, tool));
 	return (0);
 }
 
